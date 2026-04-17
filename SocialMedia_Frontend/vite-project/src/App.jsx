@@ -92,6 +92,14 @@ const App = () => {
                 </PageWrapper>
               }
             />
+             <Route
+              path="/top"
+              element={
+                <PageWrapper>
+                  <New/>
+                </PageWrapper>
+              }
+            />
             <Route
               path="/notification"
               element={
