@@ -31,6 +31,7 @@ const Setting = () => {
       <section className="grid grid-cols-1 gap-3 ">
         {settingList.map((elem, index) => (
           <SettingList
+          type="Setting"
             key={index}
             name={elem.name}
             description={elem.description}

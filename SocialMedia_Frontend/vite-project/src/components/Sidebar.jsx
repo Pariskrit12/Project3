@@ -6,9 +6,9 @@ const Sidebar = () => {
   const sideBarLinks = [
     { icon: "boxicons:home-filled", label: "Home", path: "/" },
     { icon: "mingcute:trending-up-fill", label: "Trending", path:"/trending" },
-    { icon: "fluent:new-16-filled", label: "New" },
-    { icon: "fluent:align-top-24-filled", label: "Top" },
-    { icon: "material-symbols:communities", label: "Communities" },
+    { icon: "fluent:new-16-filled", label: "New" ,path:"/new"},
+    { icon: "fluent:align-top-24-filled", label: "Top",path:"/top" },
+    { icon: "material-symbols:communities", label: "Communities" ,path:"/communities"},
     { icon: "lets-icons:setting-fill", label: "Settings",path:'/settings' },
     { icon: "material-symbols:login", label: "Login", path: "/login" },
   ];
