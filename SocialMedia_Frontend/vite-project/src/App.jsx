@@ -15,6 +15,7 @@ import Setting from "./pages/Setting";
 import ChangePassword from "./pages/ChangePassword";
 import DeactivateAccount from "./pages/DeactivateAccount";
 import AccountInformation from "./pages/AccountInformation";
+import New from "./pages/New";
 
 const PageWrapper = ({ children }) => (
   <div className="px-4 py-5">{children}</div>
@@ -80,6 +81,14 @@ const App = () => {
               element={
                 <PageWrapper>
                   <Trending />
+                </PageWrapper>
+              }
+            />
+            <Route
+              path="/new"
+              element={
+                <PageWrapper>
+                  <New/>
                 </PageWrapper>
               }
             />
