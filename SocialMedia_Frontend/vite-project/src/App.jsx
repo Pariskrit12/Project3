@@ -16,6 +16,7 @@ import ChangePassword from "./pages/ChangePassword";
 import DeactivateAccount from "./pages/DeactivateAccount";
 import AccountInformation from "./pages/AccountInformation";
 import New from "./pages/New";
+import Communites from "./pages/Communites";
 
 const PageWrapper = ({ children }) => (
   <div className="px-4 py-5">{children}</div>
@@ -34,6 +35,7 @@ const App = () => {
     "/settings/changePassword",
     "/settings/accountInformation",
     "/settings/deactivateAccount",
+    "/communities"
   ].includes(location.pathname);
 
   return (
@@ -161,6 +163,14 @@ const App = () => {
               element={
                 <PageWrapper>
                   <Postpage />
+                </PageWrapper>
+              }
+            />
+            <Route
+              path="/communities"
+              element={
+                <PageWrapper>
+                  <Communites />
                 </PageWrapper>
               }
             />

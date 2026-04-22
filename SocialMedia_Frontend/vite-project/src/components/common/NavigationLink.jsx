@@ -7,7 +7,7 @@ const NavigationLink = ({icon,label,onClick,isActive,path}) => {
     : "";           // default hover
 
   return (
-    <Link to={path} onClick={onClick} className={`flex  gap-4 items-center  py-2 px-2 ${bgColor}`}>
+    <Link to={path} onClick={onClick} className={`flex  gap-4 items-center  py-2 px-2 ${bgColor} hover:bg-[#F4D9C6]`}>
         <Icon className="text-[#AF503A]" icon={icon} width="24" height="24" />
         <span>{label}</span>
       </Link>
