@@ -17,14 +17,14 @@ const postSchema = new Schema(
     },
     images: [
       {
-        url: String,
-        publicId: String,
+        url: { type: String, required: true },
+        publicId: { type: String, required: true },
       },
     ],
     videos: [
       {
-        url: String,
-        publicId: String,
+        url: { type: String, required: true },
+        publicId: { type: String, required: true },
       },
     ],
     community: {
@@ -32,6 +32,25 @@ const postSchema = new Schema(
       ref: "Community",
       default: null,
     },
+
+    likes: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    dislikes: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    comments: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Comment",
+      },
+    ],
   },
   { timestamps: true },
 );
