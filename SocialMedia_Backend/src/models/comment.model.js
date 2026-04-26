@@ -1,0 +1,34 @@
+import mongoose, { Schema } from "mongoose";
+
+const commentSchema = new Schema({
+  creator: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+  likes: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      default: [],
+    },
+  ],
+  dislikes: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      default: [],
+    },
+  ],
+  description: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  post: {
+    type: Schema.Types.ObjectId,
+    ref: "Post",
+    required: true,
+  },
+});
+export const Comment = mongoose.model("Comment", commentSchema);
