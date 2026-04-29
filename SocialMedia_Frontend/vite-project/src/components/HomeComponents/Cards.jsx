@@ -3,7 +3,7 @@ import React from "react";
 import Button from "../common/Button";
 import { useNavigate } from "react-router-dom";
 
-const Cards = ({ onClick, showFull,communitteName,username,uploadedTime,titleOfPost,image,description }) => {
+const Cards = ({ onClick, showFull, communitteName, username, uploadedTime, titleOfPost, image, description }) => {
   const buttonDetails = [
     { icon: "boxicons:like-filled" },
     { icon: "boxicons:dislike-filled" },
@@ -13,36 +13,37 @@ const Cards = ({ onClick, showFull,communitteName,username,uploadedTime,titleOfP
   return (
     <div
       onClick={onClick}
-      className="border border-[#E8D5C0] bg-[#FDF6EE] shadow-[0_2px_12px_rgba(164,57,25,0.08)] p-4 flex flex-col gap-3 rounded-2xl hover:shadow-[0_4px_20px_rgba(164,57,25,0.14)] transition-shadow duration-200 cursor-pointer min-h-fit"
+      className="border border-[#E8D5C0] bg-[#FDF6EE] shadow-[0_2px_12px_rgba(164,57,25,0.08)] p-5 flex flex-col gap-4 rounded-2xl hover:shadow-[0_6px_24px_rgba(164,57,25,0.14)] hover:border-[#D4B89A] transition-all duration-200 cursor-pointer"
     >
-      <div className="flex justify-between">
-
-      <div className="flex gap-2 items-center">
-        <div className="bg-[#A43919] text-white rounded-full p-1">
-          <Icon icon="bi:emoji-grin-fill" width="18" height="18" />
+      <div className="flex justify-between items-start">
+        <div className="flex gap-2.5 items-center">
+          <div className="bg-linear-to-br from-[#AF503A] to-[#A43919] text-white rounded-full p-1.5 shadow-sm shrink-0">
+            <Icon icon="bi:emoji-grin-fill" width="15" height="15" />
+          </div>
+          <div>
+            <p className="text-[#A43919] font-bold text-sm leading-tight">{communitteName}</p>
+            <p className="text-xs text-[#B89880]">/{username} · {uploadedTime}</p>
+          </div>
         </div>
-        <p className="text-[#A43919] flex items-center font-semibold">{communitteName} &nbsp; <span className="text-xs text-[#B89880]">/{username}</span></p>
-        <span className="text-xs text-[#B89880] ">{uploadedTime}</span>
+        <div className="flex items-center gap-2.5">
+          <Button isActive={true} name="Join" />
+          <Icon className="text-[#B89880]" icon="tabler:dots-filled" width="20" height="20" />
+        </div>
       </div>
-      <div className="flex items-center gap-4">
-        <Button isActive={true} name="Join"/>
-          <Icon icon="tabler:dots-filled" width="24" height="24" />
+
+      <h1 className="text-lg font-bold text-[#2C1A0E] leading-snug">{titleOfPost}</h1>
+
+      <div className="rounded-xl overflow-hidden bg-[#EEE7DB] flex justify-center">
+        <img className="object-contain w-full xs:w-122" src={image} alt="post" />
       </div>
-      </div>
-      <div>
-        <h1 className="text-xl font-bold text-[#2C1A0E]">{titleOfPost}</h1>
-      </div>
-      <div className="flex justify-center w-full bg-[#EEE7DB] rounded-xl overflow-hidden">
-        <img className="object-contain w-full xs:w-122" src={image} alt="image" />
-      </div>
+
       <div>
         {showFull && (
-          <p className="text-sm text-[#5C4033] leading-relaxed">
-           {description}
-          </p>
+          <p className="text-sm text-[#5C4033] leading-relaxed">{description}</p>
         )}
       </div>
-      <div className="flex gap-2 pt-1 border-t border-[#EEE7DB]">
+
+      <div className="flex gap-2 pt-2 border-t border-[#EEE7DB]">
         {buttonDetails.map((elem, index) => (
           <Button key={index} icon={elem.icon} />
         ))}

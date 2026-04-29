@@ -4,23 +4,22 @@ import NotificationCard from '../components/Notifications/NotificationCard'
 
 const Notification = () => {
   return (
-   <main className='grid grid-cols-1 gap-3'>
-    <section>
-        <h1 className='font-bold text-2xl'>Notificatons</h1>
-    </section>
-    <section>
-        <div className='flex gap-2 justify-self-end items-center '>
-            <span>Mark all as read</span>
-            <div className='border h-4'></div>
-            <IconLink icon="material-symbols:settings-rounded" />
+    <main className='grid grid-cols-1 gap-4'>
+      <section className="flex justify-between items-center">
+        <h1 className='font-bold text-2xl text-[#2C1A0E]'>Notifications</h1>
+        <div className='flex gap-3 items-center'>
+          <span className='text-sm text-[#AF503A] font-medium cursor-pointer hover:text-[#A43919] transition-colors'>Mark all as read</span>
+          <div className='h-4 w-px bg-[#E8D5C0]'></div>
+          <IconLink icon="material-symbols:settings-rounded" />
         </div>
-    </section>
-    <section className='grid grid-cols-1 gap-3'>
-        <NotificationCard/>
-        <NotificationCard/>
-        <NotificationCard/>
-    </section>
-   </main>
+      </section>
+
+      <section className='grid grid-cols-1 gap-3'>
+        <NotificationCard />
+        <NotificationCard />
+        <NotificationCard />
+      </section>
+    </main>
   )
 }
 

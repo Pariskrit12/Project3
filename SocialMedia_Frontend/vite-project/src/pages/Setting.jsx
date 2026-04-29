@@ -23,15 +23,17 @@ const Setting = () => {
       path: "/settings/deactivateAccount",
     },
   ];
+
   return (
-    <main className=" w-200">
-      <div className="mb-3">
-        <h1 className="font-bold text-2xl">Settings</h1>
+    <main className="w-200 max-w-full">
+      <div className="mb-5">
+        <h1 className="font-bold text-2xl text-[#2C1A0E]">Settings</h1>
+        <p className="text-sm text-[#B89880] mt-0.5">Manage your account preferences</p>
       </div>
-      <section className="grid grid-cols-1 gap-3 ">
+      <section className="grid grid-cols-1 gap-3">
         {settingList.map((elem, index) => (
           <SettingList
-          type="Setting"
+            type="Setting"
             key={index}
             name={elem.name}
             description={elem.description}

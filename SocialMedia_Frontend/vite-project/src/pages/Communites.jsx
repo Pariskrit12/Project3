@@ -4,6 +4,7 @@ import Button from "../components/common/Button";
 import Dropdown from "../components/common/Dropdown";
 import Cards from "../components/HomeComponents/Cards";
 import Input from "../components/common/Input";
+
 const Communites = () => {
   const [open, setOpen] = useState(false);
   const [rules, setRules] = useState([]);
@@ -44,54 +45,62 @@ const Communites = () => {
         "The lap times were insanely close today. One small mistake and you're out of the top 10.",
     },
   ];
+
   const [filter, setFilter] = useState("Best");
+
   return (
     <main>
-      <section className="relative">
-        <div className="">
-          <img className="w-full h-50 object-fill" src="./Banner1.jpg" />
-        </div>
-        <div className=" absolute left-5 -bottom-12 border-8 rounded-full border-[#FEF7ED]">
+      <section className="relative rounded-2xl overflow-hidden">
+        <img className="w-full h-48 object-cover" src="./Banner1.jpg" />
+        <div className="absolute left-5 -bottom-10 border-[6px] border-[#FEF7ED] rounded-full shadow-lg">
           <img
-            className=" w-25 h-25 object-cover rounded-full"
+            className="w-20 h-20 object-cover rounded-full"
             src="./Sharbani.png"
             alt=""
           />
         </div>
       </section>
-      <section className="ml-35 mt-5">
-        <div className="flex justify-between">
-          <h1 className="text-2xl font-bold">Personal Life</h1>
-          <div className="flex gap-4 items-center">
-            <Icon
-              className="text-[#AF503A]"
-              icon="clarity:notification-solid"
-              width="24"
-              height="24"
-            />
-            <Button name="Create Post" icon="ic:round-plus" />
+
+      <section className="ml-32 mt-4 mb-4">
+        <div className="flex justify-between items-center">
+          <h1 className="text-xl font-bold text-[#2C1A0E]">Personal Life</h1>
+          <div className="flex gap-2 items-center">
+            <button className="p-2 rounded-xl hover:bg-[#F4D9C6] transition-colors">
+              <Icon
+                className="text-[#AF503A]"
+                icon="clarity:notification-solid"
+                width="22"
+                height="22"
+              />
+            </button>
+            <Button name="Create Post" icon="ic:round-plus" isActive={true} />
             <Button name="Join" />
-            <Icon
-              className="text-[#AF503A]"
-              icon="pepicons-pop:dots-x"
-              width="24"
-              height="24"
-            />
+            <button className="p-2 rounded-xl hover:bg-[#F4D9C6] transition-colors">
+              <Icon
+                className="text-[#AF503A]"
+                icon="pepicons-pop:dots-x"
+                width="20"
+                height="20"
+              />
+            </button>
           </div>
         </div>
       </section>
-      <section className="grid grid-cols-[2.3fr_1fr] mt-5 gap-2">
-        <section className="grid grid-cols-1 gap-2">
-          <Dropdown
-            icon="ep:arrow-down-bold"
-            value={filter}
-            options={["Best", "Hot", "Top", "New"]}
-            onSelect={(val) => setFilter(val)}
-          />
 
-          <div className="grid grid-cols-1 gap-5">
+      <section className="grid grid-cols-[2.3fr_1fr] mt-3 gap-4">
+        <section className="grid grid-cols-1 gap-3">
+          <div>
+            <Dropdown
+              icon="ep:arrow-down-bold"
+              value={filter}
+              options={["Best", "Hot", "Top", "New"]}
+              onSelect={(val) => setFilter(val)}
+            />
+          </div>
+          <div className="grid grid-cols-1 gap-4">
             {posts.map((elem, index) => (
               <Cards
+                key={index}
                 titleOfPost={elem.titleOfPost}
                 uploadedTime={elem.uploadedTime}
                 username={elem.username}
@@ -102,38 +111,35 @@ const Communites = () => {
             ))}
           </div>
         </section>
-        <section className="border rounded-xl max-h-fit sticky top-25">
-          <div className="p-2">
-            <p className="font-bold">Personal Life</p>
 
-            <div className="flex flex-col gap-2 mt-2">
-              <p className="text-gray-400 text-sm">
-                A community for discussing anything related to personal life,
-                daily experiences, relationships, and self-growth. Share your
-                thoughts, stories, and advice. Join the conversation and connect
-                with others going through similar journeys.
-              </p>
-
-              <p className="text-sm text-gray-400">Created Dec 31, 2026</p>
-            </div>
-            <div className="flex flex-col mt-2">
-              <p className="font-bold ">124</p>
-              <p className="text-sm text-gray-400">Members</p>
+        <section className="border border-[#E8D5C0] bg-[#FDF6EE] rounded-2xl max-h-fit sticky top-25 overflow-hidden">
+          <div className="p-4 border-b border-[#E8D5C0]">
+            <p className="font-bold text-[#2C1A0E]">Personal Life</p>
+            <p className="text-sm text-[#B89880] mt-2 leading-relaxed">
+              A community for discussing anything related to personal life,
+              daily experiences, relationships, and self-growth. Share your
+              thoughts, stories, and advice. Join the conversation and connect
+              with others going through similar journeys.
+            </p>
+            <p className="text-xs text-[#B89880] mt-2">Created Dec 31, 2026</p>
+            <div className="flex flex-col mt-3">
+              <p className="font-bold text-lg text-[#2C1A0E]">124</p>
+              <p className="text-xs text-[#B89880]">Members</p>
             </div>
           </div>
-          <div className="border border-gray-400 mt-1"></div>
-          <div className="pl-2 py-2 ">
-            <p className="font-bold">PERSONAL LIFE RULES</p>
-            <div className="grid grid-cols-1 gap-2 mt-2">
 
-            {rules.map((elem, index) => (
-              <div className="text-sm w-full text-gray-400" key={index}>
-                  {index+1}.&nbsp;{elem}
-              </div>
-            ))}
+          <div className="p-4">
+            <p className="font-bold text-sm text-[#2C1A0E] uppercase tracking-wide mb-3">Personal Life Rules</p>
+            <div className="grid grid-cols-1 gap-2">
+              {rules.map((elem, index) => (
+                <div className="text-sm text-[#5C4033] flex gap-2" key={index}>
+                  <span className="font-bold text-[#A43919]">{index + 1}.</span>
+                  <span>{elem}</span>
+                </div>
+              ))}
             </div>
             {open && (
-              <div className="mt-2">
+              <div className="mt-3">
                 <Input
                   placeholder="Enter Rules"
                   value={ruleInput}

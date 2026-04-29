@@ -53,25 +53,26 @@ const AccountInformation = () => {
       placeholder: "Birth Date",
     },
   ];
+
   const [activeField, setActiveField] = useState(null);
-const activeUpdate=updateFields.find((f)=>f.key===activeField);
-console.log(activeUpdate);
+  const activeUpdate = updateFields.find((f) => f.key === activeField);
+  console.log(activeUpdate);
 
   const navigate = useNavigate();
+
   return (
-    <main className="grid grid-cols-2">
+    <main className="grid grid-cols-2 gap-6">
       <section>
-        <div className="flex w-70 justify-between items-center font-bold gap-3">
-          <Icon
+        <div className="flex items-center gap-3 mb-5">
+          <button
             onClick={() => navigate("/settings")}
-            icon="tabler:arrow-left"
-            width="30"
-            height="30"
-            className="cursor-pointer"
-          />
-          <h1 className="text-2xl">Account Information</h1>
+            className="p-2 rounded-xl hover:bg-[#F4D9C6] transition-colors text-[#2C1A0E] cursor-pointer"
+          >
+            <Icon icon="tabler:arrow-left" width="24" height="24" />
+          </button>
+          <h1 className="text-2xl font-bold text-[#2C1A0E]">Account Information</h1>
         </div>
-        <section className="grid grid-cols-1 gap-4 w-150 px-12 py-5">
+        <section className="grid grid-cols-1 gap-3 px-2">
           {accountSettingList.map((elem, index) => (
             <SettingList
               type="AccountInfo"
@@ -85,15 +86,25 @@ console.log(activeUpdate);
           ))}
         </section>
       </section>
-      <section className="flex items-center justify-center  px-5">
-        {activeUpdate?(
 
-        <div className="flex flex-col items-center w-100 gap-5">
-          <Input type={activeUpdate.type} placeholder={activeUpdate.placeholder} />
-          <Button name={activeUpdate.name} isActive={true} />
-        </div>
-        ):(
-          <p className="text-2xl font-bold">Select a field to update</p>
+      <section className="flex items-center justify-center px-5">
+        {activeUpdate ? (
+          <div className="flex flex-col items-center w-90 gap-5 p-8 bg-[#FDF6EE] border border-[#E8D5C0] rounded-2xl">
+            <div className="bg-[#EEE7DB] rounded-full p-4">
+              <Icon icon="mdi:user-edit" width="32" height="32" className="text-[#A43919]" />
+            </div>
+            <h2 className="font-bold text-lg text-[#2C1A0E]">{activeUpdate.name}</h2>
+            <Input type={activeUpdate.type} placeholder={activeUpdate.placeholder} />
+            <Button name={activeUpdate.name} isActive={true} />
+          </div>
+        ) : (
+          <div className="flex flex-col items-center gap-3 text-center">
+            <div className="bg-[#EEE7DB] rounded-full p-5">
+              <Icon icon="mdi:user" width="40" height="40" className="text-[#B89880]" />
+            </div>
+            <p className="text-lg font-bold text-[#2C1A0E]">Select a field to update</p>
+            <p className="text-sm text-[#B89880]">Choose an option from the left to edit</p>
+          </div>
         )}
       </section>
     </main>
