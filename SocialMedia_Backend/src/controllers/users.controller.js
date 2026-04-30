@@ -45,7 +45,6 @@ const userRegister = asyncHandler(async (req, res) => {
   }
 
   const userProfilePic = await uploadOnCloudinary(profilePicLocalPath);
-console.log(userProfilePic);
 
   if (!userProfilePic) {
     throw new ApiError(400, "Failed to upload on cloudinary");
@@ -71,9 +70,5 @@ console.log(userProfilePic);
     .status(201)
     .json(new ApiResponse(200, createdUser, "User registered successfully"));
 });
-
-const testController=asyncHandler(async(req,res)=>{
-  return res.status(201).json(
-    new ApiResponse(201,"Success")
-  )
-})
+ 
+export {userRegister}
