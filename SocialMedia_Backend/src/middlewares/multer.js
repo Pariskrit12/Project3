@@ -1,15 +1,26 @@
 import multer from "multer";
-
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "./public/temp"); // Store uploaded files in the './public/temp' directory
+    cb(null, "./public/temp");
   },
   filename: function (req, file, cb) {
-    // Define how the uploaded file should be named
-   cb(null, Date.now() + "-" + file.originalname); // Use the original name of the uploaded file
+    cb(null, Date.now() + "-" + file.originalname);
   },
 });
 
+const fileFilter = (req, file, cb) => {
+  const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+  if (allowedTypes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(new Error("Only JPG, PNG and WEBP images are allowed"), false);
+  }
+};
+
 export const upload = multer({
   storage,
+  fileFilter,
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB
+  },
 });
