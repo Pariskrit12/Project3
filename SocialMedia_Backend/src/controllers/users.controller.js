@@ -3,6 +3,19 @@ import { ApiError } from "../utils/apiError.js";
 import { User } from "../models/user.models.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/apiResponse.js";
+const generateRefreshTokenAndAccessToken = async (userId) => {
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new ApiError(401, "User not found");
+  }
+  const accessToken = user.generateAccessToken();
+  const refreshToken = user.generateRefreshToken();
+
+  user.refreshToken = refreshToken;
+  await user.save({ validateBeforeSave: false });
+
+  return { accessToken, refreshToken };
+}
 
 const userRegister = asyncHandler(async (req, res) => {
   const { name, username, email, password, gender } = req.body;
