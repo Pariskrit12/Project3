@@ -16,48 +16,16 @@ const AccountInformation = () => {
   ];
 
   const updateFields = [
-    {
-      name: "Update Username",
-      key: "username",
-      type: "text",
-      placeholder: "New Username",
-    },
-    {
-      name: "Update Phone Number",
-      key: "phonenumber",
-      type: "number",
-      placeholder: "98********",
-    },
-    {
-      name: "Update Email",
-      key: "email",
-      type: "email",
-      placeholder: "New Email",
-    },
-    {
-      name: "Update Country",
-      key: "country",
-      type: "text",
-      placeholder: "Choose Country",
-    },
-    {
-      name: "Update Gender",
-      key: "gender",
-      type: "text",
-      placeholder: "Gender",
-    },
-    {
-      name: "Update Birth Date",
-      key: "birthdate",
-      type: "text",
-      placeholder: "Birth Date",
-    },
+    { name: "Update Username", key: "username", type: "text", placeholder: "New Username" },
+    { name: "Update Phone Number", key: "phonenumber", type: "number", placeholder: "98********" },
+    { name: "Update Email", key: "email", type: "email", placeholder: "New Email" },
+    { name: "Update Country", key: "country", type: "text", placeholder: "Choose Country" },
+    { name: "Update Gender", key: "gender", type: "text", placeholder: "Gender" },
+    { name: "Update Birth Date", key: "birthdate", type: "text", placeholder: "Birth Date" },
   ];
 
   const [activeField, setActiveField] = useState(null);
   const activeUpdate = updateFields.find((f) => f.key === activeField);
-  console.log(activeUpdate);
-
   const navigate = useNavigate();
 
   return (
@@ -66,13 +34,16 @@ const AccountInformation = () => {
         <div className="flex items-center gap-3 mb-5">
           <button
             onClick={() => navigate("/settings")}
-            className="p-2 rounded-xl hover:bg-[#F4D9C6] transition-colors text-[#2C1A0E] cursor-pointer"
+            className="p-2 rounded-xl hover:bg-[#FAEBD8] transition-colors text-[#1C0F08] border border-[#EDD9C8] bg-[#FFFCF9]"
           >
-            <Icon icon="tabler:arrow-left" width="24" height="24" />
+            <Icon icon="tabler:arrow-left" width="22" height="22" />
           </button>
-          <h1 className="text-2xl font-bold text-[#2C1A0E]">Account Information</h1>
+          <div>
+            <h1 className="text-2xl font-black text-[#1C0F08]">Account Info</h1>
+            <p className="text-sm text-[#9C7E6D]">Click a field to edit</p>
+          </div>
         </div>
-        <section className="grid grid-cols-1 gap-3 px-2">
+        <section className="grid grid-cols-1 gap-2.5 px-1">
           {accountSettingList.map((elem, index) => (
             <SettingList
               type="AccountInfo"
@@ -89,21 +60,25 @@ const AccountInformation = () => {
 
       <section className="flex items-center justify-center px-5">
         {activeUpdate ? (
-          <div className="flex flex-col items-center w-90 gap-5 p-8 bg-[#FDF6EE] border border-[#E8D5C0] rounded-2xl">
-            <div className="bg-[#EEE7DB] rounded-full p-4">
-              <Icon icon="mdi:user-edit" width="32" height="32" className="text-[#A43919]" />
+          <div className="flex flex-col items-center w-90 gap-5 p-8 bg-[#FFFCF9] border border-[#EDD9C8] rounded-2xl shadow-[0_4px_24px_rgba(164,57,25,0.1)]">
+            <div className="bg-linear-to-br from-[#AF503A] to-[#C7604A] rounded-2xl p-4 shadow-[0_4px_16px_rgba(164,57,25,0.3)]">
+              <Icon icon="mdi:user-edit" width="32" height="32" className="text-white" />
             </div>
-            <h2 className="font-bold text-lg text-[#2C1A0E]">{activeUpdate.name}</h2>
-            <Input type={activeUpdate.type} placeholder={activeUpdate.placeholder} />
+            <h2 className="font-black text-lg text-[#1C0F08]">{activeUpdate.name}</h2>
+            <div className="w-full">
+              <Input type={activeUpdate.type} placeholder={activeUpdate.placeholder} />
+            </div>
             <Button name={activeUpdate.name} isActive={true} />
           </div>
         ) : (
-          <div className="flex flex-col items-center gap-3 text-center">
-            <div className="bg-[#EEE7DB] rounded-full p-5">
-              <Icon icon="mdi:user" width="40" height="40" className="text-[#B89880]" />
+          <div className="flex flex-col items-center gap-4 text-center p-8">
+            <div className="bg-[#F0E6DD] rounded-full p-6 shadow-inner">
+              <Icon icon="mdi:user" width="44" height="44" className="text-[#C9A88A]" />
             </div>
-            <p className="text-lg font-bold text-[#2C1A0E]">Select a field to update</p>
-            <p className="text-sm text-[#B89880]">Choose an option from the left to edit</p>
+            <div>
+              <p className="text-lg font-bold text-[#1C0F08]">Select a field to update</p>
+              <p className="text-sm text-[#9C7E6D] mt-1">Choose an option from the left to edit</p>
+            </div>
           </div>
         )}
       </section>

@@ -1,34 +1,39 @@
 import React from "react";
 import SettingList from "../components/SettingComponent/SettingList";
+import { Icon } from "@iconify/react";
 
 const Setting = () => {
   const settingList = [
     {
       name: "Account Information",
       icon: "mdi:user",
-      description:
-        "See your account information like your phone number and email address",
-      path: "/settings/accountInformation",
+      description: "See your account info like phone number and email",
+      path: "settings/accountInformation",
     },
     {
       name: "Change your password",
       icon: "carbon:password",
-      description: "Change your password any time",
-      path: "/settings/changePassword",
+      description: "Change your password at any time",
+      path: "settings/changePassword",
     },
     {
       name: "Deactivate your account",
       icon: "picon:heartbroken",
       description: "Find out how you can deactivate your account",
-      path: "/settings/deactivateAccount",
+      path: "settings/deactivateAccount",
     },
   ];
 
   return (
-    <main className="w-200 max-w-full">
-      <div className="mb-5">
-        <h1 className="font-bold text-2xl text-[#2C1A0E]">Settings</h1>
-        <p className="text-sm text-[#B89880] mt-0.5">Manage your account preferences</p>
+    <main className="max-w-2xl">
+      <div className="mb-6 flex items-center gap-4">
+        <div className="bg-linear-to-br from-[#AF503A] to-[#C7604A] p-3 rounded-2xl shadow-[0_4px_16px_rgba(164,57,25,0.3)]">
+          <Icon icon="lets-icons:setting-fill" width="26" height="26" className="text-white" />
+        </div>
+        <div>
+          <h1 className="font-black text-2xl text-[#1C0F08]">Settings</h1>
+          <p className="text-sm text-[#9C7E6D]">Manage your account preferences</p>
+        </div>
       </div>
       <section className="grid grid-cols-1 gap-3">
         {settingList.map((elem, index) => (

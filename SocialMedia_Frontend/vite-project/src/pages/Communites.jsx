@@ -11,6 +11,7 @@ const Communites = () => {
   const [ruleInput, setRuleInput] = useState("");
 
   const addRuleHandler = () => {
+    if (!ruleInput.trim()) return;
     setRules([...rules, ruleInput]);
     setRuleInput("");
     setOpen(false);
@@ -23,8 +24,7 @@ const Communites = () => {
       uploadedTime: "2h ago",
       titleOfPost: "Trying to fix my routine",
       image: "./Sharbani.png",
-      description:
-        "Lately I've been trying to wake up early, reduce screen time, and focus more on productivity. It's hard but slowly improving day by day.",
+      description: "Lately I've been trying to wake up early, reduce screen time, and focus more on productivity. It's hard but slowly improving day by day.",
     },
     {
       communityName: "Football",
@@ -32,8 +32,7 @@ const Communites = () => {
       uploadedTime: "3h ago",
       titleOfPost: "What a match last night!",
       image: "./post2.jpg",
-      description:
-        "That last-minute goal completely changed the game. One of the most intense matches I've seen this season.",
+      description: "That last-minute goal completely changed the game. One of the most intense matches I've seen this season.",
     },
     {
       communityName: "F1",
@@ -41,8 +40,7 @@ const Communites = () => {
       uploadedTime: "2h ago",
       titleOfPost: "Crazy qualifying session",
       image: "./post3.jpg",
-      description:
-        "The lap times were insanely close today. One small mistake and you're out of the top 10.",
+      description: "The lap times were insanely close today. One small mistake and you're out of the top 10.",
     },
   ];
 
@@ -50,53 +48,44 @@ const Communites = () => {
 
   return (
     <main>
-      <section className="relative rounded-2xl overflow-hidden">
-        <img className="w-full h-48 object-cover" src="./Banner1.jpg" />
-        <div className="absolute left-5 -bottom-10 border-[6px] border-[#FEF7ED] rounded-full shadow-lg">
-          <img
-            className="w-20 h-20 object-cover rounded-full"
-            src="./Sharbani.png"
-            alt=""
-          />
+      <section className="relative rounded-2xl overflow-hidden shadow-[0_4px_20px_rgba(164,57,25,0.15)]">
+        <img className="w-full h-48 object-cover" src="./Banner1.jpg" alt="banner" />
+        <div className="absolute inset-0 bg-linear-to-t from-[#1C0F08]/40 to-transparent"></div>
+        <div className="absolute left-5 -bottom-10 border-[5px] border-[#FFF7F0] rounded-full shadow-[0_4px_20px_rgba(164,57,25,0.25)]">
+          <img className="w-20 h-20 object-cover rounded-full" src="./Sharbani.png" alt="community" />
         </div>
       </section>
 
-      <section className="ml-32 mt-4 mb-4">
+      <section className="ml-32 mt-5 mb-4">
         <div className="flex justify-between items-center">
-          <h1 className="text-xl font-bold text-[#2C1A0E]">Personal Life</h1>
+          <div>
+            <h1 className="text-2xl font-black text-[#1C0F08]">Personal Life</h1>
+            <p className="text-sm text-[#9C7E6D] flex items-center gap-1 mt-0.5">
+              <Icon icon="mdi:account-group" width="14" height="14" />
+              124 members
+            </p>
+          </div>
           <div className="flex gap-2 items-center">
-            <button className="p-2 rounded-xl hover:bg-[#F4D9C6] transition-colors">
-              <Icon
-                className="text-[#AF503A]"
-                icon="clarity:notification-solid"
-                width="22"
-                height="22"
-              />
+            <button className="p-2 rounded-xl hover:bg-[#FAEBD8] transition-colors border border-[#EDD9C8] bg-[#FFFCF9]">
+              <Icon className="text-[#AF503A]" icon="clarity:notification-solid" width="20" height="20" />
             </button>
             <Button name="Create Post" icon="ic:round-plus" isActive={true} />
             <Button name="Join" />
-            <button className="p-2 rounded-xl hover:bg-[#F4D9C6] transition-colors">
-              <Icon
-                className="text-[#AF503A]"
-                icon="pepicons-pop:dots-x"
-                width="20"
-                height="20"
-              />
+            <button className="p-2 rounded-xl hover:bg-[#FAEBD8] transition-colors border border-[#EDD9C8] bg-[#FFFCF9]">
+              <Icon className="text-[#AF503A]" icon="pepicons-pop:dots-x" width="18" height="18" />
             </button>
           </div>
         </div>
       </section>
 
-      <section className="grid grid-cols-[2.3fr_1fr] mt-3 gap-4">
-        <section className="grid grid-cols-1 gap-3">
-          <div>
-            <Dropdown
-              icon="ep:arrow-down-bold"
-              value={filter}
-              options={["Best", "Hot", "Top", "New"]}
-              onSelect={(val) => setFilter(val)}
-            />
-          </div>
+      <section className="grid grid-cols-[2.3fr_1fr] mt-4 gap-5">
+        <section className="grid grid-cols-1 gap-4">
+          <Dropdown
+            icon="ep:arrow-down-bold"
+            value={filter}
+            options={["Best", "Hot", "Top", "New"]}
+            onSelect={(val) => setFilter(val)}
+          />
           <div className="grid grid-cols-1 gap-4">
             {posts.map((elem, index) => (
               <Cards
@@ -112,28 +101,41 @@ const Communites = () => {
           </div>
         </section>
 
-        <section className="border border-[#E8D5C0] bg-[#FDF6EE] rounded-2xl max-h-fit sticky top-25 overflow-hidden">
-          <div className="p-4 border-b border-[#E8D5C0]">
-            <p className="font-bold text-[#2C1A0E]">Personal Life</p>
-            <p className="text-sm text-[#B89880] mt-2 leading-relaxed">
-              A community for discussing anything related to personal life,
-              daily experiences, relationships, and self-growth. Share your
-              thoughts, stories, and advice. Join the conversation and connect
-              with others going through similar journeys.
+        <section className="border border-[#EDD9C8] bg-[#FFFCF9] rounded-2xl max-h-fit sticky top-20 overflow-hidden shadow-[0_4px_20px_rgba(164,57,25,0.08)]">
+          <div className="p-4 border-b border-[#EDD9C8]">
+            <p className="font-black text-[#1C0F08]">About Community</p>
+            <p className="text-sm text-[#4A2C1D] mt-2.5 leading-relaxed">
+              A community for discussing anything related to personal life, daily
+              experiences, relationships, and self-growth.
             </p>
-            <p className="text-xs text-[#B89880] mt-2">Created Dec 31, 2026</p>
-            <div className="flex flex-col mt-3">
-              <p className="font-bold text-lg text-[#2C1A0E]">124</p>
-              <p className="text-xs text-[#B89880]">Members</p>
+            <p className="text-xs text-[#C9A88A] mt-2 flex items-center gap-1">
+              <Icon icon="mdi:calendar" width="12" height="12" />
+              Created Dec 31, 2026
+            </p>
+            <div className="flex gap-4 mt-3">
+              <div>
+                <p className="font-black text-xl text-[#1C0F08]">124</p>
+                <p className="text-xs text-[#9C7E6D]">Members</p>
+              </div>
+              <div>
+                <p className="font-black text-xl text-[#1C0F08]">48</p>
+                <p className="text-xs text-[#9C7E6D]">Online</p>
+              </div>
             </div>
           </div>
 
           <div className="p-4">
-            <p className="font-bold text-sm text-[#2C1A0E] uppercase tracking-wide mb-3">Personal Life Rules</p>
-            <div className="grid grid-cols-1 gap-2">
+            <p className="font-black text-sm text-[#1C0F08] uppercase tracking-wide mb-3 flex items-center gap-2">
+              <Icon icon="mdi:shield-check" width="16" height="16" className="text-[#AF503A]" />
+              Community Rules
+            </p>
+            <div className="flex flex-col gap-2">
+              {rules.length === 0 && (
+                <p className="text-sm text-[#C9A88A] italic">No rules added yet</p>
+              )}
               {rules.map((elem, index) => (
-                <div className="text-sm text-[#5C4033] flex gap-2" key={index}>
-                  <span className="font-bold text-[#A43919]">{index + 1}.</span>
+                <div className="text-sm text-[#4A2C1D] flex gap-2" key={index}>
+                  <span className="font-black text-[#AF503A] shrink-0">{index + 1}.</span>
                   <span>{elem}</span>
                 </div>
               ))}
@@ -141,7 +143,7 @@ const Communites = () => {
             {open && (
               <div className="mt-3">
                 <Input
-                  placeholder="Enter Rules"
+                  placeholder="Enter rule..."
                   value={ruleInput}
                   onChange={(e) => setRuleInput(e.target.value)}
                 />
@@ -149,9 +151,10 @@ const Communites = () => {
             )}
             <div className="flex w-full justify-center mt-4">
               <Button
-                name={open ? "Enter" : "Add Rules"}
+                name={open ? "Add Rule" : "Add Rules"}
                 isActive={true}
                 onClick={open ? addRuleHandler : () => setOpen(true)}
+                icon={open ? "ic:round-plus" : "ic:round-plus"}
               />
             </div>
           </div>

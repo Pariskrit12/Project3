@@ -19,7 +19,7 @@ import New from "./pages/New";
 import Communites from "./pages/Communites";
 
 const PageWrapper = ({ children }) => (
-  <div className="px-4 py-5">{children}</div>
+  <div className="px-5 py-6">{children}</div>
 );
 
 const App = () => {
@@ -63,7 +63,7 @@ const App = () => {
         </Routes>
       ) : (
         <div
-          className={`grid ${hideRecentPost ? "grid-cols-[1fr_4fr]" : "grid-cols-[1fr_3fr_1.25fr]"} `}
+          className={`grid min-h-screen ${hideRecentPost ? "grid-cols-[1fr_4fr]" : "grid-cols-[1fr_3fr_1.25fr]"}`}
         >
           <div className="sticky top-0 h-screen overflow-y-auto">
             <Sidebar />
