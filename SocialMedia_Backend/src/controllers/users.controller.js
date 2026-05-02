@@ -16,7 +16,6 @@ const generateRefreshTokenAndAccessToken = async (userId) => {
 
   return { accessToken, refreshToken };
 }
-
 const userRegister = asyncHandler(async (req, res) => {
   const { name, username, email, password, gender } = req.body;
 
@@ -126,5 +125,73 @@ const userLogin = asyncHandler(async (req, res) => {
       ),
     );
 });
- 
+const logoutUser = asyncHandler(async (req, res) => {
+  await User.findByIdAndUpdate(
+    req.user._id,
+    {
+      $unset: {
+        refreshToken: 1,
+      },
+    },
+    {
+      new: true,
+    }
+  );
+  const options = {
+    httpOnly: true,
+    secure: false,
+  };
+  return res
+    .status(200)
+    .clearCookie("accessToken", options) //clearing cookie
+    .clearCookie("refreshToken", options)
+    .json(new ApiResponse(200, {}, "User logged out successfully"));
+});
+const changeEmail = asyncHandler(async (req, res) => {
+  const userId = req.user?._id;
+
+  if (!userId) {
+    throw new ApiError(401, "Unauthorized");
+  }
+
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  const { oldEmail, newEmail } = req.body;
+
+  if (!oldEmail || !newEmail) {
+    throw new ApiError(400, "All fields are required");
+  }
+
+  if (oldEmail !== user.email) {
+    throw new ApiError(400, "Current email does not match");
+  }
+
+  if (oldEmail === newEmail) {
+    throw new ApiError(400, "New email must be different from current email");
+  }
+
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+  if (!emailRegex.test(newEmail)) {
+    throw new ApiError(400, "Please provide a valid email address");
+  }
+
+  const alreadyExistingUserWithEmail = await User.findOne({
+    email: newEmail,
+  });
+
+  if (alreadyExistingUserWithEmail) {
+    throw new ApiError(409, "Email already in use");
+  }
+
+  user.email = newEmail;
+  await user.save({ validateBeforeSave: false });
+
+  return res.status(200).json(
+    new ApiResponse(200, {}, "Email changed successfully")
+  );
+});
 export {userRegister,userLogin}
