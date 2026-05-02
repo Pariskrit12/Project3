@@ -194,4 +194,70 @@ const changeEmail = asyncHandler(async (req, res) => {
     new ApiResponse(200, {}, "Email changed successfully")
   );
 });
-export {userRegister,userLogin}
+const changePassword = asyncHandler(async (req, res) => {
+  const userId = req.user?._id;
+
+  const { oldPassword, newPassword, confirmPassword } = req.body;
+
+
+  if (!oldPassword || !newPassword || !confirmPassword) {
+    throw new ApiError(400, "All fields are required");
+  }
+
+
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+
+  const isPasswordCorrect = await user.isPasswordCorrect(oldPassword);
+  if (!isPasswordCorrect) {
+    throw new ApiError(401, "Old password is incorrect");
+  }
+
+
+  if (oldPassword === newPassword) {
+    throw new ApiError(400, "New password cannot be same as old password");
+  }
+
+
+  const passwordRegex =
+    /^(?=.[a-z])(?=.[A-Z])(?=.\d)(?=.[@$!%?&])[A-Za-z\d@$!%?&]{8,20}$/;
+
+  if (!passwordRegex.test(newPassword)) {
+    throw new ApiError(
+      400,
+      "Password must be 8–20 characters and include uppercase, lowercase, number, and special character"
+    );
+  }
+
+
+  if (newPassword !== confirmPassword) {
+    throw new ApiError(400, "Passwords do not match");
+  }
+
+
+  user.password = newPassword;
+
+ 
+  user.refreshToken = undefined;
+
+  await user.save();
+
+
+  const options = {
+    httpOnly: true,
+    secure: false,
+   
+  };
+
+  return res
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .status(200)
+    .json(
+      new ApiResponse(200, null, "Password changed successfully. Please login again.")
+    );
+});
+export {userRegister,userLogin,logoutUser,changeEmail,changePassword}
