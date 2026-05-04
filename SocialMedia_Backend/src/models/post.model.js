@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-
+import { ApiError } from "../utils/apiError";
 const postSchema = new Schema(
   {
     creator: {
@@ -15,16 +15,11 @@ const postSchema = new Schema(
       type: String,
       trim: true,
     },
-    images: [
+    media: [
       {
-        url: { type: String, required: true },
-        publicId: { type: String, required: true },
-      },
-    ],
-    videos: [
-      {
-        url: { type: String, required: true },
-        publicId: { type: String, required: true },
+        type: "image" | "video",
+        url: String,
+        publicId: String,
       },
     ],
     community: {
@@ -55,7 +50,7 @@ const postSchema = new Schema(
   { timestamps: true },
 );
 //check if post is empty
-postSchema.pre("save", function (next) {
+postSchema.pre(["save", "findOneAndUpdate"], function (next) {
   const hasText =
     (this.postTitle && this.postTitle.trim().length > 0) ||
     (this.postDescription && this.postDescription.trim().length > 0);
@@ -65,7 +60,7 @@ postSchema.pre("save", function (next) {
     (this.videos && this.videos.length > 0);
 
   if (!hasText && !hasMedia) {
-    return next(new Error("Post cannot be empty"));
+    return next(new ApiError(400, "Post cannot be empty"));
   }
   next();
 });
