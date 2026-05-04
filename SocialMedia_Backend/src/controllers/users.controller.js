@@ -3,6 +3,7 @@ import { ApiError } from "../utils/apiError.js";
 import { User } from "../models/user.models.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/apiResponse.js";
+import {v2 as cloudinary} from "cloudinary"
 const generateRefreshTokenAndAccessToken = async (userId) => {
   const user = await User.findById(userId);
   if (!user) {
@@ -258,6 +259,47 @@ const changePassword = asyncHandler(async (req, res) => {
     .status(200)
     .json(
       new ApiResponse(200, null, "Password changed successfully. Please login again.")
+    );
+});
+const changeUserProfilePic = asyncHandler(async (req, res) => {
+  const userId = req.user?._id;
+  if (!userId) {
+    throw new ApiError(401, "Unauthorized access");
+  }
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  const userProfilePicLocalPath = req.file?.path;
+  if (!userProfilePicLocalPath) {
+    throw new ApiError(400, "Profile picture is required");
+  }
+
+  const uploadedImage = await uploadOnCloudinary(userProfilePicLocalPath);
+  if (!uploadedImage) {
+    throw new ApiError(400, "User profile pic failed to upload on cloudinary");
+  }
+  if (user.userProfilePicPublicId) {
+    try {
+      await cloudinary.uploader.destroy(user.userProfilePicPublicId);
+    } catch (error) {
+      console.log("Old profile pic delete failed:", error);
+    }
+  }
+
+  user.userProfilePic = uploadedImage.url;
+  user.userProfilePicPublicId = uploadedImage.public_id;
+  await user.save();
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { profilePic: user.userProfilePic },
+        "Successfully updated user profile pic",
+      ),
     );
 });
 export {userRegister,userLogin,logoutUser,changeEmail,changePassword}
