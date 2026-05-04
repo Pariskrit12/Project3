@@ -302,4 +302,41 @@ const changeUserProfilePic = asyncHandler(async (req, res) => {
       ),
     );
 });
-export {userRegister,userLogin,logoutUser,changeEmail,changePassword}
+const changeUsername = asyncHandler(async (req, res) => {
+  const userId = req.user?._id;
+
+  if (!userId) {
+    throw new ApiError(401, "Unauthorized access");
+  }
+
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  const { username } = req.body;
+  if (!username) {
+    throw new ApiError(400, "Username field is required");
+  }
+  if (user.username === username) {
+    throw new ApiError(400, "You already have this username");
+  }
+
+  const existingUser = await User.findOne({ username });
+  if (existingUser) {
+    throw new ApiError(409, "Username already taken");
+  }
+  user.username = username.toLowerCase();
+  await user.save();
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { newUsername: username.toLowerCase() },
+        "Username successfully updated",
+      ),
+    );
+});
+export {userRegister,userLogin,logoutUser,changeEmail,changePassword,changeUserProfilePic,changeUsername}
