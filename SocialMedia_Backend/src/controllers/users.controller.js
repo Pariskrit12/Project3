@@ -334,7 +334,25 @@ const changeUsername = asyncHandler(async (req, res) => {
       ),
     );
 });
+const getCurrentUser = asyncHandler(async (req, res) => {
+  const userId = req.user?._id;
+  if (!userId) {
+    throw new ApiError(401, "Unauthorized access");
+  }
 
+  const currentUser = await User.findById(userId).select(
+    "-password -refreshToken",
+  );
+  if (!currentUser) {
+    throw new ApiError(404, "User not found");
+  }
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, currentUser, "Successfully fetched current user"),
+    );
+});
 
 export {
   userRegister,
@@ -344,4 +362,5 @@ export {
   changePassword,
   changeUserProfilePic,
   changeUsername,
+  getCurrentUser
 };
