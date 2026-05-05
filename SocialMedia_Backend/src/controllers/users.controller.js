@@ -333,7 +333,9 @@ const changeUsername = asyncHandler(async (req, res) => {
         "Username successfully updated",
       ),
     );
-}); 
+});
+
+
 export {
   userRegister,
   userLogin,
