@@ -89,4 +89,28 @@ const getPostById = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, post, "Post By id is fetched successfully"));
 });
 
+const getPostOfLoggedInUser = asyncHandler(async (req, res) => {
+  const userId = req.user?._id;
+
+  if (!userId) {
+    throw new ApiError(401, "Unauthorized access");
+  }
+
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  const postsOfUser = await Post.find({ creator: userId });
+
+  if (postsOfUser.length===0) {
+    throw new ApiError(404, "Post of users not found");
+  }
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, postsOfUser, "Posts of user successfully fetched"),
+    );
+});
 export { createPost };
