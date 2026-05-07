@@ -378,6 +378,45 @@ const getAllUsers = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, allUsers, "Fetched all users successfully"));
 });
+const followUser = asyncHandler(async (req, res) => {
+
+  const loggedInUserId = req.user?._id;
+  if (!loggedInUserId) {
+    throw new ApiError(401, "Unauthorized access");
+  }
+
+  const { id: userId } = req.params;
+  if (!userId) {
+    throw new ApiError(404, "User id not found");
+  }
+  if (loggedInUserId === userId) {
+    throw new ApiError(400, "You cannot follow yourself");
+  }
+  const loggedInUser = await User.findById(loggedInUserId);
+  const user = await User.findById(userId);
+  if (!loggedInUser) {
+    throw new ApiError(404, "Logged In user not found");
+  }
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+  const alreadyFollowing = loggedInUser.following.includes(userId);
+  if (alreadyFollowing) {
+    throw new ApiError(400, "You are already following this user");
+  }
+
+  await User.findByIdAndUpdate(loggedInUserId, {
+    $push: { following: userId },
+  });
+
+  await User.findByIdAndUpdate(userId, {
+    $push: { followers: loggedInUserId },
+  });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "User followed successfully"));
+});
 
 
 export {
@@ -390,5 +429,6 @@ export {
   changeUsername,
   getCurrentUser,
   getUserProfileById,
-  getAllUsers
+  getAllUsers,
+  followUser
 };
