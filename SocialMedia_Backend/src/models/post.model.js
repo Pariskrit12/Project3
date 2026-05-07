@@ -17,9 +17,16 @@ const postSchema = new Schema(
     },
     media: [
       {
-        type: "image" | "video",
-        url: String,
-        publicId: String,
+        type: {
+          type: String,
+          enum: ["image", "video"],
+        },
+        url: {
+          type: String,
+        },
+        publicId: {
+          type: String,
+        },
       },
     ],
     community: {
