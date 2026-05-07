@@ -9,11 +9,20 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-  const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+  const allowedTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+    "video/mp4",
+    "video/mov",
+    "video/quicktime",
+    "video/webm",
+    "video/x-matroska",
+  ];
   if (allowedTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new Error("Only JPG, PNG and WEBP images are allowed"), false);
+    cb(new Error("Only JPG, PNG, WEBP images and MP4, MOV, WEBM, MKV videos are allowed"), false);
   }
 };
 
@@ -21,6 +30,6 @@ export const upload = multer({
   storage,
   fileFilter,
   limits: {
-    fileSize: 5 * 1024 * 1024, // 5MB
+    fileSize: 50 * 1024 * 1024, // 50MB
   },
 });
