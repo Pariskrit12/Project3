@@ -378,6 +378,8 @@ const getAllUsers = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, allUsers, "Fetched all users successfully"));
 });
+
+
 export {
   userRegister,
   userLogin,
