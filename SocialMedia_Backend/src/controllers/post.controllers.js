@@ -101,16 +101,41 @@ const getPostOfLoggedInUser = asyncHandler(async (req, res) => {
     throw new ApiError(404, "User not found");
   }
 
-  const postsOfUser = await Post.find({ creator: userId });
+  const postsOfLoggedInUser = await Post.find({ creator: userId })
+    .populate("communitie")
+    .populate("creator");
 
-  if (postsOfUser.length===0) {
+  if (postsOfUser.length === 0) {
     throw new ApiError(404, "Post of users not found");
   }
 
   return res
     .status(200)
     .json(
-      new ApiResponse(200, postsOfUser, "Posts of user successfully fetched"),
+      new ApiResponse(
+        200,
+        postsOfLoggedInUser,
+        "Posts of user successfully fetched",
+      ),
     );
+});
+
+const getPostOfUserById = asyncHandler(async (req, res) => {
+  const { userId } = req.params;
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  const postOfUser = await Post.find({ creator: userId })
+    .populate("communitie")
+    .populate("creator");
+  if (postOfUser.length === 0) {
+    throw new ApiError(404, "User post not found");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, postOfUser, "Successfully fetched user post"));
 });
 export { createPost };
