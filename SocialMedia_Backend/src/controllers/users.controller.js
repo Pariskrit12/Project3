@@ -417,6 +417,47 @@ const followUser = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, {}, "User followed successfully"));
 });
+const unfollowUser = asyncHandler(async (req, res) => {
+  const { id: userId } = req.params;
+  const loggedInUserId = req?.user?._id;
+
+  if (!userId || !loggedInUserId) {
+    throw new ApiError(401, "Unauthorized access");
+  }
+
+  if (userId === loggedInUserId.toString()) {
+    throw new ApiError(400, "You cannot unfollow yourself");
+  }
+
+  const loggedInUser = await User.findById(loggedInUserId);
+  if (!loggedInUser) {
+    throw new ApiError(404, "Logged In user not found");
+  }
+
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  const alreadyFollowing = loggedInUser.following.includes(userId);
+  if (!alreadyFollowing) {
+    throw new ApiError(400, "You are not following this user");
+  }
+
+
+  await User.findByIdAndUpdate(loggedInUserId, {
+    $pull: { following: userId },
+  });
+
+ 
+  await User.findByIdAndUpdate(userId, {
+    $pull: { followers: loggedInUserId },
+  });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "Unfollowed successfully"));
+});
 
 
 export {
@@ -430,5 +471,6 @@ export {
   getCurrentUser,
   getUserProfileById,
   getAllUsers,
-  followUser
+  followUser,
+  unfollowUser
 };
