@@ -64,13 +64,29 @@ const createPost = asyncHandler(async (req, res) => {
 
 const getAllPost = asyncHandler(async (req, res) => {
   const allPost = await Post.find().populate("creator").populate("community");
-  if (allPost.length===0) {
+  if (allPost.length === 0) {
     throw new ApiError(404, "Failed to find any post");
   }
 
   return res
     .status(200)
     .json(new ApiResponse(200, allPost, "Fetched all post successfully"));
+});
+
+const getPostById = asyncHandler(async (req, res) => {
+  const { postId } = req.params;
+
+  const post = await Post.findById(postId)
+    .populate("creator")
+    .populate("community")
+    .populate("comments");
+  if (!post) {
+    throw new ApiError(404, "Post not found");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, post, "Post By id is fetched successfully"));
 });
 
 export { createPost };
