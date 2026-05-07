@@ -4,6 +4,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { Post } from "../models/post.model.js";
 import { ApiResponse } from "../utils/apiResponse.js";
+import { v2 as cloudinary } from "cloudinary";
 const createPost = asyncHandler(async (req, res) => {
   const { communitieId } = req.params;
   const userId = req.user?._id;
@@ -137,5 +138,44 @@ const getPostOfUserById = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(new ApiResponse(200, postOfUser, "Successfully fetched user post"));
+});
+
+const deletePost = asyncHandler(async (req, res) => {
+  const { postId } = req.params;
+  const userId = req.user?._id;
+
+  if (!userId) {
+    throw new ApiError(401, "Unauthorized access");
+  }
+
+  const loggedInUser = await User.findById(userId);
+  if (!loggedInUser) {
+    throw new ApiError(404, "User not found");
+  }
+
+  const post = await Post.findById(postId);
+  if (!post) {
+    throw new ApiError(404, "Post not found");
+  }
+
+  if (post.creator.toString() !== userId.toString()) {
+    throw new ApiError(403, "You are not authorized to delete this post");
+  }
+
+  if (post.media.length > 0) {
+    await Promise.all(
+      post.media.map((item) =>
+        cloudinary.uploader.destroy(item.publicId, {
+          resource_type: item.type === "video" ? "video" : "image",
+        }),
+      ),
+    );
+  }
+
+  await Post.findByIdAndDelete(postId);
+  
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "Post deleted successfully"));
 });
 export { createPost };
