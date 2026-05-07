@@ -1,0 +1,65 @@
+import { User } from "../models/user.models.js";
+import { ApiError } from "../utils/apiError.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { Post } from "../models/post.model.js";
+import { ApiResponse } from "../utils/apiResponse.js";
+const createPost = asyncHandler(async (req, res) => {
+  const { communitieId } = req.params;
+  const userId = req.user?._id;
+
+  if (!userId) {
+    throw new ApiError(401, "Unauthorized access");
+  }
+
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  const { postTitle, postDescription } = req.body;
+
+  const hasText =
+    (postTitle && postTitle.trim().length > 0) ||
+    (postDescription && postDescription.trim().length > 0);
+
+  const hasMedia = req?.files?.length > 0;
+
+  if (!hasText && !hasMedia) {
+    throw new ApiError(400, "Post cannot be empty");
+  }
+
+  const mediaArray = [];
+
+  if (req?.files?.length > 0) {
+    for (const file of req.files) {
+      try {
+        const uploadedImage = await uploadOnCloudinary(file.path);
+
+        mediaArray.push({
+          type: file.mimetype.startsWith("image") ? "image" : "video",
+          url: uploadedImage.url,
+          publicId: uploadedImage.public_id,
+        });
+      } catch (error) {
+        throw new ApiError(500, "Failed to upload in cloudinary");
+      }
+    }
+  }
+
+  const post = await Post.create({
+    postTitle,
+    postDescription,
+    media: mediaArray,
+    creator: userId,
+    community: communitieId || null,
+  });
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, { createdPost: post }, "Successfully Created Post"),
+    );
+});
+
+export { createPost };
