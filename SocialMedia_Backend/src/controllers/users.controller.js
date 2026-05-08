@@ -489,7 +489,29 @@ const getFollowers = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, user.followers, "Fetched user followers successfully"));
 });
+const getFollowing = asyncHandler(async (req, res) => {
+  const userId = req.user?._id;
 
+  if (!userId) {
+    throw new ApiError(401, "Unauthorized acess");
+  }
+
+  const user = await User.findById(userId).populate("following");
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        user.following,
+        "User following successfully fetched",
+      ),
+    );
+});
 export {
   userRegister,
   userLogin,
@@ -504,5 +526,6 @@ export {
   followUser,
   unfollowUser,
   deactivateAccount,
-  getFollowers
+  getFollowers,
+  getFollowing
 };
