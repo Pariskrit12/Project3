@@ -319,4 +319,5 @@ export {
   deletePost,
   likePost,
   dislikePost,
+  updatePost,
 };
