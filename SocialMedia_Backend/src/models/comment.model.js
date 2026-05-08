@@ -20,6 +20,14 @@ const commentSchema = new Schema({
       default: [],
     },
   ],
+
+  image: {
+    type: String,
+    default: "",
+  },
+  imagePublicId: {
+    type: String,
+  },
   description: {
     type: String,
     required: true,
