@@ -174,7 +174,6 @@ const deletePost = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, "Post deleted successfully"));
 });
-
 const likePost = asyncHandler(async (req, res) => {
   const userId = req.user?._id;
   const { id: postId } = req.params;
@@ -202,9 +201,47 @@ const likePost = asyncHandler(async (req, res) => {
   }
   await post.save();
 
-  return res.status(200).json(
-     new ApiResponse(200,"Post liked successfully")
-  )
+  return res.status(200).json(new ApiResponse(200, "Post liked successfully"));
+});
+const dislikePost = asyncHandler(async (req, res) => {
+  const userId = req.user?._id;
+  const { id: postId } = req.params;
+  if (!userId) {
+    throw new ApiError(401, "Unauthorized access");
+  }
+
+  const post = await Post.findById(postId);
+  if (!post) {
+    throw new ApiError(404, "Post not found");
+  }
+
+  const alreadyDisliked = post.dislikes.some(
+    (id) => id.toString() === userId.toString(),
+  );
+  const alreadyLiked = post.likes.some(
+    (id) => id.toString() === userId.toString(),
+  );
+let message="";
+  if (alreadyDisliked) {
+    post.dislikes = post.dislikes.filter(
+      (id) => id.toString() !== userId.toString(),
+    );
+    message="Disliked removed"
+  } else {
+    post.dislikes.push(userId);
+    message="Post disliked successfully"
+    if (alreadyLiked) {
+      post.likes = post.likes.filter(
+        (id) => id.toString() !== userId.toString(),
+      );
+    }
+  }
+
+  await post.save();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, post,message));
 });
 
 export {
