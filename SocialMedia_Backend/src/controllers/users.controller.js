@@ -455,24 +455,26 @@ const unfollowUser = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, {}, "Unfollowed successfully"));
 });
+const deactivateAccount = asyncHandler(async (req, res) => {
+  const userId = req.user?._id;
 
-const getFollowingCount = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user?._id);
+  if (!userId) {
+    throw new ApiError(401, "Unauthorized access");
+  }
 
+  const user = await User.findById(userId);
   if (!user) {
     throw new ApiError(404, "User not found");
   }
 
+  user.accountStatus = "deactivated";
+  await user.save({ validateBeforeSave: false });
+
   return res
     .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        user.following.length,
-        "User following count fetched",
-      ),
-    );
+    .json(new ApiResponse(200, "User account deactivated successfully"));
 });
+
 
 export {
   userRegister,
@@ -487,4 +489,5 @@ export {
   getAllUsers,
   followUser,
   unfollowUser,
+  deactivateAccount
 };
