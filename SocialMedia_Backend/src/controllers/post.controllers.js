@@ -180,28 +180,34 @@ const likePost = asyncHandler(async (req, res) => {
   if (!userId) {
     throw new ApiError(401, "Unauthorized access");
   }
-
-  const user = await User.findById(userId);
-  if (!user) {
-    throw new ApiError(404, "User not found");
-  }
-
   const post = await Post.findById(postId);
   if (!post) {
     throw new ApiError(404, "Post not found");
   }
-
+  const alreadyDisliked = post.dislikes.some(
+    (id) => id.toString() === userId.toString(),
+  );
   const alreadyLiked = post.likes.some(
     (id) => id.toString() === userId.toString(),
   );
+  let message = "";
   if (alreadyLiked) {
     post.likes = post.likes.filter((id) => id.toString() !== userId.toString());
+    message = "Like removed";
   } else {
     post.likes.push(userId);
+    if (alreadyDisliked) {
+      post.dislikes = post.dislikes.filter(
+        (id) => id.toString() !== userId.toString(),
+      );
+    }
+    message = "Liked post successfully";
   }
   await post.save();
 
-  return res.status(200).json(new ApiResponse(200, "Post liked successfully"));
+  return res
+    .status(200)
+    .json(new ApiResponse(200, post, message));
 });
 const dislikePost = asyncHandler(async (req, res) => {
   const userId = req.user?._id;
@@ -221,15 +227,15 @@ const dislikePost = asyncHandler(async (req, res) => {
   const alreadyLiked = post.likes.some(
     (id) => id.toString() === userId.toString(),
   );
-let message="";
+  let message = "";
   if (alreadyDisliked) {
     post.dislikes = post.dislikes.filter(
       (id) => id.toString() !== userId.toString(),
     );
-    message="Disliked removed"
+    message = "Disliked removed";
   } else {
     post.dislikes.push(userId);
-    message="Post disliked successfully"
+    message = "Post disliked successfully";
     if (alreadyLiked) {
       post.likes = post.likes.filter(
         (id) => id.toString() !== userId.toString(),
@@ -239,9 +245,7 @@ let message="";
 
   await post.save();
 
-  return res
-    .status(200)
-    .json(new ApiResponse(200, post,message));
+  return res.status(200).json(new ApiResponse(200, post, message));
 });
 
 export {
