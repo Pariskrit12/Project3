@@ -5,6 +5,7 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { Post } from "../models/post.model.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import { v2 as cloudinary } from "cloudinary";
+
 const createPost = asyncHandler(async (req, res) => {
   const { communitieId } = req.params;
   const userId = req.user?._id;
@@ -62,7 +63,6 @@ const createPost = asyncHandler(async (req, res) => {
       new ApiResponse(200, { createdPost: post }, "Successfully Created Post"),
     );
 });
-
 const getAllPost = asyncHandler(async (req, res) => {
   const allPost = await Post.find().populate("creator").populate("community");
   if (allPost.length === 0) {
@@ -73,7 +73,6 @@ const getAllPost = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, allPost, "Fetched all post successfully"));
 });
-
 const getPostById = asyncHandler(async (req, res) => {
   const { postId } = req.params;
 
@@ -89,7 +88,6 @@ const getPostById = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, post, "Post By id is fetched successfully"));
 });
-
 const getPostOfLoggedInUser = asyncHandler(async (req, res) => {
   const userId = req.user?._id;
 
@@ -120,7 +118,6 @@ const getPostOfLoggedInUser = asyncHandler(async (req, res) => {
       ),
     );
 });
-
 const getPostOfUserById = asyncHandler(async (req, res) => {
   const { userId } = req.params;
   const user = await User.findById(userId);
@@ -139,7 +136,6 @@ const getPostOfUserById = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, postOfUser, "Successfully fetched user post"));
 });
-
 const deletePost = asyncHandler(async (req, res) => {
   const { postId } = req.params;
   const userId = req.user?._id;
@@ -173,9 +169,11 @@ const deletePost = asyncHandler(async (req, res) => {
   }
 
   await Post.findByIdAndDelete(postId);
-  
+
   return res
     .status(200)
     .json(new ApiResponse(200, "Post deleted successfully"));
 });
-export { createPost };
+
+
+export { createPost,getAllPost,getPostById,getPostOfLoggedInUser,getPostOfUserById,deletePost };
