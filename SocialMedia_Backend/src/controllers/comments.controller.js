@@ -61,6 +61,72 @@ const createComment = asyncHandler(async (req, res) => {
     );
 });
 
-const 
+const updateComment = asyncHandler(async (req, res) => {
+  const userId = req.user?._id;
+  const { commentId } = req.params;
 
-export {createComment}
+  if (!userId) {
+    throw new ApiError(401, "Unauthorized access");
+  }
+
+  const comment = await Comment.findById(commentId);
+  if (!comment) {
+    throw new ApiError(404, "Comment not found");
+  }
+
+  if (comment.creator.toString() !== userId.toString()) {
+    throw new ApiError(403, "You cannot update this comment");
+  }
+  const { description } = req.body;
+
+  const hasText = description && description.trim().length > 0;
+  const hasMedia = !!req.file;
+
+  if (!hasText && !hasMedia) {
+    throw new ApiError(400, "Comment cannot be empty");
+  }
+  let imageUrl = comment.image;
+  let imagePublicId = comment.imagePublicId;
+  if (req.file) {
+    if (comment.imagePublicId) {
+      try {
+        await cloudinary.uploader.destroy(imagePublicId);
+      } catch (error) {
+        throw new ApiError(
+          500,
+          "Failed to delete old image from cloudinary",
+          error,
+        );
+      }
+    }
+
+    try {
+      const uploadedImage = await uploadOnCloudinary(req.file?.path);
+      imageUrl = uploadedImage.url;
+      imagePublicId = uploadedImage.public_id;
+    } catch (error) {
+      throw new ApiError(
+        500,
+        "Failed to upload new image in cloudinary",
+        error,
+      );
+    }
+  }
+  comment.description = hasText ? description.trim() : comment.description;
+  comment.image = imageUrl;
+  comment.imagePublicId = imagePublicId;
+  const updatedComment = await comment.save().catch(async (err) => {
+    if (req.file && imagePublicId) {
+      await deleteFromCloudinary(imagePublicId);
+    }
+    throw new ApiError(500, "Failed to update comment", err);
+  });
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, updateComment , "Successfully updated comments"),
+    );
+});
+
+
+export { createComment };
