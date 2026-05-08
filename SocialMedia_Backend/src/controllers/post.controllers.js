@@ -205,9 +205,7 @@ const likePost = asyncHandler(async (req, res) => {
   }
   await post.save();
 
-  return res
-    .status(200)
-    .json(new ApiResponse(200, post, message));
+  return res.status(200).json(new ApiResponse(200, post, message));
 });
 const dislikePost = asyncHandler(async (req, res) => {
   const userId = req.user?._id;
@@ -247,7 +245,71 @@ const dislikePost = asyncHandler(async (req, res) => {
 
   return res.status(200).json(new ApiResponse(200, post, message));
 });
+const updatePost = asyncHandler(async (req, res) => {
+  const userId = req.user?._id;
+  const { id: postId } = req.params;
+  if (!userId) {
+    throw new ApiError(401, "Unauthorized access");
+  }
 
+  const post = await Post.findById(postId);
+  if (!post) {
+    throw new ApiError(404, "Post not found");
+  }
+  if (post.creator.toString() !== userId.toString()) {
+    throw new ApiError(403, "You cannot edit this post");
+  }
+  const { postTitle, postDescription } = req.body;
+
+  const hasText =
+    (postTitle && postTitle.trim().length > 0) ||
+    (postDescription && postDescription.trim().length > 0);
+  const hasNewMedia = req?.files?.length > 0;
+
+  if (!hasText && !hasNewMedia) {
+    throw new ApiError(400, "Post cannot be empty");
+  }
+
+  if (postTitle) {
+    post.postTitle = postTitle.trim();
+  }
+
+  if (postDescription) {
+    post.postDescription = postDescription.trim();
+  }
+  if (hasNewMedia) {
+    if (post.media.length > 0) {
+      //remove old media
+      await Promise.all(
+        post.media.map((item) =>
+          cloudinary.uploader.destroy(item.publicId, {
+            resource_type: item.type === "video" ? "video" : "image",
+          }),
+        ),
+      );
+    }
+    const mediaArray = [];
+
+    for (const file of req.files) {
+      try {
+        const uploadedImage = await uploadOnCloudinary(file.path);
+        mediaArray.push({
+          type: file.mimetype.startsWith("image") ? "image" : "video",
+          url: uploadedImage.url,
+          publicId: uploadedImage.public_id,
+        });
+      } catch (error) {
+        throw new ApiError(500, "Failed to upload media in cloudinary");
+      }
+    }
+    post.media = mediaArray;
+  }
+  await post.save();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, post, "Post updated successfully"));
+});
 export {
   createPost,
   getAllPost,
@@ -255,4 +317,6 @@ export {
   getPostOfLoggedInUser,
   getPostOfUserById,
   deletePost,
+  likePost,
+  dislikePost,
 };
