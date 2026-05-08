@@ -379,7 +379,6 @@ const getAllUsers = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, allUsers, "Fetched all users successfully"));
 });
 const followUser = asyncHandler(async (req, res) => {
-
   const loggedInUserId = req.user?._id;
   if (!loggedInUserId) {
     throw new ApiError(401, "Unauthorized access");
@@ -444,12 +443,10 @@ const unfollowUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "You are not following this user");
   }
 
-
   await User.findByIdAndUpdate(loggedInUserId, {
     $pull: { following: userId },
   });
 
- 
   await User.findByIdAndUpdate(userId, {
     $pull: { followers: loggedInUserId },
   });
@@ -459,6 +456,23 @@ const unfollowUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, "Unfollowed successfully"));
 });
 
+const getFollowingCount = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user?._id);
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        user.following.length,
+        "User following count fetched",
+      ),
+    );
+});
 
 export {
   userRegister,
@@ -472,5 +486,5 @@ export {
   getUserProfileById,
   getAllUsers,
   followUser,
-  unfollowUser
+  unfollowUser,
 };

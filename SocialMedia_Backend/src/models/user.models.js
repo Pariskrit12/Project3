@@ -72,7 +72,7 @@ const userSchema = new Schema(
     },
     accountStatus:{
         type:String,
-        enum:["active","deactived","banned"],
+        enum:["active","deactivated","banned"],
         default:"active"
     }
   },
