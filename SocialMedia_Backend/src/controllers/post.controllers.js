@@ -175,5 +175,43 @@ const deletePost = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, "Post deleted successfully"));
 });
 
+const likePost = asyncHandler(async (req, res) => {
+  const userId = req.user?._id;
+  const { id: postId } = req.params;
+  if (!userId) {
+    throw new ApiError(401, "Unauthorized access");
+  }
 
-export { createPost,getAllPost,getPostById,getPostOfLoggedInUser,getPostOfUserById,deletePost };
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  const post = await Post.findById(postId);
+  if (!post) {
+    throw new ApiError(404, "Post not found");
+  }
+
+  const alreadyLiked = post.likes.some(
+    (id) => id.toString() === userId.toString(),
+  );
+  if (alreadyLiked) {
+    post.likes = post.likes.filter((id) => id.toString() !== userId.toString());
+  } else {
+    post.likes.push(userId);
+  }
+  await post.save();
+
+  return res.status(200).json(
+     new ApiResponse(200,"Post liked successfully")
+  )
+});
+
+export {
+  createPost,
+  getAllPost,
+  getPostById,
+  getPostOfLoggedInUser,
+  getPostOfUserById,
+  deletePost,
+};
