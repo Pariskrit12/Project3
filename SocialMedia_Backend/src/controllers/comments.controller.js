@@ -253,7 +253,18 @@ const getCommentOfPost = asyncHandler(async (req, res) => {
   const totalComments = await Comment.countDocuments({ post: postId });
   return res
     .status(200)
-    .json(new ApiResponse(200, {comments,totalComments,currentPage:page,totalPages:Math.ceil(totalComments/limit)}, "Comment of post fetched successfully"));
+    .json(
+      new ApiResponse(
+        200,
+        {
+          comments,
+          totalComments,
+          currentPage: page,
+          totalPages: Math.ceil(totalComments / limit),
+        },
+        "Comment of post fetched successfully",
+      ),
+    );
 });
 export {
   createComment,
