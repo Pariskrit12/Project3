@@ -310,22 +310,7 @@ const updatePost = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, post, "Post updated successfully"));
 });
-const getCommentOfPost=asyncHandler(async(req,res)=>{
-  const userId=req.user?._id
-  if(!userId){
-    throw new ApiError(401,"Unauthorized access")
-  }
 
-  const {postId}=req.params;
-  const post=await Post.findById(postId).populate("comments")
-  if(!post){
-    throw new ApiError(404,"Post not found")
-  }
-
-  return res.status(200).json(
-    new ApiResponse(200,post.comments,'Comment of post fetched successfully')
-  )
-})
 export {
   createPost,
   getAllPost,
@@ -336,5 +321,5 @@ export {
   likePost,
   dislikePost,
   updatePost,
-  getCommentOfPost
+  
 };
