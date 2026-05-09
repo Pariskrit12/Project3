@@ -60,6 +60,7 @@ const createComment = asyncHandler(async (req, res) => {
       ),
     );
 });
+
 const updateComment = asyncHandler(async (req, res) => {
   const userId = req.user?._id;
   const { commentId } = req.params;
@@ -203,4 +204,38 @@ const dislikeComment = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, comment, message));
 });
 
-export { createComment,updateComment,likeComment,dislikeComment };
+const deleteComment = asyncHandler(async (req, res) => {
+  const userId = req.user?._id;
+  const { commentId } = req.params;
+  if (!userId) {
+    throw new ApiError(401, "Unauthorized access");
+  }
+
+  const comment = await Comment.findById(commentId);
+  if (!comment) {
+    throw new ApiError(404, "Comment not found");
+  }
+
+  if (comment.creator.toString() !== userId.toString()) {
+    throw new ApiError(403, "You cannot delete this comment");
+  }
+
+  if (comment.imagePublicId) {
+    try {
+      await cloudinary.uploader.destroy(comment.imagePublicId);
+    } catch (error) {
+      throw new ApiError(
+        500,
+        "Failed to delete old image from cloudinary",
+        error,
+      );
+    }
+  }
+  await comment.deleteOne();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "Comment delete successfully"));
+});
+
+export { createComment, updateComment, likeComment, dislikeComment,deleteComment };
