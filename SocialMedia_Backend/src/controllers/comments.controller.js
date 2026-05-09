@@ -128,5 +128,4 @@ const updateComment = asyncHandler(async (req, res) => {
     );
 });
 
-
 export { createComment };
