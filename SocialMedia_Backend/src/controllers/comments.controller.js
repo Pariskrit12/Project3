@@ -60,7 +60,6 @@ const createComment = asyncHandler(async (req, res) => {
       ),
     );
 });
-
 const updateComment = asyncHandler(async (req, res) => {
   const userId = req.user?._id;
   const { commentId } = req.params;
@@ -123,9 +122,85 @@ const updateComment = asyncHandler(async (req, res) => {
   });
   return res
     .status(200)
-    .json(
-      new ApiResponse(200, updateComment , "Successfully updated comments"),
-    );
+    .json(new ApiResponse(200, updateComment, "Successfully updated comments"));
 });
 
-export { createComment };
+const likeComment = asyncHandler(async (req, res) => {
+  const userId = req.user?._id;
+  const { commentId } = req.params;
+  if (!userId) {
+    throw new ApiError(401, "Unauthorized access");
+  }
+
+  const comment = await Comment.findById(commentId);
+  if (!comment) {
+    throw new ApiError(404, "comment not found");
+  }
+
+  const alreadyLiked = comment.likes.some(
+    (id) => id.toString() === userId.toString(),
+  );
+  const alreadyDisliked = comment.dislikes.some(
+    (id) => id.toString() === userId.toString(),
+  );
+  let message = "";
+  if (alreadyLiked) {
+    comment.likes = comment.likes.filter(
+      (id) => id.toString() !== userId.toString(),
+    );
+    message = "Like removed from comment";
+  } else {
+    comment.likes.push(userId);
+    message = "Successfully liked the comment";
+    if (alreadyDisliked) {
+      comment.dislikes = comment.dislikes.filter(
+        (id) => id.toString() !== userId.toString(),
+      );
+    }
+  }
+
+  await comment.save();
+
+  return res.status(200).json(new ApiResponse(200, comment, message));
+});
+
+const dislikeComment = asyncHandler(async (req, res) => {
+  const userId = req.user?._id;
+  const { commentId } = req.params;
+  if (!userId) {
+    throw new ApiError(401, "Unauthorized access");
+  }
+
+  const comment = await Comment.findById(commentId);
+  if (!comment) {
+    throw new ApiError(404, "comment not found");
+  }
+
+  const alreadyLiked = comment.likes.some(
+    (id) => id.toString() === userId.toString(),
+  );
+  const alreadyDisliked = comment.dislikes.some(
+    (id) => id.toString() === userId.toString(),
+  );
+  let message = "";
+  if (alreadyDisliked) {
+    comment.dislikes = comment.dislikes.filter(
+      (id) => id.toString() !== userId.toString(),
+    );
+    message = "Dislike removed from comment";
+  } else {
+    comment.dislikes.push(userId);
+    message = "Successfully disliked the comment";
+    if (alreadyLiked) {
+      comment.likes = comment.likes.filter(
+        (id) => id.toString() !== userId.toString(),
+      );
+    }
+  }
+
+  await comment.save();
+
+  return res.status(200).json(new ApiResponse(200, comment, message));
+});
+
+export { createComment,updateComment,likeComment,dislikeComment };
