@@ -1,5 +1,5 @@
 import { Comment } from "../models/comment.model";
-import { Post } from "../models/post.model";
+
 import { ApiError } from "../utils/apiError";
 import { ApiResponse } from "../utils/apiResponse";
 import { asyncHandler } from "../utils/asyncHandler";
@@ -240,27 +240,20 @@ const deleteComment = asyncHandler(async (req, res) => {
 });
 
 const getCommentOfPost = asyncHandler(async (req, res) => {
-  const userId = req.user?._id;
-  if (!userId) {
-    throw new ApiError(401, "Unauthorized access");
-  }
-
   const { postId } = req.params;
-  
-  const post = await Post.findById(postId).populate("comments");
-  if (!post) {
-    throw new ApiError(404, "Post not found");
-  }
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
 
+  const skip = (skip - 1) * limit;
+  const comments = (await Comment.find({ post: postId }))
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit);
+
+  const totalComments = await Comment.countDocuments({ post: postId });
   return res
     .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        post.comments,
-        "Comment of post fetched successfully",
-      ),
-    );
+    .json(new ApiResponse(200, {comments,totalComments,currentPage:page,totalPages:Math.ceil(totalComments/limit)}, "Comment of post fetched successfully"));
 });
 export {
   createComment,
@@ -268,4 +261,5 @@ export {
   likeComment,
   dislikeComment,
   deleteComment,
+  getCommentOfPost,
 };
