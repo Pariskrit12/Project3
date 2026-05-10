@@ -523,6 +523,23 @@ const getFollowerCount = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, user.followers.length, "user follower count"));
 });
+const getFollowingCount = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user?._id);
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        user.following.length,
+        "User following count fetched",
+      ),
+    );
+});
 export {
   userRegister,
   userLogin,
@@ -539,5 +556,6 @@ export {
   deactivateAccount,
   getFollowers,
   getFollowing,
-  getFollowerCount
+  getFollowerCount,
+  getFollowingCount
 };
