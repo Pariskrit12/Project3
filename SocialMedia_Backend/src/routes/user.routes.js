@@ -21,4 +21,5 @@ router.route("/deactivateAccount").post(verifyJwt, deactivateAccount);
 router.route("/getFollowers").get(verifyJwt,getFollowers);
 router.route("/getFollowing").get(verifyJwt,getFollowing);
 router.route("/getFollowingCount").get(verifyJwt, getFollowingCount);
+router.route("/getFollowerCount").get(verifyJwt,getFollowerCount);
 export default router;
