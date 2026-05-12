@@ -76,3 +76,20 @@ const toggleJoinCommunity = asyncHandler(async (req, res) => {
       ),
     );
 });
+const getPostOfCommunity = asyncHandler(async (req, res) => {
+  const { communityId } = req.params;
+  const community = await Community.findById(communityId);
+  if (!community) {
+    throw new ApiError(404, "Community not found");
+  }
+  const postOfCommunity = await Post.find({ community: communityId }).populate(
+    "creator",
+    "username userProfilePic",
+  );
+  if (!postsOfCommunity.length) {
+    throw new ApiError(404, "No posts found for this community");
+  }
+  return res
+    .status(200)
+    .json(new ApiResponse(200, postOfCommunity, "Posts fetched successfully"));
+});
