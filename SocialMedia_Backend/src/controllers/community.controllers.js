@@ -39,3 +39,40 @@ const createCommunity = asyncHandler(async (req, res) => {
     .status(201)
     .json(new ApiResponse(201, community, "Community created successfully"));
 });
+const toggleJoinCommunity = asyncHandler(async (req, res) => {
+  const userId = req.user?._id;
+  const { communityId } = req.params;
+  if (!userId) {
+    throw new ApiError(401, "Unauthorized access");
+  }
+
+  const community = await Community.findById(communityId);
+  if (!community) {
+    throw new ApiError(404, "Community not found");
+  }
+
+  const alreadyJoined = community.members.some(
+    (id) => id.toString() === userId.toString(),
+  );
+
+  if (alreadyJoined) {
+    community.members = community.members.filter(
+      (id) => id.toString() !== userId.toString(),
+    );
+  } else {
+    community.members.push(userId);
+  }
+  await community.save();
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        community,
+        alreadyJoined
+          ? "Left community successfully"
+          : "Joined community successfully",
+      ),
+    );
+});
