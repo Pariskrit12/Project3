@@ -93,3 +93,19 @@ const getPostOfCommunity = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, postOfCommunity, "Posts fetched successfully"));
 });
+const getFollowersOfCommunity = asyncHandler(async (req, res) => {
+  const { communityId } = req.params;
+
+  const community = await Community.findById(communityId).populate(
+    "members",
+    "username userProfilePic",
+  );
+  if (!community) {
+    throw new ApiError(404, "Community not found");
+  }
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, community.members, "Fetched follower of community"),
+    );
+});
