@@ -244,8 +244,8 @@ const getCommentOfPost = asyncHandler(async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
 
-  const skip = (skip - 1) * limit;
-  const comments = (await Comment.find({ post: postId }))
+  const skip = (page - 1) * limit;
+  const comments = await Comment.find({ post: postId })
     .sort({ createdAt: -1 })
     .skip(skip)
     .limit(limit);
