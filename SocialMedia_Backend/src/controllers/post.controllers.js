@@ -5,6 +5,7 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { Post } from "../models/post.model.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import { v2 as cloudinary } from "cloudinary";
+import { Notification } from "../models/notification.model.js";
 
 const createPost = asyncHandler(async (req, res) => {
   const { communitieId } = req.params;
@@ -202,6 +203,15 @@ const likePost = asyncHandler(async (req, res) => {
       );
     }
     message = "Liked post successfully";
+    if (post.creator.toString() !== userId.toString()) {
+      await Notification.create({
+        sender: userId,
+        receiver: post.creator,
+        type: "like",
+        message: `${req.user.username} liked your post`,
+        link: `/post/${post._id}`,
+      });
+    }
   }
   await post.save();
 
