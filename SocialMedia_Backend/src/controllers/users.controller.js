@@ -52,6 +52,9 @@ const userRegister = asyncHandler(async (req, res) => {
   if (!validGenders.includes(gender.toLowerCase())) {
     throw new ApiError(400, "Invalid gender value");
   }
+
+  const normalizedGender =
+    gender.charAt(0).toUpperCase() + gender.slice(1).toLowerCase();
   const profilePicLocalPath = await req.file?.path;
 
   if (!profilePicLocalPath) {
@@ -67,7 +70,7 @@ const userRegister = asyncHandler(async (req, res) => {
   const user = await User.create({
     username: username.toLowerCase(),
     email: email.toLowerCase(),
-    gender,
+    gender: normalizedGender,
     name,
     password,
     userProfilePic: userProfilePic.url,
@@ -388,7 +391,7 @@ const followUser = asyncHandler(async (req, res) => {
   if (!userId) {
     throw new ApiError(404, "User id not found");
   }
-  if (loggedInUserId === userId) {
+  if (loggedInUserId.toString() === userId) {
     throw new ApiError(400, "You cannot follow yourself");
   }
   const loggedInUser = await User.findById(loggedInUserId);
