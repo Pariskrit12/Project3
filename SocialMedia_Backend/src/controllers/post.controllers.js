@@ -203,6 +203,7 @@ const likePost = asyncHandler(async (req, res) => {
       );
     }
     message = "Liked post successfully";
+    await post.save();
     if (post.creator.toString() !== userId.toString()) {
       await Notification.create({
         sender: userId,
@@ -213,7 +214,6 @@ const likePost = asyncHandler(async (req, res) => {
       });
     }
   }
-  await post.save();
 
   return res.status(200).json(new ApiResponse(200, post, message));
 });
@@ -320,7 +320,6 @@ const updatePost = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, post, "Post updated successfully"));
 });
-
 const searchPosts = asyncHandler(async (req, res) => {
   const { q } = req.query;
 
