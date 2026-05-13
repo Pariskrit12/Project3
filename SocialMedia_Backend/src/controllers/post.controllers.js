@@ -311,6 +311,26 @@ const updatePost = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, post, "Post updated successfully"));
 });
 
+const searchPosts = asyncHandler(async (req, res) => {
+  const { q } = req.query;
+
+  if (!q || q.trim().length === 0) {
+    throw new ApiError(400, "Search query is required");
+  }
+
+  const regex = new RegExp(q.trim(), "i");
+
+  const posts = await Post.find({
+    $or: [{ postTitle: regex }, { postDescription: regex }],
+  })
+    .populate("creator", "username userProfilePic")
+    .populate("community", "communityName");
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, posts, "Posts fetched successfully"));
+});
+
 export {
   createPost,
   getAllPost,
@@ -321,5 +341,5 @@ export {
   likePost,
   dislikePost,
   updatePost,
-  
+  searchPosts,
 };
