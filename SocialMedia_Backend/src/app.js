@@ -18,4 +18,9 @@ app.use("/users", userRouter);
 
 import postRouter from "./routes/post.routes.js";
 app.use("/post", postRouter);
+
+import commentRouter from "./routes/comment.routes.js"
+app.user("/comment",commentRouter)
+
+import communityRouter from './routes/community.route.js';
 export default app;

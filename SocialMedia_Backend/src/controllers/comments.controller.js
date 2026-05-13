@@ -1,10 +1,13 @@
-import { Comment } from "../models/comment.model";
+import { Comment } from "../models/comment.model.js";
+import { Notification } from "../models/notification.model.js";
+import { Post } from "../models/post.model.js";
 
-import { ApiError } from "../utils/apiError";
-import { ApiResponse } from "../utils/apiResponse";
-import { asyncHandler } from "../utils/asyncHandler";
-import { uploadOnCloudinary } from "../utils/cloudinary";
+import { ApiError } from "../utils/apiError.js";
+import { ApiResponse } from "../utils/apiResponse.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { v2 as cloudinary } from "cloudinary";
+import mongoose from "mongoose";
 
 const createComment = asyncHandler(async (req, res) => {
   const userId = req.user?._id;
@@ -50,6 +53,17 @@ const createComment = asyncHandler(async (req, res) => {
       throw new ApiError(500, "Failed to save comment", err);
     }
   });
+
+  const post = await Post.findById(postId).select("creator");
+  if (post && post.creator.toString() !== userId.toString()) {
+    await Notification.create({
+      sender: userId,
+      receiver: post.creator,
+      type: "comment",
+      message: `${req.user.username} commented on your post`,
+      link: `/post/${postId}`,
+    });
+  }
 
   return res
     .status(200)
@@ -163,6 +177,16 @@ const likeComment = asyncHandler(async (req, res) => {
 
   await comment.save();
 
+  if (!alreadyLiked && comment.creator.toString() !== userId.toString()) {
+    await Notification.create({
+      sender: userId,
+      receiver: comment.creator,
+      type: "like_comment",
+      message: `${req.user.username} liked your comment`,
+      link: `/post/${comment.post}`,
+    });
+  }
+
   return res.status(200).json(new ApiResponse(200, comment, message));
 });
 
@@ -244,8 +268,8 @@ const getCommentOfPost = asyncHandler(async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
 
-  const skip = (skip - 1) * limit;
-  const comments = (await Comment.find({ post: postId }))
+  const skip = (page - 1) * limit;
+  const comments = await Comment.find({ post: postId })
     .sort({ createdAt: -1 })
     .skip(skip)
     .limit(limit);

@@ -3,6 +3,10 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import { v2 as cloudinary } from "cloudinary";
+import { Community } from "../models/community.model.js";
+import { Post } from "../models/post.model.js";
+import { User } from "../models/user.models.js";
+
 const createCommunity = asyncHandler(async (req, res) => {
   const userId = req.user?._id;
 
@@ -86,7 +90,7 @@ const getPostOfCommunity = asyncHandler(async (req, res) => {
     "creator",
     "username userProfilePic",
   );
-  if (!postsOfCommunity.length) {
+  if (!postOfCommunity.length) {
     throw new ApiError(404, "No posts found for this community");
   }
   return res
@@ -108,56 +112,4 @@ const getFollowersOfCommunity = asyncHandler(async (req, res) => {
     .json(
       new ApiResponse(200, community.members, "Fetched follower of community"),
     );
-});
-export {createCommunity,toggleJoinCommunity,getFollowersOfCommunity,getPostOfCommunity}
-const updateCommunity = asyncHandler(async (req, res) => {
-  const userId = req.user?._id;
-  const { communityId } = req.params;
-
-  if (!userId) {
-    throw new ApiError(401, "Unauthorized access");
-  }
-
-  const community = await Community.findById(communityId);
-  if (!community) {
-    throw new ApiError(404, "Community not found");
-  }
-
-  if (community.creator.toString() !== userId.toString()) {
-    throw new ApiError(403, "Only the community admin can update this community");
-  }
-
-  const { communityName, communityDescription } = req.body;
-
-  if (communityName) community.communityName = communityName.trim();
-  if (communityDescription) community.communityDescription = communityDescription.trim();
-
-  const profilePath = req.files?.profilePicture?.[0]?.path;
-  const bannerPath = req.files?.banner?.[0]?.path;
-
-  if (profilePath) {
-    if (community.communityProfilePicturePublicId) {
-      await cloudinary.uploader.destroy(community.communityProfilePicturePublicId);
-    }
-    const uploaded = await uploadOnCloudinary(profilePath);
-    if (!uploaded) throw new ApiError(500, "Failed to upload profile picture");
-    community.communityProfilePicture = uploaded.url;
-    community.communityProfilePicturePublicId = uploaded.public_id;
-  }
-
-  if (bannerPath) {
-    if (community.communityBannerPublicId) {
-      await cloudinary.uploader.destroy(community.communityBannerPublicId);
-    }
-    const uploaded = await uploadOnCloudinary(bannerPath);
-    if (!uploaded) throw new ApiError(500, "Failed to upload banner");
-    community.communityBanner = uploaded.url;
-    community.communityBannerPublicId = uploaded.public_id;
-  }
-
-  await community.save();
-
-  return res
-    .status(200)
-    .json(new ApiResponse(200, community, "Community updated successfully"));
 });

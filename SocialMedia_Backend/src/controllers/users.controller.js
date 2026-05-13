@@ -4,6 +4,7 @@ import { User } from "../models/user.models.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import { v2 as cloudinary } from "cloudinary";
+import { Notification } from "../models/notification.model.js";
 
 const generateRefreshTokenAndAccessToken = async (userId) => {
   const user = await User.findById(userId);
@@ -52,6 +53,9 @@ const userRegister = asyncHandler(async (req, res) => {
   if (!validGenders.includes(gender.toLowerCase())) {
     throw new ApiError(400, "Invalid gender value");
   }
+
+  const normalizedGender =
+    gender.charAt(0).toUpperCase() + gender.slice(1).toLowerCase();
   const profilePicLocalPath = await req.file?.path;
 
   if (!profilePicLocalPath) {
@@ -67,7 +71,7 @@ const userRegister = asyncHandler(async (req, res) => {
   const user = await User.create({
     username: username.toLowerCase(),
     email: email.toLowerCase(),
-    gender,
+    gender: normalizedGender,
     name,
     password,
     userProfilePic: userProfilePic.url,
@@ -388,7 +392,7 @@ const followUser = asyncHandler(async (req, res) => {
   if (!userId) {
     throw new ApiError(404, "User id not found");
   }
-  if (loggedInUserId === userId) {
+  if (loggedInUserId.toString() === userId) {
     throw new ApiError(400, "You cannot follow yourself");
   }
   const loggedInUser = await User.findById(loggedInUserId);
@@ -410,6 +414,14 @@ const followUser = asyncHandler(async (req, res) => {
 
   await User.findByIdAndUpdate(userId, {
     $push: { followers: loggedInUserId },
+  });
+
+  await Notification.create({
+    sender: loggedInUserId,
+    receiver: userId,
+    type: "follow",
+    message: `${req.user.username} started following you`,
+    link: `/profile/${loggedInUserId}`,
   });
 
   return res
@@ -540,6 +552,24 @@ const getFollowingCount = asyncHandler(async (req, res) => {
       ),
     );
 });
+const searchUsers = asyncHandler(async (req, res) => {
+  const { q } = req.query;
+
+  if (!q || q.trim().length === 0) {
+    throw new ApiError(400, "Search query is required");
+  }
+
+  const regex = new RegExp(q.trim(), "i");
+
+  const users = await User.find({
+    $or: [{ username: regex }, { name: regex }],
+  }).select("-password -refreshToken");
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, users, "Users fetched successfully"));
+});
+
 export {
   userRegister,
   userLogin,
@@ -557,5 +587,6 @@ export {
   getFollowers,
   getFollowing,
   getFollowerCount,
-  getFollowingCount
+  getFollowingCount,
+  searchUsers,
 };

@@ -5,6 +5,7 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { Post } from "../models/post.model.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import { v2 as cloudinary } from "cloudinary";
+import { Notification } from "../models/notification.model.js";
 
 const createPost = asyncHandler(async (req, res) => {
   const { communitieId } = req.params;
@@ -104,7 +105,7 @@ const getPostOfLoggedInUser = asyncHandler(async (req, res) => {
     .populate("communitie")
     .populate("creator");
 
-  if (postsOfUser.length === 0) {
+  if (postsOfLoggedInUser.length === 0) {
     throw new ApiError(404, "Post of users not found");
   }
 
@@ -202,8 +203,17 @@ const likePost = asyncHandler(async (req, res) => {
       );
     }
     message = "Liked post successfully";
+    await post.save();
+    if (post.creator.toString() !== userId.toString()) {
+      await Notification.create({
+        sender: userId,
+        receiver: post.creator,
+        type: "like_post",
+        message: `${req.user.username} liked your post`,
+        link: `/post/${post._id}`,
+      });
+    }
   }
-  await post.save();
 
   return res.status(200).json(new ApiResponse(200, post, message));
 });
@@ -310,6 +320,25 @@ const updatePost = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, post, "Post updated successfully"));
 });
+const searchPosts = asyncHandler(async (req, res) => {
+  const { q } = req.query;
+
+  if (!q || q.trim().length === 0) {
+    throw new ApiError(400, "Search query is required");
+  }
+
+  const regex = new RegExp(q.trim(), "i");
+
+  const posts = await Post.find({
+    $or: [{ postTitle: regex }, { postDescription: regex }],
+  })
+    .populate("creator", "username userProfilePic")
+    .populate("community", "communityName");
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, posts, "Posts fetched successfully"));
+});
 
 export {
   createPost,
@@ -321,5 +350,5 @@ export {
   likePost,
   dislikePost,
   updatePost,
-  
+  searchPosts,
 };

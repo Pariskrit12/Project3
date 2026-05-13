@@ -1,6 +1,6 @@
-import app from "./app.js";
-import connection from "./db/connection.js";
-import dotenv from "dotenv"
+import app from "./app.js";//server
+import connection from "./db/connection.js";//db
+import dotenv from "dotenv"//env
 const port = process.env.PORT || 8000;
 connection()
   .then(() => {
