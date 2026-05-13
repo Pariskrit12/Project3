@@ -4,6 +4,7 @@ import { User } from "../models/user.models.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import { v2 as cloudinary } from "cloudinary";
+import { Notification } from "../models/notification.model.js";
 
 const generateRefreshTokenAndAccessToken = async (userId) => {
   const user = await User.findById(userId);
@@ -413,6 +414,14 @@ const followUser = asyncHandler(async (req, res) => {
 
   await User.findByIdAndUpdate(userId, {
     $push: { followers: loggedInUserId },
+  });
+
+  await Notification.create({
+    sender: loggedInUserId,
+    reciever: userId,
+    type: "follow",
+    message: `${req.user.username} started following you`,
+    link: `/profile/${loggedInUserId}`,
   });
 
   return res
