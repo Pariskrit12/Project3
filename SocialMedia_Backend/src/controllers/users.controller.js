@@ -543,6 +543,24 @@ const getFollowingCount = asyncHandler(async (req, res) => {
       ),
     );
 });
+const searchUsers = asyncHandler(async (req, res) => {
+  const { q } = req.query;
+
+  if (!q || q.trim().length === 0) {
+    throw new ApiError(400, "Search query is required");
+  }
+
+  const regex = new RegExp(q.trim(), "i");
+
+  const users = await User.find({
+    $or: [{ username: regex }, { name: regex }],
+  }).select("-password -refreshToken");
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, users, "Users fetched successfully"));
+});
+
 export {
   userRegister,
   userLogin,
@@ -560,5 +578,6 @@ export {
   getFollowers,
   getFollowing,
   getFollowerCount,
-  getFollowingCount
+  getFollowingCount,
+  searchUsers,
 };
