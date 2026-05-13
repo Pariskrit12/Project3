@@ -104,7 +104,7 @@ const getPostOfLoggedInUser = asyncHandler(async (req, res) => {
     .populate("communitie")
     .populate("creator");
 
-  if (postsOfUser.length === 0) {
+  if (postsOfLoggedInUser.length === 0) {
     throw new ApiError(404, "Post of users not found");
   }
 
