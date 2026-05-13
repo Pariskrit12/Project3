@@ -208,7 +208,7 @@ const likePost = asyncHandler(async (req, res) => {
       await Notification.create({
         sender: userId,
         receiver: post.creator,
-        type: "like",
+        type: "like_post",
         message: `${req.user.username} liked your post`,
         link: `/post/${post._id}`,
       });
