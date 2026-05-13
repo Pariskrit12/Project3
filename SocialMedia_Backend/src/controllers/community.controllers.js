@@ -113,3 +113,33 @@ const getFollowersOfCommunity = asyncHandler(async (req, res) => {
       new ApiResponse(200, community.members, "Fetched follower of community"),
     );
 });
+const deleteCommunity = asyncHandler(async (req, res) => {
+  const userId = req.user?._id;
+  const { communityId } = req.params;
+
+  if (!userId) {
+    throw new ApiError(401, "Unauthorized access");
+  }
+
+  const community = await Community.findById(communityId);
+  if (!community) {
+    throw new ApiError(404, "Community not found");
+  }
+
+  if (community.creator.toString() !== userId.toString()) {
+    throw new ApiError(403, "Only the community admin can delete this community");
+  }
+
+  if (community.communityProfilePicturePublicId) {
+    await cloudinary.uploader.destroy(community.communityProfilePicturePublicId);
+  }
+  if (community.communityBannerPublicId) {
+    await cloudinary.uploader.destroy(community.communityBannerPublicId);
+  }
+
+  await community.deleteOne();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, null, "Community deleted successfully"));
+});
