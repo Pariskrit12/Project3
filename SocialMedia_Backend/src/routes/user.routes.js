@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { upload } from "../middlewares/multer.js";
-import { changeEmail, changePassword, changeUsername, changeUserProfilePic, deactivateAccount, followUser, getAllUsers, getCurrentUser, getFollowerCount, getFollowers, getFollowing, getFollowingCount, getUserProfileById, logoutUser, unfollowUser, userLogin, userRegister } from "../controllers/users.controller.js";
+import { changeEmail, changePassword, changeUsername, changeUserProfilePic, deactivateAccount, followUser, getAllUsers, getCurrentUser, getFollowerCount, getFollowers, getFollowing, getFollowingCount, getUserProfileById, logoutUser, unfollowUser, userLogin, userRegister, searchUsers } from "../controllers/users.controller.js";
 import {verifyJwt} from "../middlewares/auth.js"
 
 
@@ -22,5 +22,6 @@ router.route("/deactivateAccount").post(verifyJwt, deactivateAccount);
 router.route("/getFollowers").get(verifyJwt,getFollowers);
 router.route("/getFollowing").get(verifyJwt,getFollowing);
 router.route("/getFollowingCount").get(verifyJwt, getFollowingCount);
-router.route("/getFollowerCount").get(verifyJwt,getFollowerCount);
+router.route("/getFollowerCount").get(verifyJwt, getFollowerCount);
+router.route("/search").get(verifyJwt, searchUsers);
 export default router;

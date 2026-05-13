@@ -12,6 +12,7 @@ import {
   likePost,
   dislikePost,
   updatePost,
+  searchPosts,
 } from "../controllers/post.controllers.js";
 const router = Router();
 
@@ -31,6 +32,7 @@ router.route("/updatePost/:id").patch(verifyJwt, upload.array("media", 10), upda
 router.route("/deletePost/:postId").delete(verifyJwt, deletePost);
 router.route("/like/:id").post(verifyJwt, likePost);
 router.route("/dislike/:id").post(verifyJwt, dislikePost);
+router.route("/search").get(verifyJwt, searchPosts);
 
 
 
