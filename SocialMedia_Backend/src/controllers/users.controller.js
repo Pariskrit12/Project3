@@ -418,7 +418,7 @@ const followUser = asyncHandler(async (req, res) => {
 
   await Notification.create({
     sender: loggedInUserId,
-    reciever: userId,
+    receiver: userId,
     type: "follow",
     message: `${req.user.username} started following you`,
     link: `/profile/${loggedInUserId}`,

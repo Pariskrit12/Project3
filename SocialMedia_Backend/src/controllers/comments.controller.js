@@ -58,7 +58,7 @@ const createComment = asyncHandler(async (req, res) => {
   if (post && post.creator.toString() !== userId.toString()) {
     await Notification.create({
       sender: userId,
-      reciever: post.creator,
+      receiver: post.creator,
       type: "comment",
       message: `${req.user.username} commented on your post`,
       link: `/post/${postId}`,
@@ -180,7 +180,7 @@ const likeComment = asyncHandler(async (req, res) => {
   if (!alreadyLiked && comment.creator.toString() !== userId.toString()) {
     await Notification.create({
       sender: userId,
-      reciever: comment.creator,
+      receiver: comment.creator,
       type: "like_comment",
       message: `${req.user.username} liked your comment`,
       link: `/post/${comment.post}`,

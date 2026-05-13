@@ -3,6 +3,10 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import { v2 as cloudinary } from "cloudinary";
+import { Community } from "../models/community.model.js";
+import { Post } from "../models/post.model.js";
+import { User } from "../models/user.models.js";
+
 const createCommunity = asyncHandler(async (req, res) => {
   const userId = req.user?._id;
 
@@ -86,7 +90,7 @@ const getPostOfCommunity = asyncHandler(async (req, res) => {
     "creator",
     "username userProfilePic",
   );
-  if (!postsOfCommunity.length) {
+  if (!postOfCommunity.length) {
     throw new ApiError(404, "No posts found for this community");
   }
   return res
@@ -109,3 +113,10 @@ const getFollowersOfCommunity = asyncHandler(async (req, res) => {
       new ApiResponse(200, community.members, "Fetched follower of community"),
     );
 });
+
+export {
+  createCommunity,
+  toggleJoinCommunity,
+  getPostOfCommunity,
+  getFollowersOfCommunity,
+};
