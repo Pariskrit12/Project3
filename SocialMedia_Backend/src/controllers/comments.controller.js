@@ -1,4 +1,5 @@
 import { Comment } from "../models/comment.model";
+import { Notification } from "../models/notification.model.js";
 
 import { ApiError } from "../utils/apiError";
 import { ApiResponse } from "../utils/apiResponse";
@@ -162,6 +163,16 @@ const likeComment = asyncHandler(async (req, res) => {
   }
 
   await comment.save();
+
+  if (!alreadyLiked && comment.creator.toString() !== userId.toString()) {
+    await Notification.create({
+      sender: userId,
+      receiver: comment.creator,
+      type: "like",
+      message: `${req.user.username} liked your comment`,
+      link: `/post/${comment.post}`,
+    });
+  }
 
   return res.status(200).json(new ApiResponse(200, comment, message));
 });
