@@ -22,7 +22,7 @@ export const communitiesApi = createApi({
     }),
     updateCommunity: builder.mutation({
       query: ({ communityId, formData }) => ({
-        url: "/updateCommunity/${communityId}",
+        url: `/updateCommunity/${communityId}`,
         method: "PATCH",
         body: formData,
       }),
@@ -33,7 +33,7 @@ export const communitiesApi = createApi({
     }),
     deleteCommunity: builder.mutation({
       query: (communityId) => ({
-        url: "/deleteCommunity/${communityId}",
+        url: `/deleteCommunity/${communityId}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Community", "CommunityFeed"],
@@ -50,7 +50,7 @@ export const communitiesApi = createApi({
       providesTags: ["Community"],
     }),
     getCommunity: builder.query({
-      query: (communityId) => "/${communityId}",
+      query: (communityId) => `/${communityId}`,
       providesTags: (result, error, communityId) => [
         { type: "Community", id: communityId },
       ],
