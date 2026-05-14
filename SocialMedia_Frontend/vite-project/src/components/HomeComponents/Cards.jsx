@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import Button from "../common/Button";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useFollowUserMutation, useUnfollowUserMutation } from "../../services/usersApi";
+import { useFollowUserMutation, useUnfollowUserMutation } from "../../services/userApi";
 import { useLikePostMutation, useDislikePostMutation } from "../../services/postsApi";
 
 const MediaCarousel = ({ media }) => {
