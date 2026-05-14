@@ -22,7 +22,7 @@ const CreatePost = () => {
     useCreatePostInCommunityMutation();
   const { data: communitiesData } = useGetAllCommunitiesQuery();
 
-  const communities = communitiesData?.data || [];
+  const communities = communitiesData?.data?.communities || [];
   const isLoading = isCreating || isCreatingInCommunity;
 
   const handleFileChange = (e) => {
