@@ -1,6 +1,6 @@
 import { Icon } from "@iconify/react";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import NavigationLink from "./common/NavigationLink";
 import { useSelector, useDispatch } from "react-redux";
 import { clearUser } from "../slices/authSlice";
@@ -15,6 +15,7 @@ const Sidebar = () => {
     { icon: "lets-icons:setting-fill", label: "Settings", path: "/settings" },
   ];
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
   const [logoutUser] = useLogoutUserMutation();
   const dropdownElement = [
@@ -22,7 +23,6 @@ const Sidebar = () => {
     { name: "Football", img: "./football.png" },
     { name: "F1", img: "./post3.jpg" },
   ];
-  const [activeIndex, setActiveIndex] = useState(0);
   const [openDropdown, setOpenDropdown] = useState(false);
   const { isAuthenticated } = useSelector((state) => state.auth);
 
@@ -34,7 +34,7 @@ const Sidebar = () => {
     navigate("/login");
   };
   return (
-    <aside className="fixed z-100 bg-[#FFF7F0] flex flex-col px-3 py-6 w-65 gap-0.5 h-screen border-r border-[#EDD9C8] shadow-[1px_0_12px_rgba(164,57,25,0.05)]">
+    <aside className="bg-[#FFF7F0] flex flex-col px-3 py-6 w-full gap-0.5 h-screen border-r border-[#EDD9C8] shadow-[1px_0_12px_rgba(164,57,25,0.05)]">
       <p className="text-[9px] font-extrabold text-[#C9A88A] uppercase tracking-[0.2em] px-3 mb-2">
         Menu
       </p>
@@ -43,8 +43,7 @@ const Sidebar = () => {
           key={index}
           label={elem.label}
           icon={elem.icon}
-          onClick={() => setActiveIndex(index)}
-          isActive={activeIndex === index}
+          isActive={location.pathname === elem.path}
           path={elem.path}
         />
       ))}
@@ -60,8 +59,7 @@ const Sidebar = () => {
         <NavigationLink
           label="Login"
           icon="material-symbols:login"
-          onClick={() => setActiveIndex(sideBarLinks.length)}
-          isActive={activeIndex === sideBarLinks.length}
+          isActive={location.pathname === "/login"}
           path="/login"
         />
       )}
@@ -81,6 +79,16 @@ const Sidebar = () => {
       <p className="text-[9px] font-extrabold text-[#C9A88A] uppercase tracking-[0.2em] px-3 mb-1">
         Communities
       </p>
+
+      {isAuthenticated && (
+        <button
+          onClick={() => navigate("/create-community")}
+          className="mx-2 mb-1 flex items-center justify-center gap-2 py-2 rounded-xl bg-[#F0E6DD] text-[#AF503A] font-semibold text-sm hover:bg-[#FAEBD8] hover:shadow-[0_2px_8px_rgba(164,57,25,0.15)] transition-all duration-200 border border-[#EDD9C8]"
+        >
+          <Icon icon="mingcute:add-fill" width="15" height="15" />
+          Create Community
+        </button>
+      )}
       <div
         onClick={() => setOpenDropdown((prev) => !prev)}
         className="flex items-center px-3 justify-between cursor-pointer py-2.5 rounded-xl hover:bg-[#FAEBD8] transition-all duration-200 group"

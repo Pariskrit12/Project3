@@ -3,6 +3,9 @@ import React, { useState } from "react";
 import Sidebar from "./Sidebar";
 import IconLink from "./common/IconLink";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+
+const DUMMY_AVATAR = "https://ui-avatars.com/api/?name=Guest&background=EDD9C8&color=AF503A";
 
 const Navbar = () => {
   const navbarLink = [
@@ -11,6 +14,8 @@ const Navbar = () => {
   ];
   const [toggleSidebar, setToggleSidebar] = useState(false);
   const navigate = useNavigate();
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
+  const profilePic = isAuthenticated && user?.userProfilePic ? user.userProfilePic : DUMMY_AVATAR;
 
   return (
     <>
@@ -54,12 +59,12 @@ const Navbar = () => {
             </div>
           ))}
           <button
-            onClick={() => navigate("/userProfile")}
+            onClick={() => navigate(`/userProfile/${user?._id}`)}
             className="ml-1.5 relative group"
           >
             <img
-              src="./Sharbani.png"
-              alt="photo"
+              src={profilePic}
+              alt={isAuthenticated ? user?.username || "profile" : "guest"}
               className="h-9 w-9 rounded-full object-cover border-2 border-[#AF503A] transition-all duration-200 group-hover:ring-3 group-hover:ring-[#AF503A]/25"
             />
             <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-400 rounded-full border-2 border-[#FFF7F0]"></div>

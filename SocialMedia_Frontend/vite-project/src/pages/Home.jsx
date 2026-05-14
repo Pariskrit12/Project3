@@ -1,44 +1,17 @@
 import React, { useState } from "react";
-import Button from "../components/common/Button";
 import Cards from "../components/HomeComponents/Cards";
 import { Icon } from "@iconify/react";
 import { useNavigate } from "react-router-dom";
 import Input from "../components/common/Input";
+import { useGetAllPostsQuery } from "../services/postsApi";
+import formatTime from "../utils/formatTime";
 
 const Home = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
 
-  const posts = [
-    {
-      communityName: "Personal Life",
-      username: "aryan_01",
-      uploadedTime: "2h ago",
-      titleOfPost: "Trying to fix my routine",
-      image: "./Sharbani.png",
-      description:
-        "Lately I've been trying to wake up early, reduce screen time, and focus more on productivity. It's hard but slowly improving day by day.",
-    },
-    {
-      communityName: "Football",
-      username: "goal_master",
-      uploadedTime: "3h ago",
-      titleOfPost: "What a match last night!",
-      image: "./post2.jpg",
-      description:
-        "That last-minute goal completely changed the game. One of the most intense matches I've seen this season.",
-    },
-    {
-      communityName: "F1",
-      username: "speedster",
-      uploadedTime: "2h ago",
-      titleOfPost: "Crazy qualifying session",
-      image: "./post3.jpg",
-      description:
-        "The lap times were insanely close today. One small mistake and you're out of the top 10.",
-    },
-  ];
+  const { data, isLoading, isError } = useGetAllPostsQuery();
 
   return (
     <main className="flex flex-col gap-5">
@@ -80,16 +53,39 @@ const Home = () => {
       </section>
 
       <section className="grid grid-cols-1 gap-4">
-        {posts.map((elem, index) => (
+        {isLoading && (
+          <div className="flex justify-center py-10">
+            <Icon icon="svg-spinners:ring-resize" width="36" height="36" className="text-[#AF503A]" />
+          </div>
+        )}
+        {isError && (
+          <div className="flex flex-col items-center gap-2 py-10 text-[#C9A88A]">
+            <Icon icon="material-symbols:error-outline" width="32" height="32" />
+            <p className="text-sm font-medium">Failed to load posts</p>
+          </div>
+        )}
+        {!isLoading && !isError && data?.data?.length === 0 && (
+          <div className="flex flex-col items-center gap-2 py-10 text-[#C9A88A]">
+            <Icon icon="mdi:post-outline" width="32" height="32" />
+            <p className="text-sm font-medium">No posts yet</p>
+          </div>
+        )}
+        {data?.data?.map((post) => (
           <Cards
-            key={index}
-            communitteName={elem.communityName}
-            image={elem.image}
-            description={elem.description}
-            titleOfPost={elem.titleOfPost}
-            username={elem.username}
-            uploadedTime={elem.uploadedTime}
-            onClick={() => navigate("/postPage")}
+            key={post._id}
+            postId={post._id}
+            communitteName={post.community?.communityName}
+            media={post.media || []}
+            description={post.postDescription}
+            titleOfPost={post.postTitle}
+            username={post.creator?.username}
+            creatorId={post.creator?._id}
+            uploadedTime={formatTime(post.createdAt)}
+            userProfilePic={post.creator?.userProfilePic}
+            likes={post.likes}
+            dislikes={post.dislikes}
+            onClick={() => navigate(`/postPage/${post._id}`)}
+
           />
         ))}
       </section>

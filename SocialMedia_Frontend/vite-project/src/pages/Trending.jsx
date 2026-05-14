@@ -1,27 +1,16 @@
 import React from "react";
 import Cards from "../components/HomeComponents/Cards";
 import { Icon } from "@iconify/react";
-
-const posts = [
-  {
-    communityName: "Football",
-    username: "goal_master",
-    uploadedTime: "3h ago",
-    titleOfPost: "What a match last night!",
-    image: "./post2.jpg",
-    description: "That last-minute goal completely changed the game. One of the most intense matches I've seen this season.",
-  },
-  {
-    communityName: "F1",
-    username: "speedster",
-    uploadedTime: "2h ago",
-    titleOfPost: "Crazy qualifying session",
-    image: "./post3.jpg",
-    description: "The lap times were insanely close today. One small mistake and you're out of the top 10.",
-  },
-];
+import { useGetAllPostsQuery } from "../services/postsApi";
+import formatTime from "../utils/formatTime";
+import { useNavigate } from "react-router-dom";
 
 const Trending = () => {
+  const { data, isLoading, isError } = useGetAllPostsQuery();
+  const navigate = useNavigate();
+
+  const posts = data?.data || [];
+
   return (
     <main className="flex flex-col gap-5">
       <div className="flex items-center gap-3">
@@ -33,9 +22,44 @@ const Trending = () => {
           <p className="text-sm text-[#9C7E6D]">What everyone is talking about</p>
         </div>
       </div>
+
+      {isLoading && (
+        <div className="flex justify-center py-20">
+          <Icon icon="svg-spinners:ring-resize" width="36" height="36" className="text-[#AF503A]" />
+        </div>
+      )}
+
+      {isError && (
+        <div className="flex flex-col items-center gap-2 py-20 text-[#C9A88A]">
+          <Icon icon="material-symbols:error-outline" width="32" height="32" />
+          <p className="text-sm font-medium">Failed to load trending posts</p>
+        </div>
+      )}
+
+      {!isLoading && !isError && posts.length === 0 && (
+        <div className="flex flex-col items-center gap-2 py-20 text-[#C9A88A]">
+          <Icon icon="mingcute:trending-up-fill" width="32" height="32" />
+          <p className="text-sm font-medium">No trending posts yet</p>
+        </div>
+      )}
+
       <section className="grid grid-cols-1 gap-4">
-        {posts.map((post, i) => (
-          <Cards key={i} {...post} communitteName={post.communityName} />
+        {posts.map((post) => (
+          <Cards
+            key={post._id}
+            postId={post._id}
+            communitteName={post.community?.communityName}
+            username={post.creator?.username}
+            creatorId={post.creator?._id}
+            userProfilePic={post.creator?.userProfilePic}
+            uploadedTime={formatTime(post.createdAt)}
+            titleOfPost={post.postTitle}
+            media={post.media || []}
+            description={post.postDescription}
+            likes={post.likes}
+            dislikes={post.dislikes}
+            onClick={() => navigate(`/postPage/${post._id}`)}
+          />
         ))}
       </section>
     </main>
