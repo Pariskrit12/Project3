@@ -42,8 +42,9 @@ const ProtectedRoute = ({ children, isAuthenticated, isLoading }) => {
 
 const App = () => {
   const dispatch = useDispatch();
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const reduxAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const { data: currentUserData, isLoading: isAuthLoading } = useGetCurrentUserQuery();
+  const isAuthenticated = reduxAuthenticated || !!currentUserData?.data;
 
   useEffect(() => {
     if (currentUserData?.data) {
