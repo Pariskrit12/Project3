@@ -7,7 +7,6 @@ import { Community } from "../models/community.model.js";
 import { Post } from "../models/post.model.js";
 import { User } from "../models/user.models.js";
 
-
 const createCommunity = asyncHandler(async (req, res) => {
   const userId = req.user?._id;
 
@@ -144,3 +143,4 @@ const deleteCommunity = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, null, "Community deleted successfully"));
 });
+export{createCommunity,toggleJoinCommunity,getPostOfCommunity,getFollowersOfCommunity,deleteCommunity}
