@@ -215,4 +215,4 @@ const searchCommunities = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, communities, "Communities fetched successfully"));
 });
-export{createCommunity,toggleJoinCommunity,getPostOfCommunity,getFollowersOfCommunity,deleteCommunity,getCommunitiesOfLoggedInUser}
+export{createCommunity,toggleJoinCommunity,getPostOfCommunity,getFollowersOfCommunity,deleteCommunity,getCommunitiesOfLoggedInUser,searchCommunities,getAllCommunities,getCommunityById}
