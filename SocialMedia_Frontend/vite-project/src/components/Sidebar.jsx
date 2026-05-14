@@ -66,6 +66,16 @@ const Sidebar = () => {
         />
       )}
 
+      {isAuthenticated && (
+        <button
+          onClick={() => navigate("/create-post")}
+          className="mx-2 mt-3 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-linear-to-r from-[#AF503A] to-[#C7604A] text-white font-semibold text-sm shadow-[0_3px_12px_rgba(164,57,25,0.35)] hover:shadow-[0_5px_18px_rgba(164,57,25,0.5)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
+        >
+          <Icon icon="mingcute:add-fill" width="16" height="16" />
+          Create Post
+        </button>
+      )}
+
       <div className="mx-3 my-4 h-px bg-linear-to-r from-transparent via-[#EDD9C8] to-transparent"></div>
 
       <p className="text-[9px] font-extrabold text-[#C9A88A] uppercase tracking-[0.2em] px-3 mb-1">
