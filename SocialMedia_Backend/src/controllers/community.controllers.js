@@ -156,4 +156,19 @@ const getCommunitiesOfLoggedInUser = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, communities, "Communities fetched successfully"));
 });
+const getCommunityById = asyncHandler(async (req, res) => {
+  const { communityId } = req.params;
+
+  const community = await Community.findById(communityId).populate(
+    "creator",
+    "username userProfilePic",
+  );
+  if (!community) {
+    throw new ApiError(404, "Community not found");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, community, "Community fetched successfully"));
+});
 export{createCommunity,toggleJoinCommunity,getPostOfCommunity,getFollowersOfCommunity,deleteCommunity,getCommunitiesOfLoggedInUser}
