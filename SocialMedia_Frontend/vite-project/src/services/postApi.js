@@ -18,7 +18,7 @@ export const postsApi = createApi({
     }),
     createPostInCommunity: builder.mutation({
       query: ({ communityId, formData }) => ({
-        url: '/createPost/${communityId}',
+        url: `/createPost/${communityId}`,
         method: "POST",
         body: formData,
       }),
@@ -29,7 +29,7 @@ export const postsApi = createApi({
       providesTags: ["Post"],
     }),
     getPost: builder.query({
-      query: (postId) => "/getPost/${postId}",
+      query: (postId) => `/getPost/${postId}`,
       providesTags: (result, error, postId) => [{ type: "Post", id: postId }],
     }),
     getPostsOfCurrentUser: builder.query({
@@ -37,14 +37,14 @@ export const postsApi = createApi({
       providesTags: ["UserPosts"],
     }),
     getPostsOfUser: builder.query({
-      query: (userId) => "/getPostOfUser/${userId}",
+      query: (userId) => `/getPostOfUser/${userId}`,
       providesTags: (result, error, userId) => [
         { type: "UserPosts", id: userId },
       ],
     }),
     updatePost: builder.mutation({
       query: ({ id, formData }) => ({
-        url: "/updatePost/${id}",
+        url: `/updatePost/${id}`,
         method: "PATCH",
         body: formData,
       }),
@@ -54,15 +54,15 @@ export const postsApi = createApi({
       ],
     }),
     deletePost: builder.mutation({
-      query: (postId) => ({ url: "/deletePost/${postId}", method: "DELETE" }),
+      query: (postId) => ({ url: `/deletePost/${postId}`, method: "DELETE" }),
       invalidatesTags: ["Post", "UserPosts"],
     }),
     likePost: builder.mutation({
-      query: (id) => ({ url: "/like/${id}", method: "POST" }),
+      query: (id) => ({ url: `/like/${id}`, method: "POST" }),
       invalidatesTags: (result, error, id) => [{ type: "Post", id }],
     }),
     dislikePost: builder.mutation({
-      query: (id) => ({ url: "/dislike/${id}", method: "POST" }),
+      query: (id) => ({ url: `/dislike/${id}`, method: "POST" }),
       invalidatesTags: (result, error, id) => [{ type: "Post", id }],
     }),
     searchPosts: builder.query({
