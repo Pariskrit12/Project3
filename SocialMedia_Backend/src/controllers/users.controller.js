@@ -40,7 +40,7 @@ const userRegister = asyncHandler(async (req, res) => {
     throw new ApiError(409, "User with this email already exists");
   }
   const passwordRegex =
-    /^(?=.[a-z])(?=.[A-Z])(?=.\d)(?=.[@$!%?&])[A-Za-z\d@$!%?&]{8,20}$/;
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]{8,20}$/;
   const isPasswordValid = passwordRegex.test(password);
   if (!isPasswordValid) {
     throw new ApiError(
@@ -224,7 +224,7 @@ const changePassword = asyncHandler(async (req, res) => {
   }
 
   const passwordRegex =
-    /^(?=.[a-z])(?=.[A-Z])(?=.\d)(?=.[@$!%?&])[A-Za-z\d@$!%?&]{8,20}$/;
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]{8,20}$/;
 
   if (!passwordRegex.test(newPassword)) {
     throw new ApiError(
