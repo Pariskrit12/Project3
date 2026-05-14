@@ -102,12 +102,8 @@ const getPostOfLoggedInUser = asyncHandler(async (req, res) => {
   }
 
   const postsOfLoggedInUser = await Post.find({ creator: userId })
-    .populate("communitie")
+    .populate("community")
     .populate("creator");
-
-  if (postsOfLoggedInUser.length === 0) {
-    throw new ApiError(404, "Post of users not found");
-  }
 
   return res
     .status(200)
@@ -127,11 +123,8 @@ const getPostOfUserById = asyncHandler(async (req, res) => {
   }
 
   const postOfUser = await Post.find({ creator: userId })
-    .populate("communitie")
+    .populate("community")
     .populate("creator");
-  if (postOfUser.length === 0) {
-    throw new ApiError(404, "User post not found");
-  }
 
   return res
     .status(200)
