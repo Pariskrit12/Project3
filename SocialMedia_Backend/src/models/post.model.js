@@ -57,7 +57,7 @@ const postSchema = new Schema(
   { timestamps: true },
 );
 //check if post is empty
-postSchema.pre("save", function (next) {
+postSchema.pre("save", async function () {
   const hasText =
     (this.postTitle && this.postTitle.trim().length > 0) ||
     (this.postDescription && this.postDescription.trim().length > 0);
@@ -65,9 +65,8 @@ postSchema.pre("save", function (next) {
   const hasMedia = this.media && this.media.length > 0;
 
   if (!hasText && !hasMedia) {
-    return next(new ApiError(400, "Post cannot be empty"));
+    throw new ApiError(400, "Post cannot be empty");
   }
-  next();
 });
 
 export const Post = mongoose.model("Post", postSchema);
