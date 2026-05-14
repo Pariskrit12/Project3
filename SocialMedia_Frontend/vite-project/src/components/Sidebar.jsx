@@ -2,6 +2,9 @@ import { Icon } from "@iconify/react";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NavigationLink from "./common/NavigationLink";
+import { useSelector, useDispatch } from "react-redux";
+import { clearUser } from "../slices/authSlice";
+import { useLogoutUserMutation } from "../services/usersApi";
 
 const Sidebar = () => {
   const sideBarLinks = [
@@ -10,9 +13,10 @@ const Sidebar = () => {
     { icon: "fluent:new-16-filled", label: "New", path: "/new" },
     { icon: "fluent:align-top-24-filled", label: "Top", path: "/top" },
     { icon: "lets-icons:setting-fill", label: "Settings", path: "/settings" },
-    { icon: "material-symbols:login", label: "Login", path: "/login" },
   ];
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [logoutUser] = useLogoutUserMutation();
   const dropdownElement = [
     { name: "Personal Life", img: "./Sharbani.png" },
     { name: "Football", img: "./football.png" },
@@ -20,7 +24,15 @@ const Sidebar = () => {
   ];
   const [activeIndex, setActiveIndex] = useState(0);
   const [openDropdown, setOpenDropdown] = useState(false);
+  const { isAuthenticated } = useSelector((state) => state.auth);
 
+  const handleLogout = async () => {
+    try {
+      await logoutUser().unwrap();
+    } catch (_) {}
+    dispatch(clearUser());
+    navigate("/login");
+  };
   return (
     <aside className="fixed z-100 bg-[#FFF7F0] flex flex-col px-3 py-6 w-65 gap-0.5 h-screen border-r border-[#EDD9C8] shadow-[1px_0_12px_rgba(164,57,25,0.05)]">
       <p className="text-[9px] font-extrabold text-[#C9A88A] uppercase tracking-[0.2em] px-3 mb-2">
@@ -36,6 +48,23 @@ const Sidebar = () => {
           path={elem.path}
         />
       ))}
+      {isAuthenticated ? (
+        <NavigationLink
+          label="Logout"
+          icon="material-symbols:logout"
+          onClick={handleLogout}
+          isActive={false}
+          path="#"
+        />
+      ) : (
+        <NavigationLink
+          label="Login"
+          icon="material-symbols:login"
+          onClick={() => setActiveIndex(sideBarLinks.length)}
+          isActive={activeIndex === sideBarLinks.length}
+          path="/login"
+        />
+      )}
 
       <div className="mx-3 my-4 h-px bg-linear-to-r from-transparent via-[#EDD9C8] to-transparent"></div>
 
