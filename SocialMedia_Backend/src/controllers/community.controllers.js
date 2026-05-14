@@ -143,4 +143,17 @@ const deleteCommunity = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, null, "Community deleted successfully"));
 });
-export{createCommunity,toggleJoinCommunity,getPostOfCommunity,getFollowersOfCommunity,deleteCommunity}
+const getCommunitiesOfLoggedInUser = asyncHandler(async (req, res) => {
+  const userId = req.user?._id;
+
+  if (!userId) {
+    throw new ApiError(401, "Unauthorized access");
+  }
+
+  const communities = await Community.find({ members: userId });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, communities, "Communities fetched successfully"));
+});
+export{createCommunity,toggleJoinCommunity,getPostOfCommunity,getFollowersOfCommunity,deleteCommunity,getCommunitiesOfLoggedInUser}
