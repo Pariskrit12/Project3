@@ -7,6 +7,7 @@ import { Community } from "../models/community.model.js";
 import { Post } from "../models/post.model.js";
 import { User } from "../models/user.models.js";
 
+
 const createCommunity = asyncHandler(async (req, res) => {
   const userId = req.user?._id;
 
@@ -79,7 +80,7 @@ const toggleJoinCommunity = asyncHandler(async (req, res) => {
           : "Joined community successfully",
       ),
     );
-});
+})
 const getPostOfCommunity = asyncHandler(async (req, res) => {
   const { communityId } = req.params;
   const community = await Community.findById(communityId);
