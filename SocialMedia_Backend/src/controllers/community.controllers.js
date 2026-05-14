@@ -171,4 +171,48 @@ const getCommunityById = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, community, "Community fetched successfully"));
 });
+const getAllCommunities = asyncHandler(async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  const [communities, total] = await Promise.all([
+    Community.find()
+      .populate("creator", "username userProfilePic")
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit),
+    Community.countDocuments(),
+  ]);
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        communities,
+        total,
+        currentPage: page,
+        totalPages: Math.ceil(total / limit),
+      },
+      "Communities fetched successfully",
+    ),
+  );
+});
+const searchCommunities = asyncHandler(async (req, res) => {
+  const { q } = req.query;
+
+  if (!q || q.trim().length === 0) {
+    throw new ApiError(400, "Search query is required");
+  }
+
+  const regex = new RegExp(q.trim(), "i");
+
+  const communities = await Community.find({
+    $or: [{ communityName: regex }, { communityDescription: regex }],
+  }).populate("creator", "username userProfilePic");
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, communities, "Communities fetched successfully"));
+});
 export{createCommunity,toggleJoinCommunity,getPostOfCommunity,getFollowersOfCommunity,deleteCommunity,getCommunitiesOfLoggedInUser}
