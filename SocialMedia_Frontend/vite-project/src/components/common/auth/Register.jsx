@@ -3,6 +3,7 @@ import React, { useRef, useState } from "react";
 import Input from "../Input";
 import Button from "../Button";
 import { useNavigate } from "react-router-dom";
+import { useRegisterUserMutation } from "../../../services/usersApi";
 
 const GENDERS = [
   { value: "male", label: "Male", icon: "mdi:gender-male" },
@@ -13,33 +14,62 @@ const GENDERS = [
 const Register = () => {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
+  const [registerUser, { isLoading }] = useRegisterUserMutation();
+
   const [profilePreview, setProfilePreview] = useState(null);
+  const [profileFile, setProfileFile] = useState(null);
   const [selectedGender, setSelectedGender] = useState("");
+  const [form, setForm] = useState({ name: "", username: "", email: "", password: "", confirmPassword: "" });
+  const [error, setError] = useState("");
+
+  const handleChange = (field) => (e) => {
+    setForm((prev) => ({ ...prev, [field]: e.target.value }));
+    setError("");
+  };
 
   const handleProfilePicChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      setProfileFile(file);
       setProfilePreview(URL.createObjectURL(file));
     }
   };
 
-  const topFields = [
-    { placeholder: "John Doe", type: "text", icon: "mdi:user-outline", label: "Full Name" },
-    { placeholder: "@username", type: "text", icon: "mdi:at", label: "Username" },
-    { placeholder: "your@email.com", type: "email", icon: "mdi:email-outline", label: "Email" },
-  ];
-
-  const passwordFields = [
-    { placeholder: "••••••••", type: "password", icon: "carbon:password", label: "Password" },
-    { placeholder: "••••••••", type: "password", icon: "carbon:password", label: "Confirm Password" },
-  ];
+  const handleSubmit = async (e) => {
+    e?.preventDefault();
+    if (!form.name || !form.username || !form.email || !form.password || !form.confirmPassword || !selectedGender) {
+      setError("Please fill in all fields.");
+      return;
+    }
+    if (form.password !== form.confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+    if (!profileFile) {
+      setError("Please upload a profile picture.");
+      return;
+    }
+    const formData = new FormData();
+    formData.append("name", form.name);
+    formData.append("username", form.username);
+    formData.append("email", form.email);
+    formData.append("password", form.password);
+    formData.append("gender", selectedGender);
+    formData.append("userProfilePic", profileFile);
+    try {
+      await registerUser(formData).unwrap();
+      navigate("/login");
+    } catch (err) {
+      setError(err?.data?.message || "Registration failed. Please try again.");
+    }
+  };
 
   return (
     <div className="flex justify-center items-center min-h-screen py-8 relative overflow-hidden">
       <div className="absolute top-0 right-1/4 w-64 h-64 bg-[#AF503A]/10 rounded-full blur-3xl pointer-events-none"></div>
       <div className="absolute bottom-10 left-1/4 w-80 h-80 bg-[#E8963A]/10 rounded-full blur-3xl pointer-events-none"></div>
 
-      <div className="w-96 rounded-3xl p-8 flex flex-col gap-6 items-center bg-[#FFFCF9]/95 backdrop-blur-sm shadow-[0_12px_48px_rgba(164,57,25,0.18)] border border-[#EDD9C8] relative z-10">
+      <form onSubmit={handleSubmit} className="w-96 rounded-3xl p-8 flex flex-col gap-6 items-center bg-[#FFFCF9]/95 backdrop-blur-sm shadow-[0_12px_48px_rgba(164,57,25,0.18)] border border-[#EDD9C8] relative z-10">
         {/* Header */}
         <div className="flex flex-col items-center gap-3">
           <div className="bg-linear-to-br from-[#E8963A] to-[#AF503A] p-4 rounded-2xl shadow-[0_6px_20px_rgba(232,150,58,0.4)]">
@@ -85,14 +115,18 @@ const Register = () => {
 
         {/* Top Fields */}
         <div className="w-full flex flex-col gap-3">
-          {topFields.map((field, index) => (
-            <div key={index} className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-[#4A2C1D] uppercase tracking-wide">
-                {field.label}
-              </label>
-              <Input placeholder={field.placeholder} type={field.type} icon={field.icon} />
-            </div>
-          ))}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-bold text-[#4A2C1D] uppercase tracking-wide">Full Name</label>
+            <Input placeholder="John Doe" type="text" icon="mdi:user-outline" value={form.name} onChange={handleChange("name")} />
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-bold text-[#4A2C1D] uppercase tracking-wide">Username</label>
+            <Input placeholder="@username" type="text" icon="mdi:at" value={form.username} onChange={handleChange("username")} />
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-bold text-[#4A2C1D] uppercase tracking-wide">Email</label>
+            <Input placeholder="your@email.com" type="email" icon="mdi:email-outline" value={form.email} onChange={handleChange("email")} />
+          </div>
         </div>
 
         {/* Gender */}
@@ -119,20 +153,24 @@ const Register = () => {
 
         {/* Password Fields */}
         <div className="w-full flex flex-col gap-3">
-          {passwordFields.map((field, index) => (
-            <div key={index} className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-[#4A2C1D] uppercase tracking-wide">
-                {field.label}
-              </label>
-              <Input placeholder={field.placeholder} type={field.type} icon={field.icon} />
-            </div>
-          ))}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-bold text-[#4A2C1D] uppercase tracking-wide">Password</label>
+            <Input placeholder="••••••••" type="password" icon="carbon:password" value={form.password} onChange={handleChange("password")} />
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-bold text-[#4A2C1D] uppercase tracking-wide">Confirm Password</label>
+            <Input placeholder="••••••••" type="password" icon="carbon:password" value={form.confirmPassword} onChange={handleChange("confirmPassword")} />
+          </div>
         </div>
 
         {/* Submit */}
         <div className="w-full">
-          <Button name="Create Account" isActive={true} />
+          <Button name={isLoading ? "Creating Account..." : "Create Account"} isActive={!isLoading} loading={isLoading} />
         </div>
+
+        {error && (
+          <p className="text-xs text-red-500 font-medium w-full text-center -mt-2">{error}</p>
+        )}
 
         <p className="text-sm text-[#4A2C1D]">
           Already have an account?{" "}
@@ -143,7 +181,7 @@ const Register = () => {
             Sign in
           </span>
         </p>
-      </div>
+      </form>
     </div>
   );
 };
