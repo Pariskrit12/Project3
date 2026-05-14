@@ -4,7 +4,7 @@ import Button from "../Button";
 import { Icon } from "@iconify/react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { useLoginUserMutation } from "../../../services/usersApi";
+import { useLoginUserMutation } from "../../../services/userApi";
 import { setUser } from "../../../slices/authSlice";
 
 const Login = () => {

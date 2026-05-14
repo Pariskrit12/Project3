@@ -3,7 +3,7 @@ import React, { useRef, useState } from "react";
 import Input from "../Input";
 import Button from "../Button";
 import { useNavigate } from "react-router-dom";
-import { useRegisterUserMutation } from "../../../services/usersApi";
+import { useRegisterUserMutation } from "../../../services/userApi";
 
 const GENDERS = [
   { value: "male", label: "Male", icon: "mdi:gender-male" },

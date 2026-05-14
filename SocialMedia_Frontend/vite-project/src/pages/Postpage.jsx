@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import Cards from "../components/HomeComponents/Cards";
 import CommentInput from "../components/common/CommentInput";
 import { Icon } from "@iconify/react";
-import { useGetPostQuery } from "../services/postsApi";
+import { useGetPostQuery } from "../services/postApi";
 import formatTime from "../utils/formatTime";
 
 const Postpage = () => {

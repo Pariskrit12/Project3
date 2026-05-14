@@ -3,7 +3,7 @@ import Cards from "../components/HomeComponents/Cards";
 import { Icon } from "@iconify/react";
 import { useNavigate } from "react-router-dom";
 import Input from "../components/common/Input";
-import { useGetAllPostsQuery } from "../services/postsApi";
+import { useGetAllPostsQuery } from "../services/postApi";
 import formatTime from "../utils/formatTime";
 
 const Home = () => {

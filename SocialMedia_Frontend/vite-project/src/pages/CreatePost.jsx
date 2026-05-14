@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import {
   useCreatePostMutation,
   useCreatePostInCommunityMutation,
-} from "../services/postsApi";
+} from "../services/postApi";
 import { useGetAllCommunitiesQuery } from "../services/communitiesApi";
 
 const CreatePost = () => {

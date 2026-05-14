@@ -3,8 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Icon } from "@iconify/react";
 import Button from "../components/common/Button";
-import { useGetProfileQuery } from "../services/usersApi";
-import { useGetPostsOfUserQuery } from "../services/postsApi";
+import { useGetProfileQuery } from "../services/userApi";
+import { useGetPostsOfUserQuery } from "../services/postApi";
 
 const UserProfile = () => {
   const { userId } = useParams();

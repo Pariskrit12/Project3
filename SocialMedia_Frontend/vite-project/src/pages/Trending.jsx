@@ -1,7 +1,7 @@
 import React from "react";
 import Cards from "../components/HomeComponents/Cards";
 import { Icon } from "@iconify/react";
-import { useGetAllPostsQuery } from "../services/postsApi";
+import { useGetAllPostsQuery } from "../services/postApi";
 import formatTime from "../utils/formatTime";
 import { useNavigate } from "react-router-dom";
 

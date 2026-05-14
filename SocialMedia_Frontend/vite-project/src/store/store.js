@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { usersApi } from "../services/usersApi";
-import { postsApi } from "../services/postsApi";
+import { usersApi } from "../services/userApi";
+import { postsApi } from "../services/postApi";
 import { commentsApi } from "../services/commentsApi";
 import { communitiesApi } from "../services/communitiesApi";
 import authReducer from "../slices/authSlice";

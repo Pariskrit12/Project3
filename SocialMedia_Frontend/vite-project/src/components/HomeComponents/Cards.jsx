@@ -4,7 +4,7 @@ import Button from "../common/Button";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useFollowUserMutation, useUnfollowUserMutation } from "../../services/userApi";
-import { useLikePostMutation, useDislikePostMutation } from "../../services/postsApi";
+import { useLikePostMutation, useDislikePostMutation } from "../../services/postApi";
 
 const MediaCarousel = ({ media }) => {
   const [index, setIndex] = useState(0);

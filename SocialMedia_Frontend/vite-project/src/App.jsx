@@ -20,7 +20,7 @@ import Communites from "./pages/Communites";
 import CreatePost from "./pages/CreatePost";
 import CommunityCreate from "./pages/CommunityCreate";
 import { useDispatch, useSelector } from "react-redux";
-import { useGetCurrentUserQuery } from "./services/usersApi";
+import { useGetCurrentUserQuery } from "./services/userApi";
 import { setUser } from "./slices/authSlice";
 import { Icon } from "@iconify/react";
 

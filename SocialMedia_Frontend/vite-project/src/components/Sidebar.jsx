@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import NavigationLink from "./common/NavigationLink";
 import { useSelector, useDispatch } from "react-redux";
 import { clearUser } from "../slices/authSlice";
-import { useLogoutUserMutation } from "../services/usersApi";
+import { useLogoutUserMutation } from "../services/userApi";
 
 const Sidebar = () => {
   const sideBarLinks = [
