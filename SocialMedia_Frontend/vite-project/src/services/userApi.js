@@ -8,14 +8,14 @@ export const usersApi = createApi({
   }),
   tagTypes: ["User", "Followers", "Following"],
   endpoints: (builder) => ({
-    register: builder.mutation({
+    registerUser: builder.mutation({
       query: (formData) => ({
         url: "/register",
         method: "POST",
         body: formData,
       }),
     }),
-    login: builder.mutation({
+    loginUser: builder.mutation({
       query: (credentials) => ({
         url: "/login",
         method: "POST",
@@ -23,7 +23,7 @@ export const usersApi = createApi({
       }),
       invalidatesTags: ["User"],
     }),
-    logout: builder.mutation({
+    logoutUser: builder.mutation({
       query: () => ({ url: "/logout", method: "POST" }),
       invalidatesTags: ["User"],
     }),
@@ -93,9 +93,9 @@ export const usersApi = createApi({
 });
 
 export const {
-  useRegisterMutation,
-  useLoginMutation,
-  useLogoutMutation,
+  useRegisterUserMutation,
+  useLoginUserMutation,
+  useLogoutUserMutation,
   useGetCurrentUserQuery,
   useGetProfileQuery,
   useGetAllUsersQuery,
