@@ -86,13 +86,9 @@ const getPostOfCommunity = asyncHandler(async (req, res) => {
   if (!community) {
     throw new ApiError(404, "Community not found");
   }
-  const postOfCommunity = await Post.find({ community: communityId }).populate(
-    "creator",
-    "username userProfilePic",
-  );
-  if (!postOfCommunity.length) {
-    throw new ApiError(404, "No posts found for this community");
-  }
+  const postOfCommunity = await Post.find({ community: communityId })
+    .populate("creator", "username userProfilePic")
+    .sort({ createdAt: -1 });
   return res
     .status(200)
     .json(new ApiResponse(200, postOfCommunity, "Posts fetched successfully"));
