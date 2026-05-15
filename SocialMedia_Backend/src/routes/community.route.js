@@ -8,6 +8,8 @@ import {
   getCommunityById,
   getAllCommunities,
   searchCommunities,
+  toggleJoinCommunity,
+  getPostOfCommunity,
 } from "../controllers/community.controllers.js";
 
 const router = Router();
@@ -25,5 +27,7 @@ router.route("/myCommunities").get(verifyJwt, getCommunitiesOfLoggedInUser);
  router.route("/search").get(verifyJwt, searchCommunities);
  router.route("/").get(verifyJwt, getAllCommunities);
 router.route("/:communityId").get(verifyJwt, getCommunityById);
+router.route("/:communityId/join").post(verifyJwt, toggleJoinCommunity);
+router.route("/:communityId/posts").get(verifyJwt, getPostOfCommunity);
 
 export default router;
