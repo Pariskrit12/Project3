@@ -53,6 +53,13 @@ const postSchema = new Schema(
         ref: "Comment",
       },
     ],
+    tags: [
+      {
+        type: String,
+        trim: true,
+        lowercase: true,
+      },
+    ],
   },
   { timestamps: true },
 );
