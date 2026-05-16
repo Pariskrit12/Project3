@@ -570,6 +570,29 @@ const searchUsers = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, users, "Users fetched successfully"));
 });
 
+const saveInterests = asyncHandler(async (req, res) => {
+  const userId = req.user?._id;
+  if (!userId) throw new ApiError(401, "Unauthorized access");
+
+  const { interests } = req.body;
+  if (!Array.isArray(interests)) {
+    throw new ApiError(400, "interests must be an array");
+  }
+
+  const cleaned = interests
+    .map((i) => i.trim().toLowerCase())
+    .filter((i) => i.length > 0);
+
+  await User.findByIdAndUpdate(userId, {
+    interests: cleaned,
+    hasSelectedInterests: true,
+  });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { interests: cleaned }, "Interests saved successfully"));
+});
+
 export {
   userRegister,
   userLogin,
@@ -589,4 +612,5 @@ export {
   getFollowerCount,
   getFollowingCount,
   searchUsers,
+  saveInterests,
 };
