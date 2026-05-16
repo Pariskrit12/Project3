@@ -3,6 +3,7 @@ import { ApiError } from "../utils/apiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { Post } from "../models/post.model.js";
+import { Community } from "../models/community.model.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import { v2 as cloudinary } from "cloudinary";
 import { Notification } from "../models/notification.model.js";
@@ -20,7 +21,7 @@ const createPost = asyncHandler(async (req, res) => {
     throw new ApiError(404, "User not found");
   }
 
-  const { postTitle, postDescription } = req.body;
+  const { postTitle, postDescription, tags } = req.body;
 
   const hasText =
     (postTitle && postTitle.trim().length > 0) ||
@@ -50,12 +51,19 @@ const createPost = asyncHandler(async (req, res) => {
     }
   }
 
+  const rawTags = tags
+    ? Array.isArray(tags)
+      ? tags
+      : JSON.parse(tags)
+    : [];
+
   const post = await Post.create({
     postTitle,
     postDescription,
     media: mediaArray,
     creator: userId,
     community: communitieId || null,
+    tags: rawTags,
   });
 
   return res
@@ -76,6 +84,7 @@ const getAllPost = asyncHandler(async (req, res) => {
 });
 const getPostById = asyncHandler(async (req, res) => {
   const { postId } = req.params;
+  const userId = req.user?._id;
 
   const post = await Post.findById(postId)
     .populate("creator")
@@ -83,6 +92,15 @@ const getPostById = asyncHandler(async (req, res) => {
     .populate("comments");
   if (!post) {
     throw new ApiError(404, "Post not found");
+  }
+
+  if (userId) {
+    await User.findByIdAndUpdate(userId, {
+      $pull: { recentlyVisited: postId },
+    });
+    await User.findByIdAndUpdate(userId, {
+      $push: { recentlyVisited: { $each: [postId], $position: 0, $slice: 10 } },
+    });
   }
 
   return res
@@ -319,8 +337,8 @@ const searchPosts = asyncHandler(async (req, res) => {
   if (!q || q.trim().length === 0) {
     throw new ApiError(400, "Search query is required");
   }
-
-  const regex = new RegExp(q.trim(), "i");
+  const escaped = q.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const regex = new RegExp(escaped, "i");
 
   const posts = await Post.find({
     $or: [{ postTitle: regex }, { postDescription: regex }],
@@ -331,6 +349,191 @@ const searchPosts = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(new ApiResponse(200, posts, "Posts fetched successfully"));
+});
+
+const getRecentlyVisitedPosts = asyncHandler(async (req, res) => {
+  const userId = req.user?._id;
+  if (!userId) {
+    throw new ApiError(401, "Unauthorized access");
+  }
+
+  const user = await User.findById(userId).populate({
+    path: "recentlyVisited",
+    populate: [
+      { path: "creator", select: "username userProfilePic" },
+      { path: "community", select: "communityName communityProfilePicture" },
+    ],
+  });
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        user.recentlyVisited,
+        "Recently visited posts fetched successfully",
+      ),
+    );
+});
+
+const getNewPosts = asyncHandler(async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  const [posts, total] = await Promise.all([
+    Post.find()
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .populate("creator", "username userProfilePic")
+      .populate("community", "communityName communityProfilePicture"),
+    Post.countDocuments(),
+  ]);
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        posts,
+        total,
+        currentPage: page,
+        totalPages: Math.ceil(total / limit),
+      },
+      "New posts fetched successfully",
+    ),
+  );
+});
+
+const getTopPosts = asyncHandler(async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  const [posts, total] = await Promise.all([
+    Post.aggregate([
+      {
+        $addFields: {
+          likesCount: { $size: "$likes" },
+          score: { $subtract: [{ $size: "$likes" }, { $size: "$dislikes" }] },
+        },
+      },
+      { $sort: { likesCount: -1, score: -1, createdAt: -1 } },
+      { $skip: skip },
+      { $limit: limit },
+      {
+        $lookup: {
+          from: "users",
+          localField: "creator",
+          foreignField: "_id",
+          pipeline: [{ $project: { username: 1, userProfilePic: 1 } }],
+          as: "creator",
+        },
+      },
+      { $unwind: { path: "$creator", preserveNullAndEmptyArrays: true } },
+      {
+        $lookup: {
+          from: "communities",
+          localField: "community",
+          foreignField: "_id",
+          pipeline: [
+            { $project: { communityName: 1, communityProfilePicture: 1 } },
+          ],
+          as: "community",
+        },
+      },
+      { $unwind: { path: "$community", preserveNullAndEmptyArrays: true } },
+    ]),
+    Post.countDocuments(),
+  ]);
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        posts,
+        total,
+        currentPage: page,
+        totalPages: Math.ceil(total / limit),
+      },
+      "Top posts fetched successfully",
+    ),
+  );
+});
+
+const searchAll = asyncHandler(async (req, res) => {
+  const { q } = req.query;
+
+  if (!q || q.trim().length === 0) {
+    throw new ApiError(400, "Search query is required");
+  }
+
+  const escaped = q.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const regex = new RegExp(escaped, "i");
+
+  const [posts, communities] = await Promise.all([
+    Post.find({
+      $or: [{ postTitle: regex }, { postDescription: regex }],
+    })
+      .populate("creator", "username userProfilePic")
+      .populate("community", "communityName communityProfilePicture")
+      .sort({ createdAt: -1 })
+      .limit(20),
+
+    Community.find({
+      $or: [{ communityName: regex }, { communityDescription: regex }],
+    })
+      .populate("creator", "username userProfilePic")
+      .sort({ createdAt: -1 })
+      .limit(20),
+  ]);
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { posts, communities }, "Search results fetched successfully"));
+});
+
+const getFeedPosts = asyncHandler(async (req, res) => {
+  const userId = req.user?._id;
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  const [user, allPosts] = await Promise.all([
+    User.findById(userId).select("interests"),
+    Post.find()
+      .populate("creator", "username userProfilePic")
+      .populate("community", "communityName communityProfilePicture")
+      .sort({ createdAt: -1 }),
+  ]);
+
+  const interests = (user?.interests ?? []).map((i) => i.toLowerCase());
+
+  let sorted;
+  if (interests.length === 0) {
+    sorted = allPosts;
+  } else {
+    sorted = [...allPosts].sort((a, b) => {
+      const scoreA = (a.tags ?? []).filter((t) =>
+        interests.includes(t.toLowerCase()),
+      ).length;
+      const scoreB = (b.tags ?? []).filter((t) =>
+        interests.includes(t.toLowerCase()),
+      ).length;
+      return scoreB - scoreA;
+    });
+  }
+
+  const total = sorted.length;
+  const posts = sorted.slice(skip, skip + limit);
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      { posts, total, currentPage: page, totalPages: Math.ceil(total / limit) },
+      "Feed fetched successfully",
+    ),
+  );
 });
 
 export {
@@ -344,4 +547,9 @@ export {
   dislikePost,
   updatePost,
   searchPosts,
+  searchAll,
+  getRecentlyVisitedPosts,
+  getNewPosts,
+  getTopPosts,
+  getFeedPosts,
 };
