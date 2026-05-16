@@ -74,7 +74,24 @@ const userSchema = new Schema(
         type:String,
         enum:["active","deactivated","banned"],
         default:"active"
-    }
+    },
+    recentlyVisited: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Post",
+      },
+    ],
+    interests: [
+      {
+        type: String,
+        trim: true,
+        lowercase: true,
+      },
+    ],
+    hasSelectedInterests: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true },
 );
