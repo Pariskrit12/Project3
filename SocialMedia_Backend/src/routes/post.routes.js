@@ -13,6 +13,11 @@ import {
   dislikePost,
   updatePost,
   searchPosts,
+  searchAll,
+  getRecentlyVisitedPosts,
+  getNewPosts,
+  getTopPosts,
+  getFeedPosts,
 } from "../controllers/post.controllers.js";
 const router = Router();
 
@@ -33,6 +38,11 @@ router.route("/deletePost/:postId").delete(verifyJwt, deletePost);
 router.route("/like/:id").post(verifyJwt, likePost);
 router.route("/dislike/:id").post(verifyJwt, dislikePost);
 router.route("/search").get(verifyJwt, searchPosts);
+router.route("/search/all").get(verifyJwt, searchAll);
+router.route("/recentlyVisited").get(verifyJwt, getRecentlyVisitedPosts);
+router.route("/new").get(verifyJwt, getNewPosts);
+router.route("/top").get(verifyJwt, getTopPosts);
+router.route("/feed").get(verifyJwt, getFeedPosts);
 
 
 
