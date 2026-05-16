@@ -54,7 +54,13 @@ const createComment = asyncHandler(async (req, res) => {
     }
   });
 
-  const post = await Post.findById(postId).select("creator");
+  await comment.populate("creator", "username userProfilePic");
+
+  const post = await Post.findByIdAndUpdate(
+    postId,
+    { $push: { comments: comment._id } },
+    { new: false, select: "creator" }
+  );
   if (post && post.creator.toString() !== userId.toString()) {
     await Notification.create({
       sender: userId,
@@ -138,7 +144,7 @@ const updateComment = asyncHandler(async (req, res) => {
   });
   return res
     .status(200)
-    .json(new ApiResponse(200, updateComment, "Successfully updated comments"));
+    .json(new ApiResponse(200, { updatedComment }, "Successfully updated comments"));
 });
 
 const likeComment = asyncHandler(async (req, res) => {
@@ -241,7 +247,11 @@ const deleteComment = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Comment not found");
   }
 
-  if (comment.creator.toString() !== userId.toString()) {
+  const post = await Post.findById(comment.post).select("creator");
+  const isCommentOwner = comment.creator.toString() === userId.toString();
+  const isPostOwner = post && post.creator.toString() === userId.toString();
+
+  if (!isCommentOwner && !isPostOwner) {
     throw new ApiError(403, "You cannot delete this comment");
   }
 
@@ -256,7 +266,10 @@ const deleteComment = asyncHandler(async (req, res) => {
       );
     }
   }
-  await comment.deleteOne();
+  await Promise.all([
+    comment.deleteOne(),
+    Post.findByIdAndUpdate(comment.post, { $pull: { comments: comment._id } }),
+  ]);
 
   return res
     .status(200)
@@ -270,6 +283,7 @@ const getCommentOfPost = asyncHandler(async (req, res) => {
 
   const skip = (page - 1) * limit;
   const comments = await Comment.find({ post: postId })
+    .populate("creator", "username userProfilePic")
     .sort({ createdAt: -1 })
     .skip(skip)
     .limit(limit);
