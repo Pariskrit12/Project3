@@ -68,10 +68,34 @@ export const postsApi = createApi({
     searchPosts: builder.query({
       query: (q) => ({ url: "/search", params: { q } }),
     }),
+     searchAll: builder.query({
+      query: (q) => ({ url: "/search/all", params: { q } }),
+    }),
+    getRecentlyVisitedPosts: builder.query({
+      query: () => "/recentlyVisited",
+      providesTags: ["RecentlyVisited"],
+    }),
+    getNewPosts: builder.query({
+      query: ({ page = 1, limit = 10 } = {}) => ({ url: "/new", params: { page, limit } }),
+      providesTags: ["Post"],
+    }),
+    getTopPosts: builder.query({
+      query: ({ page = 1, limit = 10 } = {}) => ({ url: "/top", params: { page, limit } }),
+      providesTags: ["Post"],
+    }),
+    getFeed: builder.query({
+      query: ({ page = 1, limit = 10 } = {}) => ({ url: "/feed", params: { page, limit } }),
+      providesTags: ["Post"],
+    }),
   }),
 });
 
 export const {
+  useSearchAllQuery,
+  useGetFeedQuery,
+  useGetNewPostsQuery,
+  useGetRecentlyVisitedPostsQuery,
+  useGetTopPostsQuery,
   useCreatePostMutation,
   useCreatePostInCommunityMutation,
   useGetAllPostsQuery,
