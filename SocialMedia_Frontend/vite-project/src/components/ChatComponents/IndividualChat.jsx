@@ -17,7 +17,7 @@ const IndividualChat = () => {
           <p className="text-gray-500">Active 14min ago</p>
         </div>
         </div>
-        <div className="flex gap-2 text-[#AF503A]">
+        <div className="flex gap-2 text-[#E11D48]">
           <Icon icon="material-symbols:call" width="24" height="24" />
           <Icon icon="mdi:video" width="24" height="24" />
           <Icon icon="ic:baseline-minus" width="24" height="24" />
