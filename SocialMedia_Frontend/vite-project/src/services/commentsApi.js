@@ -20,6 +20,22 @@ export const commentsApi = createApi({
         method: "POST",
         body: formData,
       }),
+      async onQueryStarted({ postId, optimisticComment }, { dispatch, queryFulfilled }) {
+        if (!optimisticComment) return;
+        const patchResult = dispatch(
+          commentsApi.util.updateQueryData("getComments", postId, (draft) => {
+            if (draft?.data) {
+              draft.data.comments = [optimisticComment, ...(draft.data.comments ?? [])];
+              draft.data.totalComments = (draft.data.totalComments ?? 0) + 1;
+            }
+          })
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
       invalidatesTags: (result, error, { postId }) => [
         { type: "Comment", id: postId },
       ],
@@ -39,9 +55,26 @@ export const commentsApi = createApi({
         url: `/${postId}/${commentId}`,
         method: "DELETE",
       }),
-      invalidatesTags: (result, error, { postId }) => [
-        { type: "Comment", id: postId },
-      ],
+      async onQueryStarted({ postId, commentId }, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          commentsApi.util.updateQueryData("getComments", postId, (draft) => {
+            if (draft?.data?.comments) {
+              draft.data.comments = draft.data.comments.filter(
+                (c) => c._id !== commentId
+              );
+              draft.data.totalComments = Math.max(
+                0,
+                (draft.data.totalComments ?? 1) - 1
+              );
+            }
+          })
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
     }),
     likeComment: builder.mutation({
       query: ({ postId, commentId }) => ({
