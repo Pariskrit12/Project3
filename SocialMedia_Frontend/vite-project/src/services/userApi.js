@@ -89,10 +89,19 @@ export const usersApi = createApi({
       query: (body) => ({ url: "/deactivateAccount", method: "POST", body }),
       invalidatesTags: ["User"],
     }),
+    saveInterests: builder.mutation({
+      query: (interests) => ({
+        url: "/saveInterests",
+        method: "POST",
+        body: { interests },
+      }),
+      invalidatesTags: ["User"],
+    }),
   }),
 });
 
 export const {
+  useSaveInterestsMutation,
   useRegisterUserMutation,
   useLoginUserMutation,
   useLogoutUserMutation,
