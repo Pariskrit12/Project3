@@ -1,40 +1,71 @@
 import { Icon } from "@iconify/react";
 import React from "react";
 import { truncateWords } from "../../utils/truncateWords";
+import formatTime from "../../utils/formatTime";
 
-const RecentPostCard = () => {
-  const title = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime, animi?";
+const RecentPostCard = ({ post, onClick }) => {
+  const thumbnail = post.media?.[0]?.url;
+  const thumbnailType = post.media?.[0]?.type;
+  const communityName = post.community?.communityName;
+  const communityPic = post.community?.communityProfilePicture;
+  const title = post.postTitle || post.postDescription || "Untitled post";
+
   return (
-    <div className="py-3 border-b border-[#EDD9C8] last:border-0 group cursor-pointer">
-      <div className="flex justify-between gap-3">
+    <div
+      onClick={onClick}
+      className="py-3 border-b border-[#FECDD3] last:border-0 group cursor-pointer"
+    >
+      <div className="flex gap-3">
+        {/* Text content */}
         <div className="flex flex-col gap-1.5 flex-1 min-w-0">
+          {/* Community / author row */}
           <div className="flex gap-1.5 items-center">
-            <div className="bg-linear-to-br from-[#C7604A] to-[#8B3010] rounded-full p-0.5 shrink-0">
-              <Icon icon="bi:emoji-grin-fill" width="10" height="10" className="text-white" />
+            <div className="h-4 w-4 rounded-full overflow-hidden shrink-0 bg-linear-to-br from-[#FB7185] to-[#BE123C] flex items-center justify-center">
+              {communityPic ? (
+                <img src={communityPic} alt="" className="w-full h-full object-cover" />
+              ) : post.creator?.userProfilePic ? (
+                <img src={post.creator.userProfilePic} alt="" className="w-full h-full object-cover" />
+              ) : (
+                <Icon icon="mdi:account" width="10" height="10" className="text-white" />
+              )}
             </div>
-            <p className="text-xs font-bold text-[#A43919]">Football</p>
-            <p className="text-xs text-[#C9A88A]">· 2h ago</p>
+            <p className="text-[11px] font-bold text-[#BE123C] truncate">
+              {communityName || post.creator?.username || "Unknown"}
+            </p>
+            <p className="text-[11px] text-[#FDA4AF] shrink-0">
+              · {formatTime(post.createdAt)}
+            </p>
           </div>
-          <p className="font-bold text-sm text-[#1C0F08] leading-snug group-hover:text-[#A43919] transition-colors duration-200">
-            {truncateWords(title, 5)}
+
+          {/* Title */}
+          <p className="font-bold text-sm text-[#1C0714] leading-snug group-hover:text-[#BE123C] transition-colors duration-200 line-clamp-2">
+            {truncateWords(title, 8)}
           </p>
+
+          {/* Stats */}
+          <div className="flex items-center gap-3 text-[11px] text-[#FDA4AF]">
+            <span className="flex items-center gap-1">
+              <Icon icon="boxicons:like-filled" width="11" height="11" className="text-[#E11D48]" />
+              {post.likes?.length ?? 0}
+            </span>
+            <span className="flex items-center gap-1">
+              <Icon icon="mdi:comment-outline" width="11" height="11" />
+              {post.comments?.length ?? 0}
+            </span>
+          </div>
         </div>
-        <div className="shrink-0">
-          <img
-            src="./Sharbani.png"
-            className="w-16 h-14 object-cover rounded-xl border border-[#EDD9C8]"
-            alt="post thumbnail"
-          />
-        </div>
-      </div>
-      <div className="flex text-xs gap-3 text-[#C9A88A] mt-2">
-        <div className="flex items-center gap-1">
-          <Icon icon="boxicons:like-filled" width="11" height="11" />
-          <p>191</p>
-        </div>
-        <div className="flex items-center gap-1">
-          <Icon icon="mdi:comments" width="11" height="11" />
-          <p>20</p>
+
+        {/* Thumbnail */}
+        <div className="shrink-0 w-16 h-14 rounded-xl overflow-hidden border border-[#FECDD3] bg-[#FFE4E6] flex items-center justify-center">
+          {thumbnail ? (
+            thumbnailType === "video" ? (
+              <video src={thumbnail} className="w-full h-full object-cover" muted />
+            ) : (
+              <img src={thumbnail} alt="thumbnail" className="w-full h-full object-cover" />
+            )
+          ) : (
+            <Icon icon="mdi:image-outline" width="22" height="22" className="text-[#FDA4AF]" />
+          )}
         </div>
       </div>
     </div>

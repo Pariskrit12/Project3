@@ -1,10 +1,10 @@
 import { Icon } from "@iconify/react";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Button from "../common/Button";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useFollowUserMutation, useUnfollowUserMutation } from "../../services/userApi";
-import { useLikePostMutation, useDislikePostMutation } from "../../services/postApi";
+import { useLikePostMutation, useDislikePostMutation, useDeletePostMutation } from "../../services/postApi";
 
 const MediaCarousel = ({ media }) => {
   const [index, setIndex] = useState(0);
@@ -113,7 +113,9 @@ const Cards = ({
   const { user: loggedInUser } = useSelector((state) => state.auth);
   const userId = loggedInUser?._id;
   const isOwnPost = userId === creatorId;
-  const isFollowing = loggedInUser?.following?.some((id) => id.toString() === creatorId);
+  const [isFollowing, setIsFollowing] = useState(
+    () => loggedInUser?.following?.some((id) => id.toString() === creatorId) ?? false
+  );
 
   const [localLikes, setLocalLikes] = useState(likes);
   const [localDislikes, setLocalDislikes] = useState(dislikes);
@@ -126,10 +128,23 @@ const Cards = ({
   const isLiked = localLikes.some((id) => id.toString() === userId);
   const isDisliked = localDislikes.some((id) => id.toString() === userId);
 
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const handleOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) setMenuOpen(false);
+    };
+    document.addEventListener("mousedown", handleOutside);
+    return () => document.removeEventListener("mousedown", handleOutside);
+  }, [menuOpen]);
+
   const [followUser, { isLoading: following }] = useFollowUserMutation();
   const [unfollowUser, { isLoading: unfollowing }] = useUnfollowUserMutation();
   const [likePost] = useLikePostMutation();
   const [dislikePost] = useDislikePostMutation();
+  const [deletePost, { isLoading: isDeleting }] = useDeletePostMutation();
 
   const resolvedMedia =
     media.length > 0
@@ -171,21 +186,26 @@ const Cards = ({
   const handleFollowToggle = async (e) => {
     e.stopPropagation();
     if (!creatorId) return;
-    if (isFollowing) {
-      await unfollowUser(creatorId);
-    } else {
-      await followUser(creatorId);
+    setIsFollowing((prev) => !prev);
+    try {
+      if (isFollowing) {
+        await unfollowUser(creatorId).unwrap();
+      } else {
+        await followUser(creatorId).unwrap();
+      }
+    } catch {
+      setIsFollowing((prev) => !prev);
     }
   };
 
   return (
     <div
       onClick={onClick}
-      className="border border-[#EDD9C8] bg-[#FFFCF9] shadow-[0_2px_16px_rgba(164,57,25,0.07)] flex flex-col gap-4 rounded-2xl hover:shadow-[0_8px_28px_rgba(164,57,25,0.13)] hover:border-[#C9A88A] hover:-translate-y-0.5 transition-all duration-300 cursor-pointer overflow-hidden"
+      className="border border-[#FECDD3] bg-[#FFF5F6] shadow-[0_2px_16px_rgba(225,29,72,0.07)] flex flex-col gap-4 rounded-2xl hover:shadow-[0_8px_28px_rgba(225,29,72,0.13)] hover:border-[#FDA4AF] hover:-translate-y-0.5 transition-all duration-300 cursor-pointer overflow-hidden"
     >
       <div className="p-5 pb-0 flex justify-between items-start">
         <div onClick={handleUserClick} className="flex gap-2.5 items-center cursor-pointer group">
-          <div className="shrink-0 h-10 w-10 rounded-full ring-2 ring-[#C7604A] ring-offset-1 ring-offset-[#FFFCF9] shadow-[0_2px_8px_rgba(164,57,25,0.25)] overflow-hidden bg-linear-to-br from-[#C7604A] to-[#8B3010]">
+          <div className="shrink-0 h-10 w-10 rounded-full ring-2 ring-[#FB7185] ring-offset-1 ring-offset-[#FFF5F6] shadow-[0_2px_8px_rgba(225,29,72,0.25)] overflow-hidden bg-linear-to-br from-[#FB7185] to-[#BE123C]">
             {userProfilePic ? (
               <img className="h-full w-full object-cover" src={userProfilePic} alt={username} />
             ) : (
@@ -195,8 +215,8 @@ const Cards = ({
             )}
           </div>
           <div>
-            <p className="text-[#A43919] font-bold text-sm leading-tight">{communitteName}</p>
-            <p className="text-xs text-[#C9A88A] group-hover:text-[#A43919] transition-colors">
+            <p className="text-[#BE123C] font-bold text-sm leading-tight">{communitteName}</p>
+            <p className="text-xs text-[#FDA4AF] group-hover:text-[#BE123C] transition-colors">
               /{username} · {uploadedTime}
             </p>
           </div>
@@ -212,32 +232,78 @@ const Cards = ({
               />
             </div>
           )}
-          <button
-            className="p-1.5 rounded-lg hover:bg-[#FAEBD8] transition-colors"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Icon className="text-[#C9A88A]" icon="tabler:dots-filled" width="20" height="20" />
-          </button>
+          <div ref={menuRef} className="relative">
+            <button
+              className="p-1.5 rounded-lg hover:bg-[#FFE4E6] transition-colors"
+              onClick={(e) => { e.stopPropagation(); setMenuOpen((p) => !p); }}
+            >
+              <Icon className="text-[#FDA4AF]" icon="tabler:dots-filled" width="20" height="20" />
+            </button>
+
+            {menuOpen && (
+              <div
+                className="absolute right-0 top-full mt-1 w-44 bg-white rounded-xl border border-[#FECDD3] shadow-[0_8px_24px_rgba(225,29,72,0.12)] z-50 overflow-hidden"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {isOwnPost ? (
+                  <>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setMenuOpen(false); navigate(`/postPage/${postId}`); }}
+                      className="flex items-center gap-2.5 w-full px-4 py-2.5 text-sm font-medium text-[#9F1239] hover:bg-[#FFF1F2] hover:text-[#E11D48] transition-colors"
+                    >
+                      <Icon icon="material-symbols:edit-outline-rounded" width="16" height="16" className="text-[#E11D48]" />
+                      Edit Post
+                    </button>
+                    <div className="h-px bg-[#FFE4E6] mx-3" />
+                    <button
+                      disabled={isDeleting}
+                      onClick={async (e) => {
+                        e.stopPropagation();
+                        setMenuOpen(false);
+                        await deletePost(postId);
+                      }}
+                      className="flex items-center gap-2.5 w-full px-4 py-2.5 text-sm font-medium text-red-500 hover:bg-red-50 transition-colors disabled:opacity-50"
+                    >
+                      {isDeleting ? (
+                        <Icon icon="svg-spinners:ring-resize" width="16" height="16" />
+                      ) : (
+                        <Icon icon="material-symbols:delete-outline-rounded" width="16" height="16" />
+                      )}
+                      Delete Post
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setMenuOpen(false); }}
+                    className="flex items-center gap-2.5 w-full px-4 py-2.5 text-sm font-medium text-[#9F1239] hover:bg-red-50 hover:text-red-500 transition-colors"
+                  >
+                    <Icon icon="material-symbols:flag-outline-rounded" width="16" height="16" className="text-red-400" />
+                    Report Post
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
       <div className="px-5">
-        <h1 className="text-lg font-bold text-[#1C0F08] leading-snug">{titleOfPost}</h1>
+        <h1 className="text-lg font-bold text-[#1C0714] leading-snug">{titleOfPost}</h1>
       </div>
 
       <MediaCarousel media={resolvedMedia} />
 
       {showFull && description && (
         <div className="px-5">
-          <p className="text-sm text-[#4A2C1D] leading-relaxed">{description}</p>
+          <p className="text-sm text-[#9F1239] leading-relaxed">{description}</p>
         </div>
       )}
 
-      <div className="px-5 pb-4 flex items-center gap-2 pt-1 border-t border-[#F0E6DD]">
+      <div className="px-5 pb-4 flex items-center gap-2 pt-1 border-t border-[#FFE4E6]">
         <button
           onClick={handleLike}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold transition-all duration-200 ${
-            isLiked ? "bg-[#FAEBD8] text-[#A43919]" : "text-[#9C7E6D] hover:bg-[#FAEBD8] hover:text-[#A43919]"
+            isLiked ? "bg-[#FFE4E6] text-[#BE123C]" : "text-[#BE7090] hover:bg-[#FFE4E6] hover:text-[#BE123C]"
           }`}
         >
           <Icon icon={isLiked ? "boxicons:like-filled" : "boxicons:like"} width="16" height="16" />
@@ -246,21 +312,21 @@ const Cards = ({
         <button
           onClick={handleDislike}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold transition-all duration-200 ${
-            isDisliked ? "bg-[#FAEBD8] text-[#A43919]" : "text-[#9C7E6D] hover:bg-[#FAEBD8] hover:text-[#A43919]"
+            isDisliked ? "bg-[#FFE4E6] text-[#BE123C]" : "text-[#BE7090] hover:bg-[#FFE4E6] hover:text-[#BE123C]"
           }`}
         >
           <Icon icon={isDisliked ? "boxicons:dislike-filled" : "boxicons:dislike"} width="16" height="16" />
           <span>{localDislikes.length > 0 ? localDislikes.length : "Dislike"}</span>
         </button>
         <button
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold text-[#9C7E6D] hover:bg-[#FAEBD8] hover:text-[#A43919] transition-all duration-200"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold text-[#BE7090] hover:bg-[#FFE4E6] hover:text-[#BE123C] transition-all duration-200"
           onClick={(e) => e.stopPropagation()}
         >
           <Icon icon="mdi:comments-outline" width="16" height="16" />
           <span>Comment</span>
         </button>
         <button
-          className="ml-auto p-1.5 rounded-full text-[#9C7E6D] hover:bg-[#FAEBD8] hover:text-[#A43919] transition-all duration-200"
+          className="ml-auto p-1.5 rounded-full text-[#BE7090] hover:bg-[#FFE4E6] hover:text-[#BE123C] transition-all duration-200"
           onClick={(e) => e.stopPropagation()}
         >
           <Icon icon="tabler:share" width="16" height="16" />
