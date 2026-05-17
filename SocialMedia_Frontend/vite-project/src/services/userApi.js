@@ -120,4 +120,5 @@ export const {
   useGetFollowerCountQuery,
   useGetFollowingCountQuery,
   useDeactivateAccountMutation,
+  
 } = usersApi;

@@ -6,7 +6,7 @@ export const postsApi = createApi({
     baseUrl: "/post",
     credentials: "include",
   }),
-  tagTypes: ["Post", "UserPosts"],
+  tagTypes: ["Post", "UserPosts", "RecentlyVisited"],
   endpoints: (builder) => ({
     createPost: builder.mutation({
       query: (formData) => ({
