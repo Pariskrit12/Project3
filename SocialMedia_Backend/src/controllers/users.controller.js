@@ -363,7 +363,10 @@ const getUserProfileById = asyncHandler(async (req, res) => {
     throw new ApiError(401, "Unauthorized access");
   }
 
-  const user = await User.findById(userId).select("-password -refreshToken");
+  const user = await User.findById(userId)
+    .select("-password -refreshToken")
+    .populate("followers", "username fullName userProfilePic")
+    .populate("following", "username fullName userProfilePic");
   if (!user) {
     throw new ApiError(404, "User not found");
   }
