@@ -3,8 +3,8 @@ import React from "react";
 
 const Button = ({ name, icon, onClick, isActive, loading }) => {
   const buttonStyle = isActive
-    ? "bg-linear-to-r from-[#AF503A] to-[#C7604A] text-white shadow-[0_3px_12px_rgba(164,57,25,0.35)] hover:shadow-[0_4px_16px_rgba(164,57,25,0.45)] hover:from-[#9B4230] hover:to-[#B75540]"
-    : "bg-[#F0E6DD] text-[#4A2C1D] hover:bg-[#FAEBD8] hover:text-[#A43919] border border-transparent hover:border-[#EDD9C8]";
+    ? "bg-linear-to-r from-[#E11D48] to-[#FB7185] text-white shadow-[0_3px_12px_rgba(225,29,72,0.35)] hover:shadow-[0_4px_16px_rgba(225,29,72,0.45)] hover:from-[#9B4230] hover:to-[#B75540]"
+    : "bg-[#FFE4E6] text-[#9F1239] hover:bg-[#FFE4E6] hover:text-[#BE123C] border border-transparent hover:border-[#FECDD3]";
 
   return (
     <button
