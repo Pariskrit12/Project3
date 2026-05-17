@@ -15,7 +15,28 @@ const CreatePost = () => {
   const [mediaFiles, setMediaFiles] = useState([]);
   const [previews, setPreviews] = useState([]);
   const [error, setError] = useState("");
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [tagInput, setTagInput] = useState("");
   const fileInputRef = useRef(null);
+
+  const PRESET_TAGS = [
+    "technology", "gaming", "sports", "music", "art", "science",
+    "travel", "food", "fitness", "fashion", "movies", "books",
+    "coding", "design", "health", "education", "photography", "nature",
+  ];
+
+  const toggleTag = (tag) => {
+    setSelectedTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+    );
+  };
+
+  const addCustomTag = () => {
+    const tag = tagInput.trim().toLowerCase();
+    if (!tag || selectedTags.includes(tag)) return;
+    setSelectedTags((prev) => [...prev, tag]);
+    setTagInput("");
+  };
 
   const [createPost, { isLoading: isCreating }] = useCreatePostMutation();
   const [createPostInCommunity, { isLoading: isCreatingInCommunity }] =
@@ -50,6 +71,8 @@ const CreatePost = () => {
     if (postDescription.trim())
       formData.append("postDescription", postDescription.trim());
     mediaFiles.forEach((file) => formData.append("media", file));
+    if (selectedTags.length > 0)
+      formData.append("tags", JSON.stringify(selectedTags));
 
     try {
       if (selectedCommunity) {
@@ -74,7 +97,7 @@ const CreatePost = () => {
       <div className="flex items-center gap-3 mb-6">
         <button
           onClick={() => navigate(-1)}
-          className="p-2 rounded-xl hover:bg-[#FAEBD8] text-[#AF503A] transition-colors duration-200"
+          className="p-2 rounded-xl hover:bg-[#FFE4E6] text-[#E11D48] transition-colors duration-200"
         >
           <Icon
             icon="material-symbols:arrow-back-rounded"
@@ -83,28 +106,28 @@ const CreatePost = () => {
           />
         </button>
         <div>
-          <h1 className="text-xl font-bold text-[#1C0F08]">Create Post</h1>
-          <p className="text-xs text-[#C9A88A]">Share something with the community</p>
+          <h1 className="text-xl font-bold text-[#1C0714]">Create Post</h1>
+          <p className="text-xs text-[#FDA4AF]">Share something with the community</p>
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         {/* Community selector */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-[10px] font-extrabold text-[#C9A88A] uppercase tracking-[0.2em] px-1">
+          <label className="text-[10px] font-extrabold text-[#FDA4AF] uppercase tracking-[0.2em] px-1">
             Community (optional)
           </label>
-          <div className="flex w-full border border-[#EDD9C8] bg-[#FFFCF9] rounded-xl p-3 gap-2.5 focus-within:border-[#AF503A] focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(175,80,58,0.1)] transition-all duration-200">
+          <div className="flex w-full border border-[#FECDD3] bg-[#FFF5F6] rounded-xl p-3 gap-2.5 focus-within:border-[#E11D48] focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(225,29,72,0.1)] transition-all duration-200">
             <Icon
               icon="mdi:account-group"
               width="18"
               height="18"
-              className="text-[#AF503A] shrink-0 mt-px"
+              className="text-[#E11D48] shrink-0 mt-px"
             />
             <select
               value={selectedCommunity}
               onChange={(e) => setSelectedCommunity(e.target.value)}
-              className="w-full outline-none bg-transparent text-[#1C0F08] text-sm cursor-pointer"
+              className="w-full outline-none bg-transparent text-[#1C0714] text-sm cursor-pointer"
             >
               <option value="">No community — general post</option>
               {communities.map((c) => (
@@ -117,75 +140,146 @@ const CreatePost = () => {
               icon="ep:arrow-down-bold"
               width="13"
               height="13"
-              className="text-[#C9A88A] shrink-0 mt-px pointer-events-none"
+              className="text-[#FDA4AF] shrink-0 mt-px pointer-events-none"
             />
           </div>
         </div>
 
         {/* Title */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-[10px] font-extrabold text-[#C9A88A] uppercase tracking-[0.2em] px-1">
+          <label className="text-[10px] font-extrabold text-[#FDA4AF] uppercase tracking-[0.2em] px-1">
             Title
           </label>
-          <div className="flex w-full border border-[#EDD9C8] bg-[#FFFCF9] rounded-xl p-3 gap-2.5 focus-within:border-[#AF503A] focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(175,80,58,0.1)] transition-all duration-200">
+          <div className="flex w-full border border-[#FECDD3] bg-[#FFF5F6] rounded-xl p-3 gap-2.5 focus-within:border-[#E11D48] focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(225,29,72,0.1)] transition-all duration-200">
             <Icon
               icon="fluent:text-header-1-24-filled"
               width="18"
               height="18"
-              className="text-[#AF503A] shrink-0 mt-px"
+              className="text-[#E11D48] shrink-0 mt-px"
             />
             <input
               value={postTitle}
               onChange={(e) => setPostTitle(e.target.value)}
               placeholder="Give your post a title..."
-              className="w-full outline-none bg-transparent text-[#1C0F08] placeholder:text-[#C9A88A] text-sm font-medium"
+              className="w-full outline-none bg-transparent text-[#1C0714] placeholder:text-[#FDA4AF] text-sm font-medium"
             />
           </div>
         </div>
 
         {/* Description */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-[10px] font-extrabold text-[#C9A88A] uppercase tracking-[0.2em] px-1">
+          <label className="text-[10px] font-extrabold text-[#FDA4AF] uppercase tracking-[0.2em] px-1">
             Description
           </label>
-          <div className="flex w-full border border-[#EDD9C8] bg-[#FFFCF9] rounded-xl p-3 gap-2.5 focus-within:border-[#AF503A] focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(175,80,58,0.1)] transition-all duration-200">
+          <div className="flex w-full border border-[#FECDD3] bg-[#FFF5F6] rounded-xl p-3 gap-2.5 focus-within:border-[#E11D48] focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(225,29,72,0.1)] transition-all duration-200">
             <Icon
               icon="material-symbols:description-outline"
               width="18"
               height="18"
-              className="text-[#AF503A] shrink-0 mt-px"
+              className="text-[#E11D48] shrink-0 mt-px"
             />
             <textarea
               value={postDescription}
               onChange={(e) => setPostDescription(e.target.value)}
               placeholder="What's on your mind?"
               rows={5}
-              className="w-full outline-none bg-transparent text-[#1C0F08] placeholder:text-[#C9A88A] text-sm resize-none"
+              className="w-full outline-none bg-transparent text-[#1C0714] placeholder:text-[#FDA4AF] text-sm resize-none"
             />
+          </div>
+        </div>
+
+        {/* Tags */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-[10px] font-extrabold text-[#FDA4AF] uppercase tracking-[0.2em] px-1">
+            Tags (optional)
+          </label>
+          <div className="border border-[#FECDD3] bg-[#FFF5F6] rounded-xl p-3 flex flex-col gap-3">
+            <div className="flex flex-wrap gap-1.5">
+              {PRESET_TAGS.map((tag) => {
+                const active = selectedTags.includes(tag);
+                return (
+                  <button
+                    key={tag}
+                    type="button"
+                    onClick={() => toggleTag(tag)}
+                    className={`px-2.5 py-1 rounded-full text-xs font-semibold border transition-all capitalize ${
+                      active
+                        ? "bg-linear-to-r from-[#E11D48] to-[#FB7185] text-white border-transparent"
+                        : "bg-[#FFE4E6] text-[#9F1239] border-[#FECDD3] hover:bg-[#FFE4E6]"
+                    }`}
+                  >
+                    {active && <Icon icon="mdi:check" width="10" height="10" className="inline mr-1 -mt-0.5" />}
+                    {tag}
+                  </button>
+                );
+              })}
+            </div>
+            <div className="flex gap-2">
+              <div className="flex-1 flex items-center gap-2 border border-[#FECDD3] bg-white rounded-lg px-3 py-1.5 focus-within:border-[#E11D48] transition-all">
+                <Icon icon="mdi:tag-plus-outline" width="14" height="14" className="text-[#E11D48] shrink-0" />
+                <input
+                  type="text"
+                  value={tagInput}
+                  onChange={(e) => setTagInput(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addCustomTag())}
+                  placeholder="Custom tag…"
+                  className="flex-1 outline-none bg-transparent text-xs text-[#1C0714] placeholder:text-[#FDA4AF]"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={addCustomTag}
+                disabled={!tagInput.trim()}
+                className="px-3 py-1.5 rounded-lg bg-[#FFE4E6] text-[#E11D48] text-xs font-semibold hover:bg-[#FFE4E6] disabled:opacity-40 transition-colors"
+              >
+                Add
+              </button>
+            </div>
+            {selectedTags.length > 0 && (
+              <div className="flex flex-wrap gap-1.5">
+                {selectedTags
+                  .filter((t) => !PRESET_TAGS.includes(t))
+                  .map((tag) => (
+                    <span
+                      key={tag}
+                      className="flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-linear-to-r from-[#E11D48] to-[#FB7185] text-white"
+                    >
+                      {tag}
+                      <button
+                        type="button"
+                        onClick={() => toggleTag(tag)}
+                        className="hover:opacity-70"
+                      >
+                        <Icon icon="mdi:close" width="10" height="10" />
+                      </button>
+                    </span>
+                  ))}
+              </div>
+            )}
           </div>
         </div>
 
         {/* Media Upload */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-[10px] font-extrabold text-[#C9A88A] uppercase tracking-[0.2em] px-1">
+          <label className="text-[10px] font-extrabold text-[#FDA4AF] uppercase tracking-[0.2em] px-1">
             Media (optional)
           </label>
           <div
             onClick={() => fileInputRef.current?.click()}
-            className="border-2 border-dashed border-[#EDD9C8] bg-[#FFFCF9] rounded-xl p-6 flex flex-col items-center gap-2 cursor-pointer hover:border-[#AF503A] hover:bg-[#FFF7F0] transition-all duration-200 group"
+            className="border-2 border-dashed border-[#FECDD3] bg-[#FFF5F6] rounded-xl p-6 flex flex-col items-center gap-2 cursor-pointer hover:border-[#E11D48] hover:bg-[#FFF1F2] transition-all duration-200 group"
           >
-            <div className="p-3 rounded-full bg-[#F0E6DD] group-hover:bg-[#FAEBD8] transition-colors">
+            <div className="p-3 rounded-full bg-[#FFE4E6] group-hover:bg-[#FFE4E6] transition-colors">
               <Icon
                 icon="material-symbols:upload-rounded"
                 width="22"
                 height="22"
-                className="text-[#AF503A]"
+                className="text-[#E11D48]"
               />
             </div>
-            <p className="text-sm font-semibold text-[#4A2C1D]">
+            <p className="text-sm font-semibold text-[#9F1239]">
               Click to upload images or videos
             </p>
-            <p className="text-xs text-[#C9A88A]">Multiple files supported</p>
+            <p className="text-xs text-[#FDA4AF]">Multiple files supported</p>
             <input
               ref={fileInputRef}
               type="file"
@@ -201,7 +295,7 @@ const CreatePost = () => {
               {previews.map((preview, index) => (
                 <div
                   key={index}
-                  className="relative rounded-xl overflow-hidden border border-[#EDD9C8] aspect-square bg-[#F0E6DD]"
+                  className="relative rounded-xl overflow-hidden border border-[#FECDD3] aspect-square bg-[#FFE4E6]"
                 >
                   {preview.type === "image" ? (
                     <img
@@ -244,7 +338,7 @@ const CreatePost = () => {
           <button
             type="button"
             onClick={() => navigate(-1)}
-            className="flex-1 py-2.5 rounded-full font-semibold text-sm text-[#4A2C1D] bg-[#F0E6DD] hover:bg-[#FAEBD8] hover:text-[#A43919] border border-transparent hover:border-[#EDD9C8] transition-all duration-200 cursor-pointer"
+            className="flex-1 py-2.5 rounded-full font-semibold text-sm text-[#9F1239] bg-[#FFE4E6] hover:bg-[#FFE4E6] hover:text-[#BE123C] border border-transparent hover:border-[#FECDD3] transition-all duration-200 cursor-pointer"
           >
             Cancel
           </button>
@@ -253,8 +347,8 @@ const CreatePost = () => {
             disabled={!hasContent || isLoading}
             className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-full font-semibold text-sm transition-all duration-200 ${
               hasContent && !isLoading
-                ? "bg-linear-to-r from-[#AF503A] to-[#C7604A] text-white shadow-[0_3px_12px_rgba(164,57,25,0.35)] hover:shadow-[0_5px_18px_rgba(164,57,25,0.5)] hover:-translate-y-0.5 cursor-pointer"
-                : "bg-[#EDD9C8] text-[#C9A88A] cursor-not-allowed"
+                ? "bg-linear-to-r from-[#E11D48] to-[#FB7185] text-white shadow-[0_3px_12px_rgba(225,29,72,0.35)] hover:shadow-[0_5px_18px_rgba(225,29,72,0.5)] hover:-translate-y-0.5 cursor-pointer"
+                : "bg-[#FECDD3] text-[#FDA4AF] cursor-not-allowed"
             }`}
           >
             {isLoading ? (

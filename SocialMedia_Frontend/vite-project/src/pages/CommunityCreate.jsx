@@ -45,8 +45,8 @@ const CommunityCreate = () => {
     if (bannerFile) formData.append("banner", bannerFile);
 
     try {
-      await createCommunity(formData).unwrap();
-      navigate("/communities");
+      const result = await createCommunity(formData).unwrap();
+      navigate(`/communities/${result.data._id}`);
     } catch (err) {
       setError(err?.data?.message || "Failed to create community. Please try again.");
     }
@@ -60,13 +60,13 @@ const CommunityCreate = () => {
       <div className="flex items-center gap-3 mb-6">
         <button
           onClick={() => navigate(-1)}
-          className="p-2 rounded-xl hover:bg-[#FAEBD8] text-[#AF503A] transition-colors duration-200"
+          className="p-2 rounded-xl hover:bg-[#FFE4E6] text-[#E11D48] transition-colors duration-200"
         >
           <Icon icon="material-symbols:arrow-back-rounded" width="20" height="20" />
         </button>
         <div>
-          <h1 className="text-xl font-bold text-[#1C0F08]">Create Community</h1>
-          <p className="text-xs text-[#C9A88A]">Build a space for people who share your interests</p>
+          <h1 className="text-xl font-bold text-[#1C0714]">Create Community</h1>
+          <p className="text-xs text-[#FDA4AF]">Build a space for people who share your interests</p>
         </div>
       </div>
 
@@ -74,12 +74,12 @@ const CommunityCreate = () => {
 
         {/* Banner upload */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-[10px] font-extrabold text-[#C9A88A] uppercase tracking-[0.2em] px-1">
-            Banner Image <span className="text-[#AF503A]">*</span>
+          <label className="text-[10px] font-extrabold text-[#FDA4AF] uppercase tracking-[0.2em] px-1">
+            Banner Image <span className="text-[#E11D48]">*</span>
           </label>
           <div
             onClick={() => bannerRef.current?.click()}
-            className="relative h-36 rounded-2xl overflow-hidden border-2 border-dashed border-[#EDD9C8] bg-[#FFFCF9] cursor-pointer hover:border-[#AF503A] hover:bg-[#FFF7F0] transition-all duration-200 group"
+            className="relative h-36 rounded-2xl overflow-hidden border-2 border-dashed border-[#FECDD3] bg-[#FFF5F6] cursor-pointer hover:border-[#E11D48] hover:bg-[#FFF1F2] transition-all duration-200 group"
           >
             {bannerPreview ? (
               <>
@@ -90,9 +90,9 @@ const CommunityCreate = () => {
               </>
             ) : (
               <div className="h-full flex flex-col items-center justify-center gap-2">
-                <Icon icon="material-symbols:image-outline" width="28" height="28" className="text-[#C9A88A]" />
-                <p className="text-sm font-medium text-[#C9A88A]">Click to upload banner</p>
-                <p className="text-xs text-[#EDD9C8]">Recommended: 1500 × 500px</p>
+                <Icon icon="material-symbols:image-outline" width="28" height="28" className="text-[#FDA4AF]" />
+                <p className="text-sm font-medium text-[#FDA4AF]">Click to upload banner</p>
+                <p className="text-xs text-[#FECDD3]">Recommended: 1500 × 500px</p>
               </div>
             )}
             <input ref={bannerRef} type="file" accept="image/*" onChange={handleBannerChange} className="hidden" />
@@ -101,13 +101,13 @@ const CommunityCreate = () => {
 
         {/* Profile picture upload */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-[10px] font-extrabold text-[#C9A88A] uppercase tracking-[0.2em] px-1">
-            Profile Picture <span className="text-[#AF503A]">*</span>
+          <label className="text-[10px] font-extrabold text-[#FDA4AF] uppercase tracking-[0.2em] px-1">
+            Profile Picture <span className="text-[#E11D48]">*</span>
           </label>
           <div className="flex items-center gap-4">
             <div
               onClick={() => profileRef.current?.click()}
-              className="relative h-20 w-20 rounded-full overflow-hidden border-2 border-dashed border-[#EDD9C8] bg-[#FFFCF9] cursor-pointer hover:border-[#AF503A] transition-all duration-200 group shrink-0"
+              className="relative h-20 w-20 rounded-full overflow-hidden border-2 border-dashed border-[#FECDD3] bg-[#FFF5F6] cursor-pointer hover:border-[#E11D48] transition-all duration-200 group shrink-0"
             >
               {profilePreview ? (
                 <>
@@ -118,48 +118,48 @@ const CommunityCreate = () => {
                 </>
               ) : (
                 <div className="h-full flex flex-col items-center justify-center">
-                  <Icon icon="mdi:account-group" width="28" height="28" className="text-[#C9A88A]" />
+                  <Icon icon="mdi:account-group" width="28" height="28" className="text-[#FDA4AF]" />
                 </div>
               )}
               <input ref={profileRef} type="file" accept="image/*" onChange={handleProfileChange} className="hidden" />
             </div>
-            <div className="text-sm text-[#9C7E6D]">
-              <p className="font-medium text-[#4A2C1D]">Community avatar</p>
+            <div className="text-sm text-[#BE7090]">
+              <p className="font-medium text-[#9F1239]">Community avatar</p>
               <p className="text-xs mt-0.5">Square image recommended</p>
-              <p className="text-xs text-[#C9A88A]">Click the circle to upload</p>
+              <p className="text-xs text-[#FDA4AF]">Click the circle to upload</p>
             </div>
           </div>
         </div>
 
         {/* Name */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-[10px] font-extrabold text-[#C9A88A] uppercase tracking-[0.2em] px-1">
-            Community Name <span className="text-[#AF503A]">*</span>
+          <label className="text-[10px] font-extrabold text-[#FDA4AF] uppercase tracking-[0.2em] px-1">
+            Community Name <span className="text-[#E11D48]">*</span>
           </label>
-          <div className="flex w-full border border-[#EDD9C8] bg-[#FFFCF9] rounded-xl p-3 gap-2.5 focus-within:border-[#AF503A] focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(175,80,58,0.1)] transition-all duration-200">
-            <Icon icon="mdi:account-group" width="18" height="18" className="text-[#AF503A] shrink-0 mt-px" />
+          <div className="flex w-full border border-[#FECDD3] bg-[#FFF5F6] rounded-xl p-3 gap-2.5 focus-within:border-[#E11D48] focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(225,29,72,0.1)] transition-all duration-200">
+            <Icon icon="mdi:account-group" width="18" height="18" className="text-[#E11D48] shrink-0 mt-px" />
             <input
               value={communityName}
               onChange={(e) => setCommunityName(e.target.value)}
               placeholder="e.g. Football, Photography, Travel..."
-              className="w-full outline-none bg-transparent text-[#1C0F08] placeholder:text-[#C9A88A] text-sm font-medium"
+              className="w-full outline-none bg-transparent text-[#1C0714] placeholder:text-[#FDA4AF] text-sm font-medium"
             />
           </div>
         </div>
 
         {/* Description */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-[10px] font-extrabold text-[#C9A88A] uppercase tracking-[0.2em] px-1">
-            Description <span className="text-[#AF503A]">*</span>
+          <label className="text-[10px] font-extrabold text-[#FDA4AF] uppercase tracking-[0.2em] px-1">
+            Description <span className="text-[#E11D48]">*</span>
           </label>
-          <div className="flex w-full border border-[#EDD9C8] bg-[#FFFCF9] rounded-xl p-3 gap-2.5 focus-within:border-[#AF503A] focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(175,80,58,0.1)] transition-all duration-200">
-            <Icon icon="material-symbols:description-outline" width="18" height="18" className="text-[#AF503A] shrink-0 mt-px" />
+          <div className="flex w-full border border-[#FECDD3] bg-[#FFF5F6] rounded-xl p-3 gap-2.5 focus-within:border-[#E11D48] focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(225,29,72,0.1)] transition-all duration-200">
+            <Icon icon="material-symbols:description-outline" width="18" height="18" className="text-[#E11D48] shrink-0 mt-px" />
             <textarea
               value={communityDescription}
               onChange={(e) => setCommunityDescription(e.target.value)}
               placeholder="What is this community about? What can members expect?"
               rows={4}
-              className="w-full outline-none bg-transparent text-[#1C0F08] placeholder:text-[#C9A88A] text-sm resize-none"
+              className="w-full outline-none bg-transparent text-[#1C0714] placeholder:text-[#FDA4AF] text-sm resize-none"
             />
           </div>
         </div>
@@ -176,7 +176,7 @@ const CommunityCreate = () => {
           <button
             type="button"
             onClick={() => navigate(-1)}
-            className="flex-1 py-2.5 rounded-full font-semibold text-sm text-[#4A2C1D] bg-[#F0E6DD] hover:bg-[#FAEBD8] hover:text-[#A43919] border border-transparent hover:border-[#EDD9C8] transition-all duration-200 cursor-pointer"
+            className="flex-1 py-2.5 rounded-full font-semibold text-sm text-[#9F1239] bg-[#FFE4E6] hover:bg-[#FFE4E6] hover:text-[#BE123C] border border-transparent hover:border-[#FECDD3] transition-all duration-200 cursor-pointer"
           >
             Cancel
           </button>
@@ -185,8 +185,8 @@ const CommunityCreate = () => {
             disabled={!canSubmit || isLoading}
             className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-full font-semibold text-sm transition-all duration-200 ${
               canSubmit && !isLoading
-                ? "bg-linear-to-r from-[#AF503A] to-[#C7604A] text-white shadow-[0_3px_12px_rgba(164,57,25,0.35)] hover:shadow-[0_5px_18px_rgba(164,57,25,0.5)] hover:-translate-y-0.5 cursor-pointer"
-                : "bg-[#EDD9C8] text-[#C9A88A] cursor-not-allowed"
+                ? "bg-linear-to-r from-[#E11D48] to-[#FB7185] text-white shadow-[0_3px_12px_rgba(225,29,72,0.35)] hover:shadow-[0_5px_18px_rgba(225,29,72,0.5)] hover:-translate-y-0.5 cursor-pointer"
+                : "bg-[#FECDD3] text-[#FDA4AF] cursor-not-allowed"
             }`}
           >
             {isLoading ? (

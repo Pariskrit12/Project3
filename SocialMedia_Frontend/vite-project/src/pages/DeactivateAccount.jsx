@@ -9,19 +9,19 @@ const DeactivateAccount = () => {
       <div className="flex items-center gap-3 mb-6">
         <button
           onClick={() => navigate("/settings")}
-          className="p-2 rounded-xl hover:bg-[#FAEBD8] transition-colors text-[#1C0F08] border border-[#EDD9C8] bg-[#FFFCF9]"
+          className="p-2 rounded-xl hover:bg-[#FFE4E6] transition-colors text-[#1C0714] border border-[#FECDD3] bg-[#FFF5F6]"
         >
           <Icon icon="tabler:arrow-left" width="22" height="22" />
         </button>
         <div>
-          <h1 className="text-2xl font-black text-[#1C0F08]">Deactivate Account</h1>
-          <p className="text-sm text-[#9C7E6D]">This action is reversible</p>
+          <h1 className="text-2xl font-black text-[#1C0714]">Deactivate Account</h1>
+          <p className="text-sm text-[#BE7090]">This action is reversible</p>
         </div>
       </div>
 
-      <div className="bg-[#FFFCF9] border border-[#EDD9C8] rounded-2xl p-6 flex flex-col gap-5 shadow-[0_4px_20px_rgba(164,57,25,0.08)]">
+      <div className="bg-[#FFF5F6] border border-[#FECDD3] rounded-2xl p-6 flex flex-col gap-5 shadow-[0_4px_20px_rgba(225,29,72,0.08)]">
         <div className="flex items-center gap-4">
-          <div className="border-3 border-[#AF503A] rounded-full shadow-[0_2px_12px_rgba(164,57,25,0.2)]">
+          <div className="border-3 border-[#E11D48] rounded-full shadow-[0_2px_12px_rgba(225,29,72,0.2)]">
             <img
               src="../Sharbani.png"
               alt="profile"
@@ -29,19 +29,19 @@ const DeactivateAccount = () => {
             />
           </div>
           <div>
-            <p className="font-bold text-[#1C0F08] text-lg">username</p>
-            <p className="text-sm text-[#9C7E6D]">email@gmail.com</p>
+            <p className="font-bold text-[#1C0714] text-lg">username</p>
+            <p className="text-sm text-[#BE7090]">email@gmail.com</p>
           </div>
         </div>
 
-        <div className="border-t border-[#EDD9C8] pt-5 flex flex-col gap-3">
+        <div className="border-t border-[#FECDD3] pt-5 flex flex-col gap-3">
           <div className="flex items-center gap-2">
             <div className="p-1.5 bg-red-50 rounded-lg">
               <Icon icon="mdi:alert-circle" width="20" height="20" className="text-red-500" />
             </div>
-            <h2 className="font-bold text-lg text-[#1C0F08]">This will deactivate your account</h2>
+            <h2 className="font-bold text-lg text-[#1C0714]">This will deactivate your account</h2>
           </div>
-          <p className="text-sm text-[#9C7E6D] leading-relaxed">
+          <p className="text-sm text-[#BE7090] leading-relaxed">
             You're about to start the process of deactivating your account. Your
             display name, @username, and public profile will no longer be viewable
             on the website.

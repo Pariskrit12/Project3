@@ -1,164 +1,278 @@
 import { Icon } from "@iconify/react";
-import React, { useState } from "react";
-import Button from "../components/common/Button";
-import Dropdown from "../components/common/Dropdown";
+import React, { useState, useMemo } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import {
+  useGetCommunityQuery,
+  useToggleJoinCommunityMutation,
+  useGetCommunityPostsQuery,
+} from "../services/communitiesApi";
 import Cards from "../components/HomeComponents/Cards";
-import Input from "../components/common/Input";
+
+const FILTERS = ["New", "Top", "Best"];
+
+function timeAgo(dateStr) {
+  const seconds = Math.floor((Date.now() - new Date(dateStr)) / 1000);
+  if (seconds < 60) return `${seconds}s ago`;
+  if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+  if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
+  return `${Math.floor(seconds / 86400)}d ago`;
+}
 
 const Communites = () => {
-  const [open, setOpen] = useState(false);
-  const [rules, setRules] = useState([]);
-  const [ruleInput, setRuleInput] = useState("");
+  const { communityId } = useParams();
+  const navigate = useNavigate();
+  const { user } = useSelector((state) => state.auth);
+  const [filter, setFilter] = useState("New");
 
-  const addRuleHandler = () => {
-    if (!ruleInput.trim()) return;
-    setRules([...rules, ruleInput]);
-    setRuleInput("");
-    setOpen(false);
-  };
+  const { data: communityData, isLoading, isError } = useGetCommunityQuery(communityId);
+  const { data: postsData, isLoading: postsLoading } = useGetCommunityPostsQuery(communityId);
+  const [toggleJoin, { isLoading: joining }] = useToggleJoinCommunityMutation();
 
-  const posts = [
-    {
-      communityName: "Personal Life",
-      username: "aryan_01",
-      uploadedTime: "2h ago",
-      titleOfPost: "Trying to fix my routine",
-      image: "./Sharbani.png",
-      description: "Lately I've been trying to wake up early, reduce screen time, and focus more on productivity. It's hard but slowly improving day by day.",
-    },
-    {
-      communityName: "Football",
-      username: "goal_master",
-      uploadedTime: "3h ago",
-      titleOfPost: "What a match last night!",
-      image: "./post2.jpg",
-      description: "That last-minute goal completely changed the game. One of the most intense matches I've seen this season.",
-    },
-    {
-      communityName: "F1",
-      username: "speedster",
-      uploadedTime: "2h ago",
-      titleOfPost: "Crazy qualifying session",
-      image: "./post3.jpg",
-      description: "The lap times were insanely close today. One small mistake and you're out of the top 10.",
-    },
-  ];
+  const community = communityData?.data;
+  const rawPosts = postsData?.data ?? [];
 
-  const [filter, setFilter] = useState("Best");
+  const isCreator = community && user && community.creator?._id?.toString() === user._id?.toString();
+  const isMember = community?.members?.some((id) => id.toString() === user?._id?.toString());
+
+  const posts = useMemo(() => {
+    const arr = [...rawPosts];
+    if (filter === "New") return arr.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    if (filter === "Top") return arr.sort((a, b) => b.likes.length - a.likes.length);
+    if (filter === "Best") return arr.sort((a, b) => (b.likes.length - b.dislikes.length) - (a.likes.length - a.dislikes.length));
+    return arr;
+  }, [rawPosts, filter]);
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-[50vh]">
+        <Icon icon="svg-spinners:ring-resize" width="40" height="40" className="text-[#E11D48]" />
+      </div>
+    );
+  }
+
+  if (isError || !community) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[50vh] gap-3 text-[#BE7090]">
+        <Icon icon="material-symbols:error-outline" width="40" height="40" />
+        <p className="font-semibold">Community not found</p>
+        <button onClick={() => navigate(-1)} className="text-sm text-[#E11D48] hover:underline">
+          Go back
+        </button>
+      </div>
+    );
+  }
 
   return (
     <main>
-      <section className="relative rounded-2xl overflow-hidden shadow-[0_4px_20px_rgba(164,57,25,0.15)]">
-        <img className="w-full h-48 object-cover" src="./Banner1.jpg" alt="banner" />
-        <div className="absolute inset-0 bg-linear-to-t from-[#1C0F08]/40 to-transparent"></div>
-        <div className="absolute left-5 -bottom-10 border-[5px] border-[#FFF7F0] rounded-full shadow-[0_4px_20px_rgba(164,57,25,0.25)]">
-          <img className="w-20 h-20 object-cover rounded-full" src="./Sharbani.png" alt="community" />
-        </div>
-      </section>
-
-      <section className="ml-32 mt-5 mb-4">
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl font-black text-[#1C0F08]">Personal Life</h1>
-            <p className="text-sm text-[#9C7E6D] flex items-center gap-1 mt-0.5">
-              <Icon icon="mdi:account-group" width="14" height="14" />
-              124 members
-            </p>
-          </div>
-          <div className="flex gap-2 items-center">
-            <button className="p-2 rounded-xl hover:bg-[#FAEBD8] transition-colors border border-[#EDD9C8] bg-[#FFFCF9]">
-              <Icon className="text-[#AF503A]" icon="clarity:notification-solid" width="20" height="20" />
-            </button>
-            <Button name="Create Post" icon="ic:round-plus" isActive={true} />
-            <Button name="Join" />
-            <button className="p-2 rounded-xl hover:bg-[#FAEBD8] transition-colors border border-[#EDD9C8] bg-[#FFFCF9]">
-              <Icon className="text-[#AF503A]" icon="pepicons-pop:dots-x" width="18" height="18" />
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <section className="grid grid-cols-[2.3fr_1fr] mt-4 gap-5">
-        <section className="grid grid-cols-1 gap-4">
-          <Dropdown
-            icon="ep:arrow-down-bold"
-            value={filter}
-            options={["Best", "Hot", "Top", "New"]}
-            onSelect={(val) => setFilter(val)}
+      {/* Banner + profile pic — outer div is relative but NOT overflow-hidden */}
+      <div className="relative mb-14">
+        <div className="relative h-48 rounded-2xl overflow-hidden shadow-[0_4px_20px_rgba(225,29,72,0.15)]">
+          <img
+            className="w-full h-full object-cover"
+            src={community.communityBanner || "./Banner1.jpg"}
+            alt="banner"
           />
-          <div className="grid grid-cols-1 gap-4">
-            {posts.map((elem, index) => (
-              <Cards
-                key={index}
-                titleOfPost={elem.titleOfPost}
-                uploadedTime={elem.uploadedTime}
-                username={elem.username}
-                description={elem.description}
-                image={elem.image}
-                communitteName={elem.communityName}
-              />
+          <div className="absolute inset-0 bg-linear-to-t from-[#1C0714]/50 to-transparent" />
+        </div>
+        {/* Profile pic sits on the border — half inside banner, half outside */}
+        <div className="absolute left-6 bottom-0 translate-y-1/2 h-[88px] w-[88px] rounded-full border-4 border-[#FFF1F2] shadow-[0_4px_20px_rgba(225,29,72,0.25)] overflow-hidden bg-[#FFE4E6]">
+          <img
+            className="w-full h-full object-cover"
+            src={community.communityProfilePicture || "./Sharbani.png"}
+            alt={community.communityName}
+          />
+        </div>
+      </div>
+
+      {/* Community info + action buttons */}
+      <div className="flex justify-between items-start mb-5 ml-1">
+        <div className="pl-[112px]">
+          <h1 className="text-2xl font-black text-[#1C0714]">{community.communityName}</h1>
+          <p className="text-sm text-[#BE7090] flex items-center gap-1 mt-0.5">
+            <Icon icon="mdi:account-group" width="14" height="14" />
+            {community.members?.length ?? 0} members
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2 shrink-0">
+          {/* Creator buttons */}
+          {isCreator && (
+            <>
+              <button
+                onClick={() => navigate(`/create-post`)}
+                className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold bg-[#E11D48] text-white hover:bg-[#BE123C] transition-colors shadow-[0_3px_12px_rgba(225,29,72,0.3)]"
+              >
+                <Icon icon="ic:round-plus" width="16" height="16" />
+                Create Post
+              </button>
+              <button className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold border border-[#FECDD3] bg-[#FFF5F6] text-[#9F1239] hover:bg-[#FFE4E6] transition-colors">
+                <Icon icon="material-symbols:edit-outline" width="16" height="16" />
+                Edit
+              </button>
+            </>
+          )}
+
+          {/* Member (non-creator) buttons */}
+          {isMember && !isCreator && (
+            <>
+              <button
+                onClick={() => navigate(`/create-post`)}
+                className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold bg-[#E11D48] text-white hover:bg-[#BE123C] transition-colors shadow-[0_3px_12px_rgba(225,29,72,0.3)]"
+              >
+                <Icon icon="ic:round-plus" width="16" height="16" />
+                Create Post
+              </button>
+              <button
+                onClick={() => toggleJoin(communityId)}
+                disabled={joining}
+                className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold border border-[#FECDD3] bg-[#FFF5F6] text-[#9F1239] hover:bg-[#FFE4E6] transition-colors"
+              >
+                {joining ? (
+                  <Icon icon="svg-spinners:ring-resize" width="14" height="14" />
+                ) : (
+                  <Icon icon="mdi:logout" width="16" height="16" />
+                )}
+                Leave
+              </button>
+            </>
+          )}
+
+          {/* Non-member join button */}
+          {!isMember && !isCreator && (
+            <button
+              onClick={() => toggleJoin(communityId)}
+              disabled={joining}
+              className="flex items-center gap-1.5 px-5 py-2 rounded-full text-sm font-semibold bg-[#E11D48] text-white hover:bg-[#BE123C] transition-colors shadow-[0_3px_12px_rgba(225,29,72,0.3)]"
+            >
+              {joining ? (
+                <Icon icon="svg-spinners:ring-resize" width="14" height="14" />
+              ) : (
+                <Icon icon="mdi:account-plus" width="16" height="16" />
+              )}
+              Join
+            </button>
+          )}
+
+          <button className="p-2 rounded-xl hover:bg-[#FFE4E6] transition-colors border border-[#FECDD3] bg-[#FFF5F6]">
+            <Icon className="text-[#E11D48]" icon="pepicons-pop:dots-x" width="18" height="18" />
+          </button>
+        </div>
+      </div>
+
+      {/* Main content grid */}
+      <section className="grid grid-cols-[2.3fr_1fr] gap-5">
+        {/* Posts column */}
+        <div className="flex flex-col gap-4">
+          {/* Filter tabs */}
+          <div className="flex items-center gap-2 border border-[#FECDD3] bg-[#FFF5F6] rounded-xl px-3 py-2">
+            {FILTERS.map((f) => (
+              <button
+                key={f}
+                onClick={() => setFilter(f)}
+                className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-200 ${
+                  filter === f
+                    ? "bg-[#E11D48] text-white shadow-[0_2px_8px_rgba(225,29,72,0.3)]"
+                    : "text-[#BE7090] hover:bg-[#FFE4E6] hover:text-[#BE123C]"
+                }`}
+              >
+                {f === "New" && <Icon icon="mdi:clock-outline" width="14" height="14" />}
+                {f === "Top" && <Icon icon="mdi:arrow-up-bold" width="14" height="14" />}
+                {f === "Best" && <Icon icon="mdi:star-outline" width="14" height="14" />}
+                {f}
+              </button>
             ))}
           </div>
-        </section>
 
-        <section className="border border-[#EDD9C8] bg-[#FFFCF9] rounded-2xl max-h-fit sticky top-20 overflow-hidden shadow-[0_4px_20px_rgba(164,57,25,0.08)]">
-          <div className="p-4 border-b border-[#EDD9C8]">
-            <p className="font-black text-[#1C0F08]">About Community</p>
-            <p className="text-sm text-[#4A2C1D] mt-2.5 leading-relaxed">
-              A community for discussing anything related to personal life, daily
-              experiences, relationships, and self-growth.
+          {/* Posts list */}
+          {postsLoading ? (
+            <div className="flex justify-center py-12">
+              <Icon icon="svg-spinners:ring-resize" width="32" height="32" className="text-[#E11D48]" />
+            </div>
+          ) : posts.length === 0 ? (
+            <div className="flex flex-col items-center justify-center gap-3 py-16 text-[#FDA4AF] border border-[#FECDD3] rounded-2xl bg-[#FFF5F6]">
+              <Icon icon="mdi:post-outline" width="36" height="36" />
+              <p className="text-sm font-medium">No posts yet in this community</p>
+              {(isCreator || isMember) && (
+                <button
+                  onClick={() => navigate("/create-post")}
+                  className="mt-1 px-4 py-1.5 rounded-full text-sm font-semibold bg-[#E11D48] text-white hover:bg-[#BE123C] transition-colors"
+                >
+                  Be the first to post
+                </button>
+              )}
+            </div>
+          ) : (
+            posts.map((post) => (
+              <Cards
+                key={post._id}
+                postId={post._id}
+                communitteName={community.communityName}
+                username={post.creator?.username}
+                creatorId={post.creator?._id}
+                userProfilePic={post.creator?.userProfilePic}
+                uploadedTime={timeAgo(post.createdAt)}
+                titleOfPost={post.postTitle}
+                description={post.postDescription}
+                media={post.media ?? []}
+                likes={post.likes ?? []}
+                dislikes={post.dislikes ?? []}
+                onClick={() => navigate(`/postPage/${post._id}`)}
+              />
+            ))
+          )}
+        </div>
+
+        {/* Sidebar */}
+        <div className="border border-[#FECDD3] bg-[#FFF5F6] rounded-2xl max-h-fit sticky top-20 overflow-hidden shadow-[0_4px_20px_rgba(225,29,72,0.08)]">
+          <div className="p-4 border-b border-[#FECDD3]">
+            <p className="font-black text-[#1C0714]">About Community</p>
+            <p className="text-sm text-[#9F1239] mt-2.5 leading-relaxed">
+              {community.communityDescription}
             </p>
-            <p className="text-xs text-[#C9A88A] mt-2 flex items-center gap-1">
+            <p className="text-xs text-[#FDA4AF] mt-2 flex items-center gap-1">
               <Icon icon="mdi:calendar" width="12" height="12" />
-              Created Dec 31, 2026
+              Created{" "}
+              {new Date(community.createdAt).toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              })}
             </p>
             <div className="flex gap-4 mt-3">
               <div>
-                <p className="font-black text-xl text-[#1C0F08]">124</p>
-                <p className="text-xs text-[#9C7E6D]">Members</p>
+                <p className="font-black text-xl text-[#1C0714]">{community.members?.length ?? 0}</p>
+                <p className="text-xs text-[#BE7090]">Members</p>
               </div>
               <div>
-                <p className="font-black text-xl text-[#1C0F08]">48</p>
-                <p className="text-xs text-[#9C7E6D]">Online</p>
+                <p className="font-black text-xl text-[#1C0714]">{posts.length}</p>
+                <p className="text-xs text-[#BE7090]">Posts</p>
               </div>
             </div>
           </div>
 
           <div className="p-4">
-            <p className="font-black text-sm text-[#1C0F08] uppercase tracking-wide mb-3 flex items-center gap-2">
-              <Icon icon="mdi:shield-check" width="16" height="16" className="text-[#AF503A]" />
-              Community Rules
+            <p className="font-black text-sm text-[#1C0714] uppercase tracking-wide mb-2 flex items-center gap-2">
+              <Icon icon="mdi:shield-crown" width="16" height="16" className="text-[#E11D48]" />
+              Created by
             </p>
-            <div className="flex flex-col gap-2">
-              {rules.length === 0 && (
-                <p className="text-sm text-[#C9A88A] italic">No rules added yet</p>
-              )}
-              {rules.map((elem, index) => (
-                <div className="text-sm text-[#4A2C1D] flex gap-2" key={index}>
-                  <span className="font-black text-[#AF503A] shrink-0">{index + 1}.</span>
-                  <span>{elem}</span>
-                </div>
-              ))}
-            </div>
-            {open && (
-              <div className="mt-3">
-                <Input
-                  placeholder="Enter rule..."
-                  value={ruleInput}
-                  onChange={(e) => setRuleInput(e.target.value)}
-                />
+            <div
+              className="flex items-center gap-2 cursor-pointer hover:text-[#E11D48] transition-colors"
+              onClick={() => navigate(`/userProfile/${community.creator?._id}`)}
+            >
+              <div className="h-7 w-7 rounded-full overflow-hidden bg-[#FFE4E6] shrink-0">
+                {community.creator?.userProfilePic ? (
+                  <img className="w-full h-full object-cover" src={community.creator.userProfilePic} alt="" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <Icon icon="mdi:account" width="16" height="16" className="text-[#E11D48]" />
+                  </div>
+                )}
               </div>
-            )}
-            <div className="flex w-full justify-center mt-4">
-              <Button
-                name={open ? "Add Rule" : "Add Rules"}
-                isActive={true}
-                onClick={open ? addRuleHandler : () => setOpen(true)}
-                icon={open ? "ic:round-plus" : "ic:round-plus"}
-              />
+              <p className="text-sm text-[#9F1239] font-medium">{community.creator?.username ?? "Unknown"}</p>
             </div>
           </div>
-        </section>
+        </div>
       </section>
     </main>
   );

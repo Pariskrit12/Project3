@@ -1,27 +1,89 @@
 import React from "react";
 import RecentPostCard from "./HomeComponents/RecentPostCard";
 import { Icon } from "@iconify/react";
+import { useNavigate } from "react-router-dom";
+import { useGetRecentlyVisitedPostsQuery } from "../services/postApi";
+
+const SkeletonCard = () => (
+  <div className="py-3 border-b border-[#FECDD3] last:border-0 flex gap-3 animate-pulse">
+    <div className="flex flex-col gap-2 flex-1">
+      <div className="flex gap-1.5 items-center">
+        <div className="h-4 w-4 rounded-full bg-[#FECDD3]" />
+        <div className="h-3 w-20 rounded bg-[#FECDD3]" />
+      </div>
+      <div className="h-3.5 w-full rounded bg-[#FECDD3]" />
+      <div className="h-3.5 w-2/3 rounded bg-[#FECDD3]" />
+      <div className="flex gap-3">
+        <div className="h-3 w-8 rounded bg-[#FECDD3]" />
+        <div className="h-3 w-8 rounded bg-[#FECDD3]" />
+      </div>
+    </div>
+    <div className="shrink-0 w-16 h-14 rounded-xl bg-[#FECDD3]" />
+  </div>
+);
 
 const RecentPostModule = () => {
+  const navigate = useNavigate();
+  const { data, isLoading } = useGetRecentlyVisitedPostsQuery();
+  const posts = data?.data ?? [];
+
   return (
-    <main className="py-5 pr-3">
-      <section className="rounded-2xl bg-[#FFFCF9] border border-[#EDD9C8] shadow-[0_2px_16px_rgba(164,57,25,0.07)] overflow-hidden">
-        <div className="flex justify-between items-center px-4 py-3 border-b border-[#EDD9C8] bg-linear-to-r from-[#FFF7F0] to-[#FFFCF9]">
+    <aside className="py-5 pr-3">
+      <section className="rounded-2xl bg-[#FFF5F6] border border-[#FECDD3] shadow-[0_2px_16px_rgba(225,29,72,0.07)] overflow-hidden">
+        {/* Header */}
+        <div className="flex justify-between items-center px-4 py-3 border-b border-[#FECDD3] bg-linear-to-r from-[#FFF1F2] to-[#FFF5F6]">
           <div className="flex items-center gap-2">
-            <Icon icon="mdi:clock-outline" width="15" height="15" className="text-[#AF503A]" />
-            <h2 className="text-sm font-bold text-[#1C0F08]">Recent Posts</h2>
+            <div className="p-1 rounded-lg bg-[#FFE4E6]">
+              <Icon icon="mdi:history" width="14" height="14" className="text-[#E11D48]" />
+            </div>
+            <h2 className="text-sm font-bold text-[#1C0714]">Recently Visited</h2>
           </div>
-          <p className="text-xs text-[#AF503A] font-semibold cursor-pointer hover:text-[#A43919] transition-colors">
-            Clear
-          </p>
+          {posts.length > 0 && (
+            <span className="text-[10px] font-bold text-[#FDA4AF] bg-[#FFE4E6] px-2 py-0.5 rounded-full">
+              {posts.length}
+            </span>
+          )}
         </div>
-        <div className="px-4 flex flex-col">
-          <RecentPostCard />
-          <RecentPostCard />
-          <RecentPostCard />
+
+        {/* Content */}
+        <div className="px-4">
+          {isLoading ? (
+            <>
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
+            </>
+          ) : posts.length === 0 ? (
+            <div className="flex flex-col items-center gap-2 py-8 text-center">
+              <div className="p-3 rounded-full bg-[#FFE4E6]">
+                <Icon icon="mdi:newspaper-variant-outline" width="24" height="24" className="text-[#FDA4AF]" />
+              </div>
+              <p className="text-sm font-semibold text-[#9F1239]">No history yet</p>
+              <p className="text-xs text-[#FDA4AF] leading-relaxed">
+                Posts you visit will appear here
+              </p>
+            </div>
+          ) : (
+            posts.map((post) => (
+              <RecentPostCard
+                key={post._id}
+                post={post}
+                onClick={() => navigate(`/postPage/${post._id}`)}
+              />
+            ))
+          )}
         </div>
+
+        {/* Footer — only when there are posts */}
+        {!isLoading && posts.length > 0 && (
+          <div className="px-4 py-2.5 border-t border-[#FECDD3] bg-[#FFF5F6]">
+            <p className="text-xs text-center text-[#FDA4AF]">
+              Showing last {posts.length} visited post{posts.length !== 1 ? "s" : ""}
+            </p>
+          </div>
+        )}
       </section>
-    </main>
+    </aside>
   );
 };
 

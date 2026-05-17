@@ -27,12 +27,12 @@ const Setting = () => {
   return (
     <main className="max-w-2xl">
       <div className="mb-6 flex items-center gap-4">
-        <div className="bg-linear-to-br from-[#AF503A] to-[#C7604A] p-3 rounded-2xl shadow-[0_4px_16px_rgba(164,57,25,0.3)]">
+        <div className="bg-linear-to-br from-[#E11D48] to-[#FB7185] p-3 rounded-2xl shadow-[0_4px_16px_rgba(225,29,72,0.3)]">
           <Icon icon="lets-icons:setting-fill" width="26" height="26" className="text-white" />
         </div>
         <div>
-          <h1 className="font-black text-2xl text-[#1C0F08]">Settings</h1>
-          <p className="text-sm text-[#9C7E6D]">Manage your account preferences</p>
+          <h1 className="font-black text-2xl text-[#1C0714]">Settings</h1>
+          <p className="text-sm text-[#BE7090]">Manage your account preferences</p>
         </div>
       </div>
       <section className="grid grid-cols-1 gap-3">

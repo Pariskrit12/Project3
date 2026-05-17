@@ -16,13 +16,16 @@ import ChangePassword from "./pages/ChangePassword";
 import DeactivateAccount from "./pages/DeactivateAccount";
 import AccountInformation from "./pages/AccountInformation";
 import New from "./pages/New";
+import Top from "./pages/Top";
 import Communites from "./pages/Communites";
 import CreatePost from "./pages/CreatePost";
 import CommunityCreate from "./pages/CommunityCreate";
+import SearchResults from "./pages/SearchResults";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetCurrentUserQuery } from "./services/userApi";
 import { setUser } from "./slices/authSlice";
 import { Icon } from "@iconify/react";
+import InterestSelectorModal from "./components/InterestSelectorModal";
 
 const PageWrapper = ({ children }) => (
   <div className="px-5 py-6">{children}</div>
@@ -32,7 +35,7 @@ const ProtectedRoute = ({ children, isAuthenticated, isLoading }) => {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <Icon icon="svg-spinners:ring-resize" width="40" height="40" className="text-[#AF503A]" />
+        <Icon icon="svg-spinners:ring-resize" width="40" height="40" className="text-[#E11D48]" />
       </div>
     );
   }
@@ -43,8 +46,11 @@ const ProtectedRoute = ({ children, isAuthenticated, isLoading }) => {
 const App = () => {
   const dispatch = useDispatch();
   const reduxAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const reduxUser = useSelector((state) => state.auth.user);
   const { data: currentUserData, isLoading: isAuthLoading } = useGetCurrentUserQuery();
   const isAuthenticated = reduxAuthenticated || !!currentUserData?.data;
+  const showInterestModal =
+    isAuthenticated && !isAuthLoading && reduxUser && reduxUser.hasSelectedInterests === false;
 
   useEffect(() => {
     if (currentUserData?.data) {
@@ -58,6 +64,7 @@ const App = () => {
   const hideRecentPost =
     location.pathname.startsWith("/userProfile") ||
     location.pathname.startsWith("/postPage") ||
+    location.pathname.startsWith("/communities") ||
     [
       "/chat",
       "/notification",
@@ -65,13 +72,14 @@ const App = () => {
       "/settings/changePassword",
       "/settings/accountInformation",
       "/settings/deactivateAccount",
-      "/communities",
       "/create-post",
       "/create-community",
-    ].includes(location.pathname);
+    ].includes(location.pathname) ||
+    location.pathname === "/search";
 
   return (
     <>
+      {showInterestModal && <InterestSelectorModal currentUser={reduxUser} />}
       <Navbar />
 
       {isAuthenticationPage ? (
@@ -88,7 +96,7 @@ const App = () => {
       ) : (
         <ProtectedRoute isAuthenticated={isAuthenticated} isLoading={isAuthLoading}>
           <div className={`grid min-h-screen ${hideRecentPost ? "grid-cols-[1fr_4fr]" : "grid-cols-[1fr_3fr_1.25fr]"}`}>
-            <div className="sticky top-0 h-screen overflow-y-auto">
+            <div className="sticky top-15 h-[calc(100vh-60px)] overflow-y-auto">
               <Sidebar />
             </div>
 
@@ -96,7 +104,7 @@ const App = () => {
               <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
               <Route path="/trending" element={<PageWrapper><Trending /></PageWrapper>} />
               <Route path="/new" element={<PageWrapper><New /></PageWrapper>} />
-              <Route path="/top" element={<PageWrapper><New /></PageWrapper>} />
+              <Route path="/top" element={<PageWrapper><Top /></PageWrapper>} />
               <Route path="/notification" element={<PageWrapper><Notification /></PageWrapper>} />
               <Route path="/userProfile/:userId" element={<PageWrapper><UserProfile /></PageWrapper>} />
               <Route path="/chat" element={<PageWrapper><Chat /></PageWrapper>} />
@@ -105,13 +113,14 @@ const App = () => {
               <Route path="/settings/deactivateAccount" element={<PageWrapper><DeactivateAccount /></PageWrapper>} />
               <Route path="/settings/accountInformation" element={<PageWrapper><AccountInformation /></PageWrapper>} />
               <Route path="/postPage/:postId" element={<PageWrapper><Postpage /></PageWrapper>} />
-              <Route path="/communities" element={<PageWrapper><Communites /></PageWrapper>} />
+              <Route path="/communities/:communityId" element={<PageWrapper><Communites /></PageWrapper>} />
               <Route path="/create-post" element={<PageWrapper><CreatePost /></PageWrapper>} />
               <Route path="/create-community" element={<PageWrapper><CommunityCreate /></PageWrapper>} />
+              <Route path="/search" element={<PageWrapper><SearchResults /></PageWrapper>} />
             </Routes>
 
             {!hideRecentPost && (
-              <div className="sticky top-25 h-screen overflow-y-auto">
+              <div className="sticky top-15 h-[calc(100vh-60px)] overflow-y-auto">
                 <RecentPostModule />
               </div>
             )}
