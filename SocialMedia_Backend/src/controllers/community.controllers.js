@@ -6,6 +6,7 @@ import { v2 as cloudinary } from "cloudinary";
 import { Community } from "../models/community.model.js";
 import { Post } from "../models/post.model.js";
 import { User } from "../models/user.models.js";
+import { sendNotification } from "../utils/sendNotification.js";
 
 const createCommunity = asyncHandler(async (req, res) => {
   const userId = req.user?._id;
@@ -65,6 +66,15 @@ const toggleJoinCommunity = asyncHandler(async (req, res) => {
     );
   } else {
     community.members.push(userId);
+    if (community.creator.toString() !== userId.toString()) {
+      await sendNotification({
+        sender: userId,
+        receiver: community.creator,
+        type: "join_community",
+        message: `${req.user.username} joined your community ${community.communityName}`,
+        link: `/communities/${communityId}`,
+      });
+    }
   }
   await community.save();
 

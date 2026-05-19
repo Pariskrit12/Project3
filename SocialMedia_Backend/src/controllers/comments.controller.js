@@ -1,5 +1,5 @@
 import { Comment } from "../models/comment.model.js";
-import { Notification } from "../models/notification.model.js";
+import { sendNotification } from "../utils/sendNotification.js";
 import { Post } from "../models/post.model.js";
 
 import { ApiError } from "../utils/apiError.js";
@@ -62,12 +62,12 @@ const createComment = asyncHandler(async (req, res) => {
     { new: false, select: "creator" }
   );
   if (post && post.creator.toString() !== userId.toString()) {
-    await Notification.create({
+    await sendNotification({
       sender: userId,
       receiver: post.creator,
       type: "comment",
       message: `${req.user.username} commented on your post`,
-      link: `/post/${postId}`,
+      link: `/postPage/${postId}`,
     });
   }
 
@@ -184,12 +184,12 @@ const likeComment = asyncHandler(async (req, res) => {
   await comment.save();
 
   if (!alreadyLiked && comment.creator.toString() !== userId.toString()) {
-    await Notification.create({
+    await sendNotification({
       sender: userId,
       receiver: comment.creator,
       type: "like_comment",
       message: `${req.user.username} liked your comment`,
-      link: `/post/${comment.post}`,
+      link: `/postPage/${comment.post}`,
     });
   }
 

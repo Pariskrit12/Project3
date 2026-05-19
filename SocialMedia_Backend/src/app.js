@@ -24,4 +24,8 @@ app.use("/comment",commentRouter)
 
 import communityRouter from './routes/community.route.js';
 app.use("/community",communityRouter);
+
+import notificationRouter from "./routes/notification.routes.js";
+app.use("/notification", notificationRouter);
+
 export default app;
