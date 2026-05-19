@@ -24,6 +24,9 @@ import SearchResults from "./pages/SearchResults";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetCurrentUserQuery } from "./services/userApi";
 import { setUser } from "./slices/authSlice";
+import { setUnreadCount } from "./slices/notificationSlice";
+import { useGetUnreadCountQuery } from "./services/notificationApi";
+import { useSocket } from "./hooks/useSocket";
 import { Icon } from "@iconify/react";
 import InterestSelectorModal from "./components/InterestSelectorModal";
 
@@ -52,11 +55,21 @@ const App = () => {
   const showInterestModal =
     isAuthenticated && !isAuthLoading && reduxUser && reduxUser.hasSelectedInterests === false;
 
+  const { data: unreadData } = useGetUnreadCountQuery(undefined, { skip: !isAuthenticated });
+
   useEffect(() => {
     if (currentUserData?.data) {
       dispatch(setUser(currentUserData.data));
     }
   }, [currentUserData, dispatch]);
+
+  useEffect(() => {
+    if (unreadData?.data !== undefined) {
+      dispatch(setUnreadCount(unreadData.data));
+    }
+  }, [unreadData, dispatch]);
+
+  useSocket();
 
   const location = useLocation();
   const isAuthenticationPage = ["/register", "/login"].includes(location.pathname);

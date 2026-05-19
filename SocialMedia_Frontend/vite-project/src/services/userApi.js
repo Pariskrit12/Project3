@@ -63,11 +63,21 @@ export const usersApi = createApi({
     }),
     followUser: builder.mutation({
       query: (id) => ({ url: `/followUser/${id}`, method: "POST" }),
-      invalidatesTags: ["Followers", "Following"],
+      invalidatesTags: (result, error, id) => [
+        "Followers",
+        "Following",
+        { type: "User", id },
+        "User",
+      ],
     }),
     unfollowUser: builder.mutation({
       query: (id) => ({ url: `/unfollowUser/${id}`, method: "POST" }),
-      invalidatesTags: ["Followers", "Following"],
+      invalidatesTags: (result, error, id) => [
+        "Followers",
+        "Following",
+        { type: "User", id },
+        "User",
+      ],
     }),
     getFollowers: builder.query({
       query: () => "/getFollowers",

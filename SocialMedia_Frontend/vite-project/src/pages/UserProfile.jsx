@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Icon } from "@iconify/react";
 import Button from "../components/common/Button";
-import { useGetProfileQuery } from "../services/userApi";
+import { useGetProfileQuery, useFollowUserMutation, useUnfollowUserMutation } from "../services/userApi";
 import { useGetPostsOfUserQuery } from "../services/postApi";
 
 const UserListModal = ({ title, users, onClose, onUserClick }) => (
@@ -62,9 +62,34 @@ const UserProfile = () => {
 
   const { data: profileData, isLoading: profileLoading } = useGetProfileQuery(userId);
   const { data: postsData, isLoading: postsLoading } = useGetPostsOfUserQuery(userId);
+  const [followUser, { isLoading: following }] = useFollowUserMutation();
+  const [unfollowUser, { isLoading: unfollowing }] = useUnfollowUserMutation();
 
   const user = profileData?.data;
   const posts = postsData?.data || [];
+
+  const myId = loggedInUser?._id?.toString();
+  const isFollowingProfile = user?.followers?.some(
+    (f) => (f._id ?? f).toString() === myId
+  );
+  const profileFollowsMe = user?.following?.some(
+    (f) => (f._id ?? f).toString() === myId
+  );
+
+  const handleFollowToggle = async () => {
+    if (isFollowingProfile) {
+      await unfollowUser(userId);
+    } else {
+      await followUser(userId);
+    }
+  };
+
+  const followBtnLabel = isFollowingProfile
+    ? "Following"
+    : profileFollowsMe
+    ? "Follow Back"
+    : "Follow";
+  const followBtnLoading = following || unfollowing;
 
   if (profileLoading) {
     return (
@@ -111,7 +136,12 @@ const UserProfile = () => {
           {isOwnProfile ? (
             <Button name="Edit Profile" isActive={true} onClick={() => navigate("/settings/accountInformation")} />
           ) : (
-            <Button name="Follow" isActive={true} />
+            <Button
+              name={followBtnLabel}
+              isActive={!isFollowingProfile}
+              onClick={handleFollowToggle}
+              loading={followBtnLoading}
+            />
           )}
           <button className="p-2 rounded-xl hover:bg-[#FFE4E6] transition-colors border border-[#FECDD3] bg-[#FFF5F6]">
             <Icon className="text-[#E11D48]" icon="fa7-solid:share" width="18" height="18" />

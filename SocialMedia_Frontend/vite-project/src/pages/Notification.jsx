@@ -1,8 +1,27 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Icon } from "@iconify/react";
+import { useDispatch } from "react-redux";
 import NotificationCard from "../components/Notifications/NotificationCard";
+import { useGetNotificationsQuery, useMarkAllReadMutation } from "../services/notificationApi";
+import { resetUnread } from "../slices/notificationSlice";
 
 const Notification = () => {
+  const dispatch = useDispatch();
+  const { data, isLoading } = useGetNotificationsQuery();
+  const [markAllRead, { isLoading: marking }] = useMarkAllReadMutation();
+
+  const notifications = data?.data ?? [];
+  const unread = notifications.filter((n) => !n.isRead).length;
+
+  useEffect(() => {
+    dispatch(resetUnread());
+  }, [dispatch]);
+
+  const handleMarkAllRead = async () => {
+    await markAllRead();
+    dispatch(resetUnread());
+  };
+
   return (
     <main className="grid grid-cols-1 gap-5 max-w-2xl">
       <section className="flex justify-between items-center">
@@ -11,7 +30,11 @@ const Notification = () => {
           <p className="text-sm text-[#BE7090] mt-0.5">Stay up to date</p>
         </div>
         <div className="flex gap-2 items-center">
-          <button className="text-sm text-[#E11D48] font-semibold px-3 py-1.5 rounded-full hover:bg-[#FFE4E6] transition-colors">
+          <button
+            onClick={handleMarkAllRead}
+            disabled={marking || unread === 0}
+            className="text-sm text-[#E11D48] font-semibold px-3 py-1.5 rounded-full hover:bg-[#FFE4E6] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          >
             Mark all read
           </button>
           <button className="p-2 rounded-xl hover:bg-[#FFE4E6] transition-colors text-[#E11D48]">
@@ -20,17 +43,33 @@ const Notification = () => {
         </div>
       </section>
 
-      <div className="flex items-center gap-2">
-        <span className="bg-linear-to-r from-[#E11D48] to-[#FB7185] text-white text-xs font-bold px-2.5 py-0.5 rounded-full">
-          3 new
-        </span>
-        <span className="text-xs text-[#FDA4AF]">Today</span>
-      </div>
+      {unread > 0 && (
+        <div className="flex items-center gap-2">
+          <span className="bg-linear-to-r from-[#E11D48] to-[#FB7185] text-white text-xs font-bold px-2.5 py-0.5 rounded-full">
+            {unread} new
+          </span>
+          <span className="text-xs text-[#FDA4AF]">Today</span>
+        </div>
+      )}
+
+      {isLoading && (
+        <div className="flex justify-center py-10">
+          <Icon icon="svg-spinners:ring-resize" width="30" height="30" className="text-[#E11D48]" />
+        </div>
+      )}
+
+      {!isLoading && notifications.length === 0 && (
+        <div className="flex flex-col items-center gap-2 py-16 text-[#FDA4AF]">
+          <Icon icon="clarity:notification-solid" width="40" height="40" />
+          <p className="text-sm font-semibold text-[#9F1239]">No notifications yet</p>
+          <p className="text-xs text-[#FDA4AF]">You're all caught up!</p>
+        </div>
+      )}
 
       <section className="grid grid-cols-1 gap-3">
-        <NotificationCard />
-        <NotificationCard />
-        <NotificationCard />
+        {notifications.map((notification) => (
+          <NotificationCard key={notification._id} notification={notification} />
+        ))}
       </section>
     </main>
   );

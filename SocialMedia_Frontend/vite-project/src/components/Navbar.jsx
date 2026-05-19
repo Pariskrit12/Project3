@@ -29,6 +29,7 @@ const Navbar = () => {
   const searchRef = useRef(null);
   const navigate = useNavigate();
   const { user, isAuthenticated } = useSelector((state) => state.auth);
+  const unreadCount = useSelector((state) => state.notifications.unreadCount);
   const profilePic = isAuthenticated && user?.userProfilePic ? user.userProfilePic : DUMMY_AVATAR;
 
   const debouncedQuery = useDebounce(searchQuery, 300);
@@ -272,8 +273,10 @@ const Navbar = () => {
               className="relative p-2 rounded-xl hover:bg-[#FFE4E6] cursor-pointer transition-all duration-200 group"
             >
               <IconLink pageLink={elem.pageLink} icon={elem.icon} />
-              {index === 0 && (
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#BE123C] rounded-full border border-[#FFF1F2]"></span>
+              {index === 0 && unreadCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] flex items-center justify-center bg-[#BE123C] text-white text-[10px] font-bold rounded-full border-2 border-[#FFF1F2] px-1">
+                  {unreadCount > 99 ? "99+" : unreadCount}
+                </span>
               )}
             </div>
           ))}
