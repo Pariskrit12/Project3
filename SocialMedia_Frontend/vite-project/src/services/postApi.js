@@ -83,6 +83,10 @@ export const postsApi = createApi({
       query: ({ page = 1, limit = 10 } = {}) => ({ url: "/top", params: { page, limit } }),
       providesTags: ["Post"],
     }),
+    getTrendingPosts: builder.query({
+      query: ({ page = 1, limit = 10 } = {}) => ({ url: "/trending", params: { page, limit } }),
+      providesTags: ["Post"],
+    }),
     getFeed: builder.query({
       query: ({ page = 1, limit = 10 } = {}) => ({ url: "/feed", params: { page, limit } }),
       providesTags: ["Post"],
@@ -96,6 +100,7 @@ export const {
   useGetNewPostsQuery,
   useGetRecentlyVisitedPostsQuery,
   useGetTopPostsQuery,
+  useGetTrendingPostsQuery,
   useCreatePostMutation,
   useCreatePostInCommunityMutation,
   useGetAllPostsQuery,

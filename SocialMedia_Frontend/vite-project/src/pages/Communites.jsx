@@ -65,7 +65,7 @@ const Communites = () => {
 
   return (
     <main>
-      {/* Banner + profile pic — outer div is relative but NOT overflow-hidden */}
+
       <div className="relative mb-14">
         <div className="relative h-48 rounded-2xl overflow-hidden shadow-[0_4px_20px_rgba(225,29,72,0.15)]">
           <img

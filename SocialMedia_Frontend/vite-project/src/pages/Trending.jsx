@@ -1,12 +1,12 @@
 import React from "react";
 import Cards from "../components/HomeComponents/Cards";
 import { Icon } from "@iconify/react";
-import { useGetTopPostsQuery } from "../services/postApi";
+import { useGetTrendingPostsQuery } from "../services/postApi";
 import formatTime from "../utils/formatTime";
 import { useNavigate } from "react-router-dom";
 
 const Trending = () => {
-  const { data, isLoading, isError } = useGetTopPostsQuery();
+  const { data, isLoading, isError } = useGetTrendingPostsQuery();
   const navigate = useNavigate();
 
   const posts = data?.data?.posts ?? [];
@@ -19,7 +19,7 @@ const Trending = () => {
         </div>
         <div>
           <h1 className="font-black text-2xl text-[#1C0714]">Trending</h1>
-          <p className="text-sm text-[#BE7090]">What everyone is talking about</p>
+          <p className="text-sm text-[#BE7090]">Most active in the last 48 hours</p>
         </div>
       </div>
 
