@@ -107,6 +107,7 @@ const Cards = ({
   postId,
   likes = [],
   dislikes = [],
+  comments = [],
 }) => {
   const navigate = useNavigate();
 
@@ -320,10 +321,10 @@ const Cards = ({
         </button>
         <button
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold text-[#BE7090] hover:bg-[#FFE4E6] hover:text-[#BE123C] transition-all duration-200"
-          onClick={(e) => e.stopPropagation()}
+          onClick={(e) => { e.stopPropagation(); navigate(`/postPage/${postId}`); }}
         >
           <Icon icon="mdi:comments-outline" width="16" height="16" />
-          <span>Comment</span>
+          <span>{comments.length > 0 ? comments.length : "Comment"}</span>
         </button>
         <button
           className="ml-auto p-1.5 rounded-full text-[#BE7090] hover:bg-[#FFE4E6] hover:text-[#BE123C] transition-all duration-200"

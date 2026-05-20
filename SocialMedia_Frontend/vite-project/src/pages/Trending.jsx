@@ -58,6 +58,7 @@ const Trending = () => {
             description={post.postDescription}
             likes={post.likes}
             dislikes={post.dislikes}
+            comments={post.comments ?? []}
             onClick={() => navigate(`/postPage/${post._id}`)}
           />
         ))}

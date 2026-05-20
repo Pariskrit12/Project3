@@ -88,6 +88,7 @@ const Postpage = () => {
           description={post.postDescription}
           likes={post.likes}
           dislikes={post.dislikes}
+          comments={post.comments ?? []}
         />
       </section>
 

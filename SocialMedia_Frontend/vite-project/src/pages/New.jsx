@@ -57,6 +57,7 @@ const New = () => {
             media={post.media ?? []}
             likes={post.likes ?? []}
             dislikes={post.dislikes ?? []}
+            comments={post.comments ?? []}
             onClick={() => navigate(`/postPage/${post._id}`)}
           />
         ))}
