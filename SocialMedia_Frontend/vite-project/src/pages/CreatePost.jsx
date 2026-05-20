@@ -1,17 +1,19 @@
 import React, { useState, useRef } from "react";
 import { Icon } from "@iconify/react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   useCreatePostMutation,
   useCreatePostInCommunityMutation,
 } from "../services/postApi";
-import { useGetAllCommunitiesQuery } from "../services/communitiesApi";
+import { useGetCommunityQuery } from "../services/communitiesApi";
 
 const CreatePost = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const communityId = searchParams.get("communityId") || "";
+
   const [postTitle, setPostTitle] = useState("");
   const [postDescription, setPostDescription] = useState("");
-  const [selectedCommunity, setSelectedCommunity] = useState("");
   const [mediaFiles, setMediaFiles] = useState([]);
   const [previews, setPreviews] = useState([]);
   const [error, setError] = useState("");
@@ -41,9 +43,8 @@ const CreatePost = () => {
   const [createPost, { isLoading: isCreating }] = useCreatePostMutation();
   const [createPostInCommunity, { isLoading: isCreatingInCommunity }] =
     useCreatePostInCommunityMutation();
-  const { data: communitiesData } = useGetAllCommunitiesQuery();
-
-  const communities = communitiesData?.data?.communities || [];
+  const { data: communityData } = useGetCommunityQuery(communityId, { skip: !communityId });
+  const community = communityData?.data;
   const isLoading = isCreating || isCreatingInCommunity;
 
   const handleFileChange = (e) => {
@@ -75,11 +76,8 @@ const CreatePost = () => {
       formData.append("tags", JSON.stringify(selectedTags));
 
     try {
-      if (selectedCommunity) {
-        await createPostInCommunity({
-          communityId: selectedCommunity,
-          formData,
-        }).unwrap();
+      if (communityId) {
+        await createPostInCommunity({ communityId, formData }).unwrap();
       } else {
         await createPost(formData).unwrap();
       }
@@ -107,43 +105,42 @@ const CreatePost = () => {
         </button>
         <div>
           <h1 className="text-xl font-bold text-[#1C0714]">Create Post</h1>
-          <p className="text-xs text-[#FDA4AF]">Share something with the community</p>
+          <p className="text-xs text-[#FDA4AF]">
+            {communityId && community
+              ? `Posting to ${community.communityName}`
+              : "Share something with everyone"}
+          </p>
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        {/* Community selector */}
-        <div className="flex flex-col gap-1.5">
-          <label className="text-[10px] font-extrabold text-[#FDA4AF] uppercase tracking-[0.2em] px-1">
-            Community (optional)
-          </label>
-          <div className="flex w-full border border-[#FECDD3] bg-[#FFF5F6] rounded-xl p-3 gap-2.5 focus-within:border-[#E11D48] focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(225,29,72,0.1)] transition-all duration-200">
-            <Icon
-              icon="mdi:account-group"
-              width="18"
-              height="18"
-              className="text-[#E11D48] shrink-0 mt-px"
-            />
-            <select
-              value={selectedCommunity}
-              onChange={(e) => setSelectedCommunity(e.target.value)}
-              className="w-full outline-none bg-transparent text-[#1C0714] text-sm cursor-pointer"
-            >
-              <option value="">No community — general post</option>
-              {communities.map((c) => (
-                <option key={c._id} value={c._id}>
-                  {c.communityName}
-                </option>
-              ))}
-            </select>
-            <Icon
-              icon="ep:arrow-down-bold"
-              width="13"
-              height="13"
-              className="text-[#FDA4AF] shrink-0 mt-px pointer-events-none"
-            />
+        {/* Community badge — only shown when coming from a community page */}
+        {communityId && (
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[10px] font-extrabold text-[#FDA4AF] uppercase tracking-[0.2em] px-1">
+              Posting in
+            </label>
+            <div className="flex items-center gap-2.5 border border-[#FECDD3] bg-[#FFF5F6] rounded-xl p-3">
+              <div className="shrink-0 h-7 w-7 rounded-full overflow-hidden bg-[#FFE4E6] border border-[#FECDD3]">
+                {community?.communityProfilePicture ? (
+                  <img
+                    src={community.communityProfilePicture}
+                    alt={community.communityName}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <Icon icon="mdi:account-group" width="14" height="14" className="text-[#E11D48]" />
+                  </div>
+                )}
+              </div>
+              <p className="text-sm font-semibold text-[#1C0714] flex-1">
+                {community?.communityName ?? "Loading…"}
+              </p>
+              <Icon icon="mdi:lock" width="14" height="14" className="text-[#FDA4AF]" />
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Title */}
         <div className="flex flex-col gap-1.5">

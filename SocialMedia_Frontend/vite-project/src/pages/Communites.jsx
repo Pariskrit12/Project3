@@ -100,7 +100,7 @@ const Communites = () => {
           {isCreator && (
             <>
               <button
-                onClick={() => navigate(`/create-post`)}
+                onClick={() => navigate(`/create-post?communityId=${communityId}`)}
                 className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold bg-[#E11D48] text-white hover:bg-[#BE123C] transition-colors shadow-[0_3px_12px_rgba(225,29,72,0.3)]"
               >
                 <Icon icon="ic:round-plus" width="16" height="16" />
@@ -117,7 +117,7 @@ const Communites = () => {
           {isMember && !isCreator && (
             <>
               <button
-                onClick={() => navigate(`/create-post`)}
+                onClick={() => navigate(`/create-post?communityId=${communityId}`)}
                 className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold bg-[#E11D48] text-white hover:bg-[#BE123C] transition-colors shadow-[0_3px_12px_rgba(225,29,72,0.3)]"
               >
                 <Icon icon="ic:round-plus" width="16" height="16" />
