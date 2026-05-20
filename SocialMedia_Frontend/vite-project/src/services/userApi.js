@@ -107,10 +107,15 @@ export const usersApi = createApi({
       }),
       invalidatesTags: ["User"],
     }),
+    getSuggestedUsers: builder.query({
+      query: () => "/suggestions",
+      providesTags: ["User"],
+    }),
   }),
 });
 
 export const {
+  useGetSuggestedUsersQuery,
   useSaveInterestsMutation,
   useRegisterUserMutation,
   useLoginUserMutation,

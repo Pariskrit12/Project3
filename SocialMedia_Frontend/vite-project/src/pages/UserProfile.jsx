@@ -5,6 +5,7 @@ import { Icon } from "@iconify/react";
 import Button from "../components/common/Button";
 import { useGetProfileQuery, useFollowUserMutation, useUnfollowUserMutation } from "../services/userApi";
 import { useGetPostsOfUserQuery } from "../services/postApi";
+import SuggestedUsers from "../components/UserProfile/SuggestedUsers";
 
 const UserListModal = ({ title, users, onClose, onUserClick }) => (
   <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={onClose}>
@@ -109,9 +110,11 @@ const UserProfile = () => {
   }
 
   return (
-    <main className="max-w-3xl">
-      {/* Banner + Avatar */}
-      <section className="relative mb-14">
+    <main>
+      <div className={`grid gap-6 items-start ${isOwnProfile ? "grid-cols-[1fr_280px]" : "max-w-3xl"}`}>
+        <div>
+        {/* Banner + Avatar */}
+        <section className="relative mb-14">
         <div className="h-36 bg-linear-to-br from-[#E11D48] via-[#FB7185] to-[#BE123C] rounded-2xl overflow-hidden relative">
           <div className="absolute inset-0">
             <div className="absolute top-4 left-10 w-16 h-16 rounded-full bg-white/20"></div>
@@ -294,14 +297,22 @@ const UserProfile = () => {
         )}
       </section>
 
-      {modal && (
-        <UserListModal
-          title={modal === "followers" ? "Followers" : "Following"}
-          users={modal === "followers" ? (user.followers ?? []) : (user.following ?? [])}
-          onClose={() => setModal(null)}
-          onUserClick={(id) => { setModal(null); navigate(`/userProfile/${id}`); }}
-        />
-      )}
+        {modal && (
+          <UserListModal
+            title={modal === "followers" ? "Followers" : "Following"}
+            users={modal === "followers" ? (user.followers ?? []) : (user.following ?? [])}
+            onClose={() => setModal(null)}
+            onUserClick={(id) => { setModal(null); navigate(`/userProfile/${id}`); }}
+          />
+        )}
+        </div>
+
+        {isOwnProfile && (
+          <aside className="sticky top-20">
+            <SuggestedUsers />
+          </aside>
+        )}
+      </div>
     </main>
   );
 };
