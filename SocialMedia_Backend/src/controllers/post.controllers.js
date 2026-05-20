@@ -498,7 +498,7 @@ const getTrendingPosts = asyncHandler(async (req, res) => {
   const limit = parseInt(req.query.limit) || 10;
   const skip = (page - 1) * limit;
 
-  // Posts created in the last 48 hours
+
   const cutoff = new Date(Date.now() - 48 * 60 * 60 * 1000);
 
   const [posts, total] = await Promise.all([

@@ -573,6 +573,59 @@ const searchUsers = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, users, "Users fetched successfully"));
 });
 
+const getSuggestedUsers = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  const me = await User.findById(userId).select("interests following");
+  if (!me) throw new ApiError(404, "User not found");
+
+  const interests = me.interests ?? [];
+  const excludeIds = [userId, ...me.following];
+
+  // No interests set — fall back to users they don't follow yet
+  if (interests.length === 0) {
+    const users = await User.find({ _id: { $nin: excludeIds } })
+      .select("username name userProfilePic interests")
+      .limit(8)
+      .lean();
+    return res.status(200).json(new ApiResponse(200, users, "Suggested users fetched"));
+  }
+
+  const users = await User.aggregate([
+    {
+      $match: {
+        _id: { $nin: excludeIds },
+        interests: { $in: interests },
+      },
+    },
+    {
+      $addFields: {
+        commonInterestsCount: {
+          $size: {
+            $filter: {
+              input: { $ifNull: ["$interests", []] },
+              as: "i",
+              cond: { $in: ["$$i", interests] },
+            },
+          },
+        },
+      },
+    },
+    { $sort: { commonInterestsCount: -1 } },
+    { $limit: 8 },
+    {
+      $project: {
+        username: 1,
+        name: 1,
+        userProfilePic: 1,
+        interests: 1,
+        commonInterestsCount: 1,
+      },
+    },
+  ]);
+
+  return res.status(200).json(new ApiResponse(200, users, "Suggested users fetched"));
+});
+
 const saveInterests = asyncHandler(async (req, res) => {
   const userId = req.user?._id;
   if (!userId) throw new ApiError(401, "Unauthorized access");
@@ -616,4 +669,5 @@ export {
   getFollowingCount,
   searchUsers,
   saveInterests,
+  getSuggestedUsers,
 };
