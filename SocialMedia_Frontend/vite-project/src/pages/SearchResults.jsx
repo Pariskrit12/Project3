@@ -2,7 +2,11 @@ import { Icon } from "@iconify/react";
 import React, { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useSearchAllQuery, useLikePostMutation, useDislikePostMutation } from "../services/postApi";
+import {
+  useSearchAllQuery,
+  useLikePostMutation,
+  useDislikePostMutation,
+} from "../services/postApi";
 import { useToggleJoinCommunityMutation } from "../services/communitiesApi";
 
 function timeAgo(dateStr) {
@@ -13,7 +17,6 @@ function timeAgo(dateStr) {
   return `${Math.floor(seconds / 86400)}d ago`;
 }
 
-// Reddit-style compact post card
 const SearchPostCard = ({ post }) => {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
@@ -34,7 +37,10 @@ const SearchPostCard = ({ post }) => {
       setLocalLikes((prev) => prev.filter((id) => id.toString() !== user._id));
     } else {
       setLocalLikes((prev) => [...prev, user._id]);
-      if (isDisliked) setLocalDislikes((prev) => prev.filter((id) => id.toString() !== user._id));
+      if (isDisliked)
+        setLocalDislikes((prev) =>
+          prev.filter((id) => id.toString() !== user._id),
+        );
     }
     likePost(post._id);
   };
@@ -43,10 +49,15 @@ const SearchPostCard = ({ post }) => {
     e.stopPropagation();
     if (!user?._id) return;
     if (isDisliked) {
-      setLocalDislikes((prev) => prev.filter((id) => id.toString() !== user._id));
+      setLocalDislikes((prev) =>
+        prev.filter((id) => id.toString() !== user._id),
+      );
     } else {
       setLocalDislikes((prev) => [...prev, user._id]);
-      if (isLiked) setLocalLikes((prev) => prev.filter((id) => id.toString() !== user._id));
+      if (isLiked)
+        setLocalLikes((prev) =>
+          prev.filter((id) => id.toString() !== user._id),
+        );
     }
     dislikePost(post._id);
   };
@@ -56,19 +67,24 @@ const SearchPostCard = ({ post }) => {
       onClick={() => navigate(`/postPage/${post._id}`)}
       className="flex bg-[#FFF5F6] border border-[#FECDD3] rounded-xl hover:border-[#FDA4AF] hover:shadow-[0_4px_16px_rgba(225,29,72,0.1)] transition-all duration-200 cursor-pointer overflow-hidden"
     >
-      {/* Vote column */}
       <div className="flex flex-col items-center gap-0.5 px-2 py-3 bg-[#FFF1F2] min-w-[44px] shrink-0">
         <button
           onClick={handleLike}
           className={`p-1 rounded transition-colors ${
-            isLiked ? "text-[#E11D48]" : "text-[#FDA4AF] hover:text-[#E11D48] hover:bg-[#FFE4E6]"
+            isLiked
+              ? "text-[#E11D48]"
+              : "text-[#FDA4AF] hover:text-[#E11D48] hover:bg-[#FFE4E6]"
           }`}
         >
           <Icon icon="mdi:arrow-up-bold" width="18" height="18" />
         </button>
         <span
           className={`text-xs font-black ${
-            score > 0 ? "text-[#E11D48]" : score < 0 ? "text-blue-500" : "text-[#BE7090]"
+            score > 0
+              ? "text-[#E11D48]"
+              : score < 0
+                ? "text-blue-500"
+                : "text-[#BE7090]"
           }`}
         >
           {score}
@@ -76,24 +92,33 @@ const SearchPostCard = ({ post }) => {
         <button
           onClick={handleDislike}
           className={`p-1 rounded transition-colors ${
-            isDisliked ? "text-blue-500" : "text-[#FDA4AF] hover:text-blue-500 hover:bg-blue-50"
+            isDisliked
+              ? "text-blue-500"
+              : "text-[#FDA4AF] hover:text-blue-500 hover:bg-blue-50"
           }`}
         >
           <Icon icon="mdi:arrow-down-bold" width="18" height="18" />
         </button>
       </div>
 
-      {/* Content */}
       <div className="flex-1 p-3 min-w-0">
-        {/* Meta */}
         <div className="flex items-center gap-1 text-xs text-[#BE7090] mb-1.5 flex-wrap">
           {post.community && (
             <>
               <div className="h-4 w-4 rounded-full overflow-hidden bg-[#FFE4E6] shrink-0 flex items-center justify-center">
                 {post.community.communityProfilePicture ? (
-                  <img src={post.community.communityProfilePicture} alt="" className="w-full h-full object-cover" />
+                  <img
+                    src={post.community.communityProfilePicture}
+                    alt=""
+                    className="w-full h-full object-cover"
+                  />
                 ) : (
-                  <Icon icon="mdi:account-group" width="10" height="10" className="text-[#E11D48]" />
+                  <Icon
+                    icon="mdi:account-group"
+                    width="10"
+                    height="10"
+                    className="text-[#E11D48]"
+                  />
                 )}
               </div>
               <button
@@ -122,19 +147,15 @@ const SearchPostCard = ({ post }) => {
           <span>{timeAgo(post.createdAt)}</span>
         </div>
 
-        {/* Title */}
         <h2 className="font-bold text-[#1C0714] text-sm leading-snug mb-1 line-clamp-2">
           {post.postTitle || post.postDescription}
         </h2>
-
-        {/* Description preview */}
         {post.postDescription && post.postTitle && (
           <p className="text-xs text-[#BE7090] line-clamp-2 mb-2 leading-relaxed">
             {post.postDescription}
           </p>
         )}
 
-        {/* Actions */}
         <div className="flex items-center gap-1 mt-2">
           <button
             className="flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold text-[#BE7090] hover:bg-[#FFE4E6] hover:text-[#BE123C] transition-colors"
@@ -156,14 +177,22 @@ const SearchPostCard = ({ post }) => {
         </div>
       </div>
 
-      {/* Thumbnail */}
       {thumbnail && (
         <div className="shrink-0 w-20 h-20 m-3 rounded-lg overflow-hidden bg-[#FFE4E6] self-center">
           {thumbnail.type === "image" ? (
-            <img src={thumbnail.url} alt="" className="w-full h-full object-cover" />
+            <img
+              src={thumbnail.url}
+              alt=""
+              className="w-full h-full object-cover"
+            />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-[#1C0714]">
-              <Icon icon="mdi:play-circle" width="24" height="24" className="text-white/80" />
+              <Icon
+                icon="mdi:play-circle"
+                width="24"
+                height="24"
+                className="text-white/80"
+              />
             </div>
           )}
         </div>
@@ -172,15 +201,17 @@ const SearchPostCard = ({ post }) => {
   );
 };
 
-// Reddit-style community card
 const SearchCommunityCard = ({ community }) => {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
   const [toggleJoin, { isLoading: joining }] = useToggleJoinCommunityMutation();
   const [isMember, setIsMember] = useState(
-    community.members?.some((id) => id.toString() === user?._id?.toString()) ?? false
+    community.members?.some((id) => id.toString() === user?._id?.toString()) ??
+      false,
   );
-  const [memberCount, setMemberCount] = useState(community.members?.length ?? 0);
+  const [memberCount, setMemberCount] = useState(
+    community.members?.length ?? 0,
+  );
 
   const handleToggleJoin = async (e) => {
     e.stopPropagation();
@@ -196,36 +227,44 @@ const SearchCommunityCard = ({ community }) => {
 
   return (
     <div className="bg-[#FFF5F6] border border-[#FECDD3] rounded-xl overflow-hidden hover:border-[#FDA4AF] hover:shadow-[0_4px_16px_rgba(225,29,72,0.1)] transition-all duration-200">
-      {/* Banner */}
       <div
         className="h-14 w-full relative cursor-pointer"
         onClick={() => navigate(`/communities/${community._id}`)}
       >
         {community.communityBanner ? (
-          <img src={community.communityBanner} alt="" className="w-full h-full object-cover" />
+          <img
+            src={community.communityBanner}
+            alt=""
+            className="w-full h-full object-cover"
+          />
         ) : (
           <div className="w-full h-full bg-gradient-to-r from-[#E11D48] to-[#FB7185]" />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
       </div>
-
-      {/* Body */}
       <div className="px-3 pb-3 pt-1 flex items-start gap-3">
-        {/* Avatar — overlaps the banner */}
         <div
           className="shrink-0 h-11 w-11 rounded-full border-2 border-[#FFF5F6] overflow-hidden bg-[#FFE4E6] -mt-6 cursor-pointer shadow-[0_2px_8px_rgba(225,29,72,0.2)] z-10"
           onClick={() => navigate(`/communities/${community._id}`)}
         >
           {community.communityProfilePicture ? (
-            <img src={community.communityProfilePicture} alt="" className="w-full h-full object-cover" />
+            <img
+              src={community.communityProfilePicture}
+              alt=""
+              className="w-full h-full object-cover"
+            />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-[#E11D48]">
-              <Icon icon="mdi:account-group" width="18" height="18" className="text-white" />
+              <Icon
+                icon="mdi:account-group"
+                width="18"
+                height="18"
+                className="text-white"
+              />
             </div>
           )}
         </div>
 
-        {/* Info */}
         <div className="flex-1 min-w-0 mt-1">
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
@@ -275,7 +314,6 @@ const SearchResults = () => {
   const [tab, setTab] = useState("All");
   const navigate = useNavigate();
 
-  // Reset tab to "All" when query changes
   useEffect(() => {
     setTab("All");
   }, [q]);
@@ -289,7 +327,6 @@ const SearchResults = () => {
 
   return (
     <div className="max-w-2xl mx-auto">
-      {/* Header */}
       <div className="mb-5">
         <p className="text-xs font-semibold text-[#FDA4AF] uppercase tracking-widest mb-1">
           Search results for
@@ -302,7 +339,6 @@ const SearchResults = () => {
         )}
       </div>
 
-      {/* Tabs */}
       <div className="flex items-center gap-1 border border-[#FECDD3] bg-[#FFF5F6] rounded-xl px-2 py-2 mb-5">
         {TABS.map((t) => (
           <button
@@ -316,116 +352,141 @@ const SearchResults = () => {
           >
             {t}
             {t === "Posts" && posts.length > 0 && (
-              <span className="ml-1.5 text-xs opacity-70">({posts.length})</span>
+              <span className="ml-1.5 text-xs opacity-70">
+                ({posts.length})
+              </span>
             )}
             {t === "Communities" && communities.length > 0 && (
-              <span className="ml-1.5 text-xs opacity-70">({communities.length})</span>
+              <span className="ml-1.5 text-xs opacity-70">
+                ({communities.length})
+              </span>
             )}
           </button>
         ))}
       </div>
 
-      {/* Loading */}
       {isLoading && (
         <div className="flex justify-center py-16">
-          <Icon icon="svg-spinners:ring-resize" width="36" height="36" className="text-[#E11D48]" />
+          <Icon
+            icon="svg-spinners:ring-resize"
+            width="36"
+            height="36"
+            className="text-[#E11D48]"
+          />
         </div>
       )}
-
-      {/* Error */}
       {isError && (
         <div className="flex flex-col items-center gap-3 py-12 text-[#BE7090]">
           <Icon icon="material-symbols:error-outline" width="40" height="40" />
-          <p className="font-semibold">Something went wrong. Please try again.</p>
+          <p className="font-semibold">
+            Something went wrong. Please try again.
+          </p>
         </div>
       )}
 
-      {/* Empty query state */}
       {!q && !isLoading && (
         <div className="flex flex-col items-center gap-4 py-16 text-[#BE7090]">
           <Icon icon="mdi:magnify" width="48" height="48" />
           <div className="text-center">
             <p className="font-bold text-[#9F1239]">Start searching</p>
-            <p className="text-sm mt-1">Search for posts and communities above</p>
+            <p className="text-sm mt-1">
+              Search for posts and communities above
+            </p>
           </div>
         </div>
       )}
 
-      {/* No results */}
-      {q && !isLoading && !isError && posts.length === 0 && communities.length === 0 && (
-        <div className="flex flex-col items-center gap-4 py-16 text-[#BE7090]">
-          <Icon icon="mdi:magnify-close" width="48" height="48" />
-          <div className="text-center">
-            <p className="font-bold text-[#9F1239]">No results for "{q}"</p>
-            <p className="text-sm mt-1">Try different keywords or check the spelling</p>
+      {q &&
+        !isLoading &&
+        !isError &&
+        posts.length === 0 &&
+        communities.length === 0 && (
+          <div className="flex flex-col items-center gap-4 py-16 text-[#BE7090]">
+            <Icon icon="mdi:magnify-close" width="48" height="48" />
+            <div className="text-center">
+              <p className="font-bold text-[#9F1239]">No results for "{q}"</p>
+              <p className="text-sm mt-1">
+                Try different keywords or check the spelling
+              </p>
+            </div>
+            <button
+              onClick={() => navigate("/")}
+              className="mt-1 px-5 py-2 rounded-full bg-[#E11D48] text-white text-sm font-semibold hover:bg-[#BE123C] transition-colors"
+            >
+              Back to Home
+            </button>
           </div>
-          <button
-            onClick={() => navigate("/")}
-            className="mt-1 px-5 py-2 rounded-full bg-[#E11D48] text-white text-sm font-semibold hover:bg-[#BE123C] transition-colors"
-          >
-            Back to Home
-          </button>
-        </div>
-      )}
+        )}
 
-      {/* Results */}
-      {!isLoading && !isError && (posts.length > 0 || communities.length > 0) && (
-        <div className="flex flex-col gap-6">
-          {/* Communities section */}
-          {showCommunities && communities.length > 0 && (
-            <div>
-              {tab === "All" && (
-                <div className="flex items-center justify-between mb-3">
-                  <h2 className="font-black text-[#1C0714] text-xs uppercase tracking-widest flex items-center gap-2">
-                    <Icon icon="mdi:account-group" width="15" height="15" className="text-[#E11D48]" />
-                    Communities
-                  </h2>
-                  {communities.length > 3 && (
-                    <button
-                      onClick={() => setTab("Communities")}
-                      className="text-xs text-[#E11D48] font-semibold hover:underline"
-                    >
-                      See all {communities.length}
-                    </button>
+      {!isLoading &&
+        !isError &&
+        (posts.length > 0 || communities.length > 0) && (
+          <div className="flex flex-col gap-6">
+            {showCommunities && communities.length > 0 && (
+              <div>
+                {tab === "All" && (
+                  <div className="flex items-center justify-between mb-3">
+                    <h2 className="font-black text-[#1C0714] text-xs uppercase tracking-widest flex items-center gap-2">
+                      <Icon
+                        icon="mdi:account-group"
+                        width="15"
+                        height="15"
+                        className="text-[#E11D48]"
+                      />
+                      Communities
+                    </h2>
+                    {communities.length > 3 && (
+                      <button
+                        onClick={() => setTab("Communities")}
+                        className="text-xs text-[#E11D48] font-semibold hover:underline"
+                      >
+                        See all {communities.length}
+                      </button>
+                    )}
+                  </div>
+                )}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {(tab === "All" ? communities.slice(0, 4) : communities).map(
+                    (c) => (
+                      <SearchCommunityCard key={c._id} community={c} />
+                    ),
                   )}
                 </div>
-              )}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {(tab === "All" ? communities.slice(0, 4) : communities).map((c) => (
-                  <SearchCommunityCard key={c._id} community={c} />
-                ))}
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Posts section */}
-          {showPosts && posts.length > 0 && (
-            <div>
-              {tab === "All" && (
-                <div className="flex items-center justify-between mb-3">
-                  <h2 className="font-black text-[#1C0714] text-xs uppercase tracking-widest flex items-center gap-2">
-                    <Icon icon="mdi:post-outline" width="15" height="15" className="text-[#E11D48]" />
-                    Posts
-                  </h2>
-                  {posts.length > 5 && (
-                    <button
-                      onClick={() => setTab("Posts")}
-                      className="text-xs text-[#E11D48] font-semibold hover:underline"
-                    >
-                      See all {posts.length}
-                    </button>
-                  )}
+            {showPosts && posts.length > 0 && (
+              <div>
+                {tab === "All" && (
+                  <div className="flex items-center justify-between mb-3">
+                    <h2 className="font-black text-[#1C0714] text-xs uppercase tracking-widest flex items-center gap-2">
+                      <Icon
+                        icon="mdi:post-outline"
+                        width="15"
+                        height="15"
+                        className="text-[#E11D48]"
+                      />
+                      Posts
+                    </h2>
+                    {posts.length > 5 && (
+                      <button
+                        onClick={() => setTab("Posts")}
+                        className="text-xs text-[#E11D48] font-semibold hover:underline"
+                      >
+                        See all {posts.length}
+                      </button>
+                    )}
+                  </div>
+                )}
+                <div className="flex flex-col gap-2">
+                  {(tab === "All" ? posts.slice(0, 5) : posts).map((p) => (
+                    <SearchPostCard key={p._id} post={p} />
+                  ))}
                 </div>
-              )}
-              <div className="flex flex-col gap-2">
-                {(tab === "All" ? posts.slice(0, 5) : posts).map((p) => (
-                  <SearchPostCard key={p._id} post={p} />
-                ))}
               </div>
-            </div>
-          )}
-        </div>
-      )}
+            )}
+          </div>
+        )}
     </div>
   );
 };
