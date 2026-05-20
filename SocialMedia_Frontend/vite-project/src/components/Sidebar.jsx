@@ -121,7 +121,7 @@ const Sidebar = () => {
             joinedCommunities.map((community) => (
               <div
                 key={community._id}
-                onClick={() => navigate(`/communities`)}
+                onClick={() => navigate(`/communities/${community._id}`)}
                 className="flex items-center gap-3 cursor-pointer px-3 py-2 rounded-xl hover:bg-[#FFE4E6] transition-all duration-200"
               >
                 <div className="shrink-0 h-7 w-7 rounded-full overflow-hidden bg-linear-to-br from-[#FB7185] to-[#BE123C] flex items-center justify-center border border-[#FECDD3]">
