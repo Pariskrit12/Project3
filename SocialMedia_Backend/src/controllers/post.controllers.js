@@ -493,6 +493,61 @@ const searchAll = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, { posts, communities }, "Search results fetched successfully"));
 });
 
+const getTrendingPosts = asyncHandler(async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  // Posts created in the last 48 hours
+  const cutoff = new Date(Date.now() - 48 * 60 * 60 * 1000);
+
+  const [posts, total] = await Promise.all([
+    Post.aggregate([
+      { $match: { createdAt: { $gte: cutoff } } },
+      {
+        $addFields: {
+          // likes + (comments × 2) — comments weigh more to reward discussion
+          engagementScore: {
+            $add: [{ $size: "$likes" }, { $multiply: [{ $size: "$comments" }, 2] }],
+          },
+        },
+      },
+      { $sort: { engagementScore: -1, createdAt: -1 } },
+      { $skip: skip },
+      { $limit: limit },
+      {
+        $lookup: {
+          from: "users",
+          localField: "creator",
+          foreignField: "_id",
+          pipeline: [{ $project: { username: 1, userProfilePic: 1 } }],
+          as: "creator",
+        },
+      },
+      { $unwind: { path: "$creator", preserveNullAndEmptyArrays: true } },
+      {
+        $lookup: {
+          from: "communities",
+          localField: "community",
+          foreignField: "_id",
+          pipeline: [{ $project: { communityName: 1, communityProfilePicture: 1 } }],
+          as: "community",
+        },
+      },
+      { $unwind: { path: "$community", preserveNullAndEmptyArrays: true } },
+    ]),
+    Post.countDocuments({ createdAt: { $gte: cutoff } }),
+  ]);
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      { posts, total, currentPage: page, totalPages: Math.ceil(total / limit) },
+      "Trending posts fetched successfully",
+    ),
+  );
+});
+
 const getFeedPosts = asyncHandler(async (req, res) => {
   const userId = req.user?._id;
   const page = parseInt(req.query.page) || 1;
@@ -551,5 +606,6 @@ export {
   getRecentlyVisitedPosts,
   getNewPosts,
   getTopPosts,
+  getTrendingPosts,
   getFeedPosts,
 };

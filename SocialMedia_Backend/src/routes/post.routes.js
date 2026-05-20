@@ -17,6 +17,7 @@ import {
   getRecentlyVisitedPosts,
   getNewPosts,
   getTopPosts,
+  getTrendingPosts,
   getFeedPosts,
 } from "../controllers/post.controllers.js";
 const router = Router();
@@ -42,6 +43,7 @@ router.route("/search/all").get(verifyJwt, searchAll);
 router.route("/recentlyVisited").get(verifyJwt, getRecentlyVisitedPosts);
 router.route("/new").get(verifyJwt, getNewPosts);
 router.route("/top").get(verifyJwt, getTopPosts);
+router.route("/trending").get(verifyJwt, getTrendingPosts);
 router.route("/feed").get(verifyJwt, getFeedPosts);
 
 
