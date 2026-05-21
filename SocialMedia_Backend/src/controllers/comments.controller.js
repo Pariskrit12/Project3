@@ -1,6 +1,7 @@
 import { Comment } from "../models/comment.model.js";
 import { sendNotification } from "../utils/sendNotification.js";
 import { Post } from "../models/post.model.js";
+import { User } from "../models/user.models.js";
 
 import { ApiError } from "../utils/apiError.js";
 import { ApiResponse } from "../utils/apiResponse.js";
@@ -282,13 +283,17 @@ const getCommentOfPost = asyncHandler(async (req, res) => {
   const limit = parseInt(req.query.limit) || 10;
 
   const skip = (page - 1) * limit;
-  const comments = await Comment.find({ post: postId })
+  const deactivated = await User.find({ accountStatus: "deactivated" }).select("_id").lean();
+  const deactivatedIds = deactivated.map((u) => u._id);
+  const commentFilter = { post: postId, creator: { $nin: deactivatedIds } };
+
+  const comments = await Comment.find(commentFilter)
     .populate("creator", "username userProfilePic")
     .sort({ createdAt: -1 })
     .skip(skip)
     .limit(limit);
 
-  const totalComments = await Comment.countDocuments({ post: postId });
+  const totalComments = await Comment.countDocuments(commentFilter);
   return res
     .status(200)
     .json(

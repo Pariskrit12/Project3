@@ -105,6 +105,11 @@ const userLogin = asyncHandler(async (req, res) => {
     throw new ApiError(401, "Incorrect password");
   }
 
+  if (user.accountStatus === "deactivated") {
+    user.accountStatus = "active";
+    await user.save({ validateBeforeSave: false });
+  }
+
   const { accessToken, refreshToken } =
     await generateRefreshTokenAndAccessToken(user?._id);
 
@@ -367,7 +372,7 @@ const getUserProfileById = asyncHandler(async (req, res) => {
     .select("-password -refreshToken")
     .populate("followers", "username fullName userProfilePic")
     .populate("following", "username fullName userProfilePic");
-  if (!user) {
+  if (!user || user.accountStatus === "deactivated") {
     throw new ApiError(404, "User not found");
   }
 
@@ -583,7 +588,7 @@ const getSuggestedUsers = asyncHandler(async (req, res) => {
 
   // No interests set — fall back to users they don't follow yet
   if (interests.length === 0) {
-    const users = await User.find({ _id: { $nin: excludeIds } })
+    const users = await User.find({ _id: { $nin: excludeIds }, accountStatus: { $ne: "deactivated" } })
       .select("username name userProfilePic interests")
       .limit(8)
       .lean();
@@ -595,6 +600,7 @@ const getSuggestedUsers = asyncHandler(async (req, res) => {
       $match: {
         _id: { $nin: excludeIds },
         interests: { $in: interests },
+        accountStatus: { $ne: "deactivated" },
       },
     },
     {
@@ -622,6 +628,14 @@ const getSuggestedUsers = asyncHandler(async (req, res) => {
       },
     },
   ]);
+
+  if (users.length === 0) {
+    const fallbackUsers = await User.find({ _id: { $nin: excludeIds }, accountStatus: { $ne: "deactivated" } })
+      .select("username name userProfilePic interests")
+      .limit(8)
+      .lean();
+    return res.status(200).json(new ApiResponse(200, fallbackUsers, "Suggested users fetched"));
+  }
 
   return res.status(200).json(new ApiResponse(200, users, "Suggested users fetched"));
 });

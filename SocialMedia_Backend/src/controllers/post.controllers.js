@@ -8,6 +8,11 @@ import { ApiResponse } from "../utils/apiResponse.js";
 import { v2 as cloudinary } from "cloudinary";
 import { sendNotification } from "../utils/sendNotification.js";
 
+async function activeCreatorIds() {
+  const deactivated = await User.find({ accountStatus: "deactivated" }).select("_id").lean();
+  return deactivated.map((u) => u._id);
+}
+
 const createPost = asyncHandler(async (req, res) => {
   const { communitieId } = req.params;
   const userId = req.user?._id;
@@ -73,7 +78,8 @@ const createPost = asyncHandler(async (req, res) => {
     );
 });
 const getAllPost = asyncHandler(async (req, res) => {
-  const allPost = await Post.find().populate("creator").populate("community");
+  const deactivatedIds = await activeCreatorIds();
+  const allPost = await Post.find({ creator: { $nin: deactivatedIds } }).populate("creator").populate("community");
   if (allPost.length === 0) {
     throw new ApiError(404, "Failed to find any post");
   }
@@ -91,6 +97,9 @@ const getPostById = asyncHandler(async (req, res) => {
     .populate("community")
     .populate("comments");
   if (!post) {
+    throw new ApiError(404, "Post not found");
+  }
+  if (post.creator?.accountStatus === "deactivated") {
     throw new ApiError(404, "Post not found");
   }
 
@@ -136,7 +145,7 @@ const getPostOfLoggedInUser = asyncHandler(async (req, res) => {
 const getPostOfUserById = asyncHandler(async (req, res) => {
   const { userId } = req.params;
   const user = await User.findById(userId);
-  if (!user) {
+  if (!user || user.accountStatus === "deactivated") {
     throw new ApiError(404, "User not found");
   }
 
@@ -339,8 +348,10 @@ const searchPosts = asyncHandler(async (req, res) => {
   }
   const escaped = q.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const regex = new RegExp(escaped, "i");
+  const deactivatedIds = await activeCreatorIds();
 
   const posts = await Post.find({
+    creator: { $nin: deactivatedIds },
     $or: [{ postTitle: regex }, { postDescription: regex }],
   })
     .populate("creator", "username userProfilePic")
@@ -381,14 +392,16 @@ const getNewPosts = asyncHandler(async (req, res) => {
   const limit = parseInt(req.query.limit) || 10;
   const skip = (page - 1) * limit;
 
+  const deactivatedIds = await activeCreatorIds();
+  const activeFilter = { creator: { $nin: deactivatedIds } };
   const [posts, total] = await Promise.all([
-    Post.find()
+    Post.find(activeFilter)
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
       .populate("creator", "username userProfilePic")
       .populate("community", "communityName communityProfilePicture"),
-    Post.countDocuments(),
+    Post.countDocuments(activeFilter),
   ]);
 
   return res.status(200).json(
@@ -410,8 +423,10 @@ const getTopPosts = asyncHandler(async (req, res) => {
   const limit = parseInt(req.query.limit) || 10;
   const skip = (page - 1) * limit;
 
+  const deactivatedIds = await activeCreatorIds();
   const [posts, total] = await Promise.all([
     Post.aggregate([
+      { $match: { creator: { $nin: deactivatedIds } } },
       {
         $addFields: {
           likesCount: { $size: "$likes" },
@@ -444,7 +459,7 @@ const getTopPosts = asyncHandler(async (req, res) => {
       },
       { $unwind: { path: "$community", preserveNullAndEmptyArrays: true } },
     ]),
-    Post.countDocuments(),
+    Post.countDocuments({ creator: { $nin: deactivatedIds } }),
   ]);
 
   return res.status(200).json(
@@ -470,9 +485,11 @@ const searchAll = asyncHandler(async (req, res) => {
 
   const escaped = q.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const regex = new RegExp(escaped, "i");
+  const deactivatedIds = await activeCreatorIds();
 
   const [posts, communities] = await Promise.all([
     Post.find({
+      creator: { $nin: deactivatedIds },
       $or: [{ postTitle: regex }, { postDescription: regex }],
     })
       .populate("creator", "username userProfilePic")
@@ -500,13 +517,14 @@ const getTrendingPosts = asyncHandler(async (req, res) => {
 
 
   const cutoff = new Date(Date.now() - 48 * 60 * 60 * 1000);
+  const deactivatedIds = await activeCreatorIds();
 
   const [posts, total] = await Promise.all([
     Post.aggregate([
-      { $match: { createdAt: { $gte: cutoff } } },
+      { $match: { createdAt: { $gte: cutoff }, creator: { $nin: deactivatedIds } } },
       {
         $addFields: {
-          // likes + (comments × 2) — comments weigh more to reward discussion
+          // likes + (comments × 2) 
           engagementScore: {
             $add: [{ $size: "$likes" }, { $multiply: [{ $size: "$comments" }, 2] }],
           },
@@ -536,7 +554,7 @@ const getTrendingPosts = asyncHandler(async (req, res) => {
       },
       { $unwind: { path: "$community", preserveNullAndEmptyArrays: true } },
     ]),
-    Post.countDocuments({ createdAt: { $gte: cutoff } }),
+    Post.countDocuments({ createdAt: { $gte: cutoff }, creator: { $nin: deactivatedIds } }),
   ]);
 
   return res.status(200).json(
@@ -554,9 +572,10 @@ const getFeedPosts = asyncHandler(async (req, res) => {
   const limit = parseInt(req.query.limit) || 10;
   const skip = (page - 1) * limit;
 
+  const deactivatedIds = await activeCreatorIds();
   const [user, allPosts] = await Promise.all([
     User.findById(userId).select("interests"),
-    Post.find()
+    Post.find({ creator: { $nin: deactivatedIds } })
       .populate("creator", "username userProfilePic")
       .populate("community", "communityName communityProfilePicture")
       .sort({ createdAt: -1 }),

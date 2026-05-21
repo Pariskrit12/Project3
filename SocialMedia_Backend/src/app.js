@@ -28,4 +28,7 @@ app.use("/community",communityRouter);
 import notificationRouter from "./routes/notification.routes.js";
 app.use("/notification", notificationRouter);
 
+import chatRouter from "./routes/chat.routes.js";
+app.use("/chat", chatRouter);
+
 export default app;

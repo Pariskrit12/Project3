@@ -38,5 +38,5 @@ const commentSchema = new Schema({
     ref: "Post",
     required: true,
   },
-});
+}, { timestamps: true });
 export const Comment = mongoose.model("Comment", commentSchema);
