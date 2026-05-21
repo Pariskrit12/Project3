@@ -9,6 +9,8 @@ import {
   useGetCommentsQuery,
   useDeleteCommentMutation,
   useUpdateCommentMutation,
+  useLikeCommentMutation,
+  useDislikeCommentMutation,
 } from "../services/commentsApi";
 import formatTime from "../utils/formatTime";
 
@@ -25,6 +27,8 @@ const Postpage = () => {
     useGetCommentsQuery(postId);
   const [deleteComment] = useDeleteCommentMutation();
   const [updateComment, { isLoading: updating }] = useUpdateCommentMutation();
+  const [likeComment] = useLikeCommentMutation();
+  const [dislikeComment] = useDislikeCommentMutation();
 
   const post = postData?.data;
   const comments = commentsData?.data?.comments ?? [];
@@ -73,7 +77,8 @@ const Postpage = () => {
   }
 
   return (
-    <main className="flex flex-col gap-5 max-w-2xl">
+    <main className="w-full flex flex-col gap-6">
+      {/* Post card — full width */}
       <section>
         <Cards
           showFull={true}
@@ -92,14 +97,18 @@ const Postpage = () => {
         />
       </section>
 
-      <section className="flex flex-col gap-4">
-        <div className="flex items-center gap-2">
+      {/* Comments section */}
+      <section className="flex flex-col gap-5 bg-[#FFF5F6] border border-[#FECDD3] rounded-2xl p-5 shadow-[0_2px_16px_rgba(225,29,72,0.07)]">
+        {/* Header */}
+        <div className="flex items-center gap-3 pb-4 border-b border-[#FFE4E6]">
+          <Icon icon="mdi:comments-outline" width="22" height="22" className="text-[#E11D48]" />
           <h2 className="font-black text-lg text-[#1C0714]">Comments</h2>
           <span className="bg-[#FFE4E6] text-[#BE123C] text-xs font-bold px-2.5 py-0.5 rounded-full">
             {commentsData?.data?.totalComments ?? 0}
           </span>
         </div>
 
+        {/* Comment input */}
         <CommentInput postId={postId} currentUser={user} />
 
         {/* transparent overlay to close dropdown on outside click */}
@@ -110,7 +119,8 @@ const Postpage = () => {
           />
         )}
 
-        <div className="flex flex-col gap-3 mt-2">
+        {/* Comment list */}
+        <div className="flex flex-col gap-3">
           {commentsLoading && (
             <div className="flex justify-center py-6">
               <Icon
@@ -123,9 +133,10 @@ const Postpage = () => {
           )}
 
           {!commentsLoading && comments.length === 0 && (
-            <p className="text-sm text-[#FDA4AF] text-center py-4">
-              No comments yet. Be the first!
-            </p>
+            <div className="flex flex-col items-center gap-2 py-8 text-[#FDA4AF]">
+              <Icon icon="mdi:comment-outline" width="32" height="32" />
+              <p className="text-sm font-medium">No comments yet. Be the first!</p>
+            </div>
           )}
 
           {comments.map((c) => {
@@ -133,15 +144,19 @@ const Postpage = () => {
               user && c.creator?._id?.toString() === user._id?.toString();
             const canDelete = isCommentOwner || isPostOwner;
             const isEditing = editingCommentId === c._id;
+            const isLiked = c.likes?.some(
+              (id) => id.toString() === user?._id?.toString()
+            );
 
             return (
               <div
                 key={c._id}
-                className={`relative flex gap-3 p-4 bg-[#FFF5F6] border border-[#FECDD3] rounded-2xl transition-opacity ${
+                className={`relative flex gap-3 p-4 bg-white border border-[#FECDD3] rounded-2xl transition-opacity ${
                   c.isOptimistic ? "opacity-60" : "opacity-100"
                 }`}
               >
-                <div className="shrink-0 h-9 w-9 rounded-full overflow-hidden bg-linear-to-br from-[#FB7185] to-[#BE123C] flex items-center justify-center border border-[#FECDD3]">
+                {/* Avatar */}
+                <div className="shrink-0 h-9 w-9 rounded-full overflow-hidden bg-linear-to-br from-[#FB7185] to-[#BE123C] flex items-center justify-center border border-[#FECDD3] ring-2 ring-[#FB7185] ring-offset-1">
                   {c.creator?.userProfilePic ? (
                     <img
                       src={c.creator.userProfilePic}
@@ -159,11 +174,13 @@ const Postpage = () => {
                 </div>
 
                 <div className="flex flex-col gap-1 flex-1 min-w-0">
+                  {/* Top row: name + time + menu */}
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
                       <p className="font-bold text-sm text-[#1C0714]">
                         {c.creator?.username ?? "user"}
                       </p>
+                      <span className="w-1 h-1 rounded-full bg-[#FECDD3]" />
                       <p className="text-xs text-[#FDA4AF]">
                         {formatTime(c.createdAt)}
                       </p>
@@ -187,7 +204,7 @@ const Postpage = () => {
                         </button>
 
                         {openDropdownId === c._id && (
-                          <div className="absolute right-0 top-8 z-20 bg-white border border-[#FECDD3] rounded-xl shadow-lg overflow-hidden min-w-[130px]">
+                          <div className="absolute right-0 top-8 z-20 bg-white border border-[#FECDD3] rounded-xl shadow-lg overflow-hidden min-w-32.5">
                             {isCommentOwner && (
                               <button
                                 onClick={() => handleEditStart(c)}
@@ -221,6 +238,7 @@ const Postpage = () => {
                     )}
                   </div>
 
+                  {/* Comment body */}
                   {isEditing ? (
                     <div className="flex flex-col gap-2 mt-1">
                       <textarea
@@ -233,7 +251,7 @@ const Postpage = () => {
                       <div className="flex gap-2 justify-end">
                         <button
                           onClick={() => setEditingCommentId(null)}
-                          className="px-3 py-1 text-xs rounded-full bg-[#FFE4E6] text-[#9F1239] hover:bg-[#FFE4E6] font-semibold transition-colors"
+                          className="px-3 py-1 text-xs rounded-full bg-[#FFE4E6] text-[#9F1239] font-semibold transition-colors"
                         >
                           Cancel
                         </button>
@@ -247,17 +265,36 @@ const Postpage = () => {
                       </div>
                     </div>
                   ) : (
-                    <p className="text-sm text-[#9F1239] leading-relaxed">
+                    <p className="text-sm text-[#3D0A1E] leading-relaxed">
                       {c.description}
                     </p>
                   )}
 
-                  <div className="flex items-center gap-3 mt-1">
-                    <button className="flex items-center gap-1 text-xs text-[#BE7090] hover:text-[#BE123C] transition-colors">
-                      <Icon icon="boxicons:like" width="14" height="14" />
-                      <span>{c.likes?.length ?? 0}</span>
+                  {/* Action row */}
+                  <div className="flex items-center gap-2 mt-2 pt-2 border-t border-[#FFE4E6]">
+                    <button
+                      onClick={() =>
+                        !c.isOptimistic &&
+                        likeComment({ postId, commentId: c._id })
+                      }
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${
+                        isLiked
+                          ? "bg-[#FFE4E6] text-[#BE123C]"
+                          : "text-[#BE7090] hover:bg-[#FFE4E6] hover:text-[#BE123C]"
+                      }`}
+                    >
+                      <Icon
+                        icon={isLiked ? "boxicons:like-filled" : "boxicons:like"}
+                        width="14"
+                        height="14"
+                      />
+                      <span>{c.likes?.length > 0 ? c.likes.length : "Like"}</span>
                     </button>
-                    <button className="text-xs text-[#BE7090] hover:text-[#BE123C] transition-colors font-medium">
+
+                    <button
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-[#BE7090] hover:bg-[#FFE4E6] hover:text-[#BE123C] transition-all duration-200"
+                    >
+                      <Icon icon="mdi:reply" width="14" height="14" />
                       Reply
                     </button>
                   </div>

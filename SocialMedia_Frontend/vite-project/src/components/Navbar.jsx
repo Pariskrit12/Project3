@@ -2,9 +2,11 @@ import { Icon } from "@iconify/react";
 import React, { useState, useEffect, useRef } from "react";
 import IconLink from "./common/IconLink";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Sidebar from "./Sidebar";
 import { useSearchAllQuery } from "../services/postApi";
+import { useGetUnreadCountQuery } from "../services/notificationApi";
+import { setUnreadCount } from "../slices/notificationSlice";
 
 const DUMMY_AVATAR = "https://ui-avatars.com/api/?name=Guest&background=FECDD3&color=E11D48";
 
@@ -28,8 +30,16 @@ const Navbar = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const searchRef = useRef(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { user, isAuthenticated } = useSelector((state) => state.auth);
   const unreadCount = useSelector((state) => state.notifications.unreadCount);
+
+  const { data: unreadData } = useGetUnreadCountQuery(undefined, { skip: !isAuthenticated });
+  useEffect(() => {
+    if (unreadData?.data !== undefined) {
+      dispatch(setUnreadCount(unreadData.data));
+    }
+  }, [unreadData, dispatch]);
   const profilePic = isAuthenticated && user?.userProfilePic ? user.userProfilePic : DUMMY_AVATAR;
 
   const debouncedQuery = useDebounce(searchQuery, 300);

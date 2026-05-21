@@ -4,6 +4,7 @@ import { postsApi } from "../services/postApi";
 import { commentsApi } from "../services/commentsApi";
 import { communitiesApi } from "../services/communitiesApi";
 import { notificationApi } from "../services/notificationApi";
+import { chatApi } from "../services/chatApi";
 import authReducer from "../slices/authSlice";
 import notificationReducer from "../slices/notificationSlice";
 
@@ -16,6 +17,7 @@ export const store = configureStore({
     [commentsApi.reducerPath]: commentsApi.reducer,
     [communitiesApi.reducerPath]: communitiesApi.reducer,
     [notificationApi.reducerPath]: notificationApi.reducer,
+    [chatApi.reducerPath]: chatApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
@@ -23,5 +25,6 @@ export const store = configureStore({
       .concat(postsApi.middleware)
       .concat(commentsApi.middleware)
       .concat(communitiesApi.middleware)
-      .concat(notificationApi.middleware),
+      .concat(notificationApi.middleware)
+      .concat(chatApi.middleware),
 });

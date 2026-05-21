@@ -31,14 +31,24 @@ export const commentsApi = createApi({
           })
         );
         try {
-          await queryFulfilled;
+          const { data } = await queryFulfilled;
+          const realComment = data?.data?.createdComment;
+          if (realComment) {
+            dispatch(
+              commentsApi.util.updateQueryData("getComments", postId, (draft) => {
+                if (draft?.data?.comments) {
+                  const idx = draft.data.comments.findIndex(
+                    (c) => c._id === optimisticComment._id
+                  );
+                  if (idx !== -1) draft.data.comments[idx] = realComment;
+                }
+              })
+            );
+          }
         } catch {
           patchResult.undo();
         }
       },
-      invalidatesTags: (result, error, { postId }) => [
-        { type: "Comment", id: postId },
-      ],
     }),
     updateComment: builder.mutation({
       query: ({ postId, commentId, formData }) => ({

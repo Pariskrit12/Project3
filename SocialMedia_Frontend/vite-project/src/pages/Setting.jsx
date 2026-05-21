@@ -16,12 +16,6 @@ const Setting = () => {
       description: "Change your password at any time",
       path: "settings/changePassword",
     },
-    {
-      name: "Deactivate your account",
-      icon: "picon:heartbroken",
-      description: "Find out how you can deactivate your account",
-      path: "settings/deactivateAccount",
-    },
   ];
 
   return (

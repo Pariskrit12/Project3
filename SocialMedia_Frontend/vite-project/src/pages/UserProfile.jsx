@@ -139,12 +139,23 @@ const UserProfile = () => {
           {isOwnProfile ? (
             <Button name="Edit Profile" isActive={true} onClick={() => navigate("/settings/accountInformation")} />
           ) : (
-            <Button
-              name={followBtnLabel}
-              isActive={!isFollowingProfile}
-              onClick={handleFollowToggle}
-              loading={followBtnLoading}
-            />
+            <>
+              <Button
+                name={followBtnLabel}
+                isActive={!isFollowingProfile}
+                onClick={handleFollowToggle}
+                loading={followBtnLoading}
+              />
+              {(isFollowingProfile || profileFollowsMe) && (
+                <button
+                  onClick={() => navigate(`/chat?userId=${userId}`)}
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold border border-[#FECDD3] bg-[#FFF5F6] text-[#9F1239] hover:bg-[#FFE4E6] transition-colors"
+                >
+                  <Icon icon="mdi:message-outline" width="16" height="16" />
+                  Message
+                </button>
+              )}
+            </>
           )}
           <button className="p-2 rounded-xl hover:bg-[#FFE4E6] transition-colors border border-[#FECDD3] bg-[#FFF5F6]">
             <Icon className="text-[#E11D48]" icon="fa7-solid:share" width="18" height="18" />
