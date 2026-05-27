@@ -702,11 +702,12 @@ const googleLogin = asyncHandler(async (req, res) => {
   const email = payload.email;
   const name = payload.name;
   const picture = payload.picture;
-
+  const randomNum = Math.floor(1000 + Math.random() * 9000);
+  const username = `${name.toLowerCase()}${randomNum}`;
   let user = await User.findOne({ email });
   if (!user) {
     user = await User.create({
-      username: name.toLowerCase(),
+      username,
       name,
       email,
       userProfilePic: picture,
@@ -747,5 +748,5 @@ export {
   searchUsers,
   saveInterests,
   getSuggestedUsers,
-  googleLogin
+  googleLogin,
 };
