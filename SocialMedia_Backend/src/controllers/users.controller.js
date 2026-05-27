@@ -5,7 +5,8 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import { v2 as cloudinary } from "cloudinary";
 import { sendNotification } from "../utils/sendNotification.js";
-
+import { OAuth2Client } from "google-auth-library";
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const generateRefreshTokenAndAccessToken = async (userId) => {
   const user = await User.findById(userId);
   if (!user) {
@@ -507,7 +508,13 @@ const getFollowers = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, user.followers, "Fetched user followers successfully"));
+    .json(
+      new ApiResponse(
+        200,
+        user.followers,
+        "Fetched user followers successfully",
+      ),
+    );
 });
 const getFollowing = asyncHandler(async (req, res) => {
   const userId = req.user?._id;
@@ -588,11 +595,16 @@ const getSuggestedUsers = asyncHandler(async (req, res) => {
 
   // No interests set — fall back to users they don't follow yet
   if (interests.length === 0) {
-    const users = await User.find({ _id: { $nin: excludeIds }, accountStatus: { $ne: "deactivated" } })
+    const users = await User.find({
+      _id: { $nin: excludeIds },
+      accountStatus: { $ne: "deactivated" },
+    })
       .select("username name userProfilePic interests")
       .limit(8)
       .lean();
-    return res.status(200).json(new ApiResponse(200, users, "Suggested users fetched"));
+    return res
+      .status(200)
+      .json(new ApiResponse(200, users, "Suggested users fetched"));
   }
 
   const users = await User.aggregate([
@@ -630,14 +642,21 @@ const getSuggestedUsers = asyncHandler(async (req, res) => {
   ]);
 
   if (users.length === 0) {
-    const fallbackUsers = await User.find({ _id: { $nin: excludeIds }, accountStatus: { $ne: "deactivated" } })
+    const fallbackUsers = await User.find({
+      _id: { $nin: excludeIds },
+      accountStatus: { $ne: "deactivated" },
+    })
       .select("username name userProfilePic interests")
       .limit(8)
       .lean();
-    return res.status(200).json(new ApiResponse(200, fallbackUsers, "Suggested users fetched"));
+    return res
+      .status(200)
+      .json(new ApiResponse(200, fallbackUsers, "Suggested users fetched"));
   }
 
-  return res.status(200).json(new ApiResponse(200, users, "Suggested users fetched"));
+  return res
+    .status(200)
+    .json(new ApiResponse(200, users, "Suggested users fetched"));
 });
 
 const saveInterests = asyncHandler(async (req, res) => {
@@ -660,9 +679,53 @@ const saveInterests = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, { interests: cleaned }, "Interests saved successfully"));
+    .json(
+      new ApiResponse(
+        200,
+        { interests: cleaned },
+        "Interests saved successfully",
+      ),
+    );
 });
+const googleLogin = asyncHandler(async (req, res) => {
+  const { token } = req.body;
+  if (!token) {
+    throw new ApiError(404, "Token not found");
+  }
 
+  const ticket = await client.verifyIdToken({
+    idToken: token,
+    audience: process.env.GOOGLE_CLIENT_ID,
+  });
+
+  const payload = ticket.getPayload();
+  const email = payload.email;
+  const name = payload.name;
+  const picture = payload.picture;
+
+  let user = await User.findOne({ email });
+  if (!user) {
+    user = await User.create({
+      username: name.toLowerCase(),
+      name,
+      email,
+      userProfilePic: picture,
+    });
+  }
+  const { accessToken, refreshToken } = generateRefreshTokenAndAccessToken(
+    user?._id,
+  );
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
+
+  return res
+    .status(200)
+    .cookie("accessToken", accessToken, options)
+    .cookie("refreshToken", refreshToken, options)
+    .json(new ApiResponse(200, user, "User loggedIn Successfully"));
+});
 export {
   userRegister,
   userLogin,
