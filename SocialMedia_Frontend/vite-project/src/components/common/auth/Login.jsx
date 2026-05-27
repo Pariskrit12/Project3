@@ -6,7 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useLoginUserMutation } from "../../../services/userApi";
 import { setUser } from "../../../slices/authSlice";
-
+import { GoogleLogin } from "@react-oauth/google";
+import axios from "axios";
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -27,7 +28,10 @@ const Login = () => {
       return;
     }
     try {
-      const res = await loginUser({ email: form.email, password: form.password }).unwrap();
+      const res = await loginUser({
+        email: form.email,
+        password: form.password,
+      }).unwrap();
       dispatch(setUser(res.data.user));
       navigate("/");
     } catch (err) {
@@ -46,17 +50,26 @@ const Login = () => {
       >
         <div className="flex flex-col items-center gap-3">
           <div className="bg-linear-to-br from-[#E11D48] to-[#FB7185] p-4 rounded-2xl shadow-[0_6px_20px_rgba(225,29,72,0.4)]">
-            <Icon icon="solar:login-bold" width="32" height="32" className="text-white" />
+            <Icon
+              icon="solar:login-bold"
+              width="32"
+              height="32"
+              className="text-white"
+            />
           </div>
           <div className="text-center">
             <h1 className="text-2xl font-black text-[#1C0714]">Welcome back</h1>
-            <p className="text-sm text-[#BE7090] mt-0.5">Sign in to SocialSphere</p>
+            <p className="text-sm text-[#BE7090] mt-0.5">
+              Sign in to SocialSphere
+            </p>
           </div>
         </div>
 
         <div className="w-full flex flex-col gap-3">
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold text-[#9F1239] uppercase tracking-wide">Email</label>
+            <label className="text-xs font-bold text-[#9F1239] uppercase tracking-wide">
+              Email
+            </label>
             <Input
               placeholder="your@email.com"
               type="email"
@@ -66,7 +79,9 @@ const Login = () => {
             />
           </div>
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold text-[#9F1239] uppercase tracking-wide">Password</label>
+            <label className="text-xs font-bold text-[#9F1239] uppercase tracking-wide">
+              Password
+            </label>
             <Input
               placeholder="••••••••"
               type="password"
@@ -83,23 +98,46 @@ const Login = () => {
         </div>
 
         {error && (
-          <p className="text-xs text-red-500 font-medium w-full text-center -mt-2">{error}</p>
+          <p className="text-xs text-red-500 font-medium w-full text-center -mt-2">
+            {error}
+          </p>
         )}
 
         <div className="w-full">
-          <Button name={isLoading ? "Signing in..." : "Sign In"} isActive={!isLoading} loading={isLoading} />
+          <Button
+            name={isLoading ? "Signing in..." : "Sign In"}
+            isActive={!isLoading}
+            loading={isLoading}
+          />
         </div>
 
         <div className="flex items-center gap-3 w-full">
           <div className="h-px flex-1 bg-[#FECDD3]"></div>
-          <span className="text-xs text-[#FDA4AF] font-medium">or continue with</span>
+          <span className="text-xs text-[#FDA4AF] font-medium">
+            or continue with
+          </span>
           <div className="h-px flex-1 bg-[#FECDD3]"></div>
         </div>
 
-        <button className="w-full flex items-center justify-center gap-3 py-2.5 rounded-xl border border-[#FECDD3] bg-white hover:bg-[#FFE4E6] transition-colors text-sm font-semibold text-[#1C0714]">
-          <Icon icon="flat-color-icons:google" width="20" height="20" />
-          Google
-        </button>
+        <GoogleLogin
+          onSuccess={async (response) => {
+            try {
+              const token = response.credential;
+              const res = await axios.post(
+                "/users/auth",
+                { token },
+                { withCredentials: true },
+              );
+              console.log(res.data.data);
+              const user = res.data.data;
+              dispatch(setUser(user));
+              navigate("/");
+            } catch (error) {
+              console.log("Google login failed", error);
+              setError?.("Google login failed");
+            }
+          }}
+        />
 
         <p className="text-sm text-[#9F1239]">
           Don't have an account?{" "}
