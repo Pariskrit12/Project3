@@ -747,4 +747,5 @@ export {
   searchUsers,
   saveInterests,
   getSuggestedUsers,
+  googleLogin
 };
