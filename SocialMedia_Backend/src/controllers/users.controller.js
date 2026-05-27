@@ -703,7 +703,7 @@ const googleLogin = asyncHandler(async (req, res) => {
   const name = payload.name;
   const picture = payload.picture;
   const randomNum = Math.floor(1000 + Math.random() * 9000);
-  const username = `${name.toLowerCase()}${randomNum}`;
+  const username = `${name.toLowerCase().replace(/\s+/g, "")}${randomNum}`;
   let user = await User.findOne({ email });
   if (!user) {
     user = await User.create({
@@ -713,9 +713,14 @@ const googleLogin = asyncHandler(async (req, res) => {
       userProfilePic: picture,
     });
   }
-  const { accessToken, refreshToken } = generateRefreshTokenAndAccessToken(
+  const { accessToken, refreshToken } = await generateRefreshTokenAndAccessToken(
     user?._id,
   );
+
+  const loggedInUser = await User.findById(user._id).select(
+    "-password -refreshToken",
+  );
+
   const options = {
     httpOnly: true,
     secure: true,
@@ -725,7 +730,7 @@ const googleLogin = asyncHandler(async (req, res) => {
     .status(200)
     .cookie("accessToken", accessToken, options)
     .cookie("refreshToken", refreshToken, options)
-    .json(new ApiResponse(200, user, "User loggedIn Successfully"));
+    .json(new ApiResponse(200, loggedInUser, "User loggedIn Successfully"));
 });
 export {
   userRegister,
