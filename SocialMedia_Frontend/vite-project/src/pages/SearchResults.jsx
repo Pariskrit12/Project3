@@ -65,15 +65,15 @@ const SearchPostCard = ({ post }) => {
   return (
     <div
       onClick={() => navigate(`/postPage/${post._id}`)}
-      className="flex bg-[#FFFFFF] border border-[#EDEFF1] rounded-xl hover:border-[#878A8C] hover:shadow-[0_4px_16px_rgba(255,69,0,0.1)] transition-all duration-200 cursor-pointer overflow-hidden"
+      className="flex bg-[#1E1E1E] border border-[#3A3A3C] rounded-xl hover:border-[#9A9A9A] hover:shadow-[0_4px_16px_rgba(255,69,0,0.1)] transition-all duration-200 cursor-pointer overflow-hidden"
     >
-      <div className="flex flex-col items-center gap-0.5 px-2 py-3 bg-[#DAE0E6] min-w-[44px] shrink-0">
+      <div className="flex flex-col items-center gap-0.5 px-2 py-3 bg-[#111111] min-w-[44px] shrink-0">
         <button
           onClick={handleLike}
           className={`p-1 rounded transition-colors ${
             isLiked
               ? "text-[#FF4500]"
-              : "text-[#878A8C] hover:text-[#FF4500] hover:bg-[#E5E6EA]"
+              : "text-[#9A9A9A] hover:text-[#FF4500] hover:bg-[#2A2A2A]"
           }`}
         >
           <Icon icon="mdi:arrow-up-bold" width="18" height="18" />
@@ -84,7 +84,7 @@ const SearchPostCard = ({ post }) => {
               ? "text-[#FF4500]"
               : score < 0
                 ? "text-blue-500"
-                : "text-[#878A8C]"
+                : "text-[#9A9A9A]"
           }`}
         >
           {score}
@@ -94,7 +94,7 @@ const SearchPostCard = ({ post }) => {
           className={`p-1 rounded transition-colors ${
             isDisliked
               ? "text-blue-500"
-              : "text-[#878A8C] hover:text-blue-500 hover:bg-blue-50"
+              : "text-[#9A9A9A] hover:text-blue-500 hover:bg-blue-50"
           }`}
         >
           <Icon icon="mdi:arrow-down-bold" width="18" height="18" />
@@ -102,10 +102,10 @@ const SearchPostCard = ({ post }) => {
       </div>
 
       <div className="flex-1 p-3 min-w-0">
-        <div className="flex items-center gap-1 text-xs text-[#878A8C] mb-1.5 flex-wrap">
+        <div className="flex items-center gap-1 text-xs text-[#9A9A9A] mb-1.5 flex-wrap">
           {post.community && (
             <>
-              <div className="h-4 w-4 rounded-full overflow-hidden bg-[#E5E6EA] shrink-0 flex items-center justify-center">
+              <div className="h-4 w-4 rounded-full overflow-hidden bg-[#2A2A2A] shrink-0 flex items-center justify-center">
                 {post.community.communityProfilePicture ? (
                   <img
                     src={post.community.communityProfilePicture}
@@ -130,7 +130,7 @@ const SearchPostCard = ({ post }) => {
               >
                 c/{post.community.communityName}
               </button>
-              <span className="text-[#EDEFF1]">·</span>
+              <span className="text-[#3A3A3C]">·</span>
             </>
           )}
           <span>Posted by</span>
@@ -143,22 +143,22 @@ const SearchPostCard = ({ post }) => {
           >
             u/{post.creator?.username}
           </button>
-          <span className="text-[#EDEFF1]">·</span>
+          <span className="text-[#3A3A3C]">·</span>
           <span>{timeAgo(post.createdAt)}</span>
         </div>
 
-        <h2 className="font-bold text-[#1C1C1C] text-sm leading-snug mb-1 line-clamp-2">
+        <h2 className="font-bold text-[#D7DADC] text-sm leading-snug mb-1 line-clamp-2">
           {post.postTitle || post.postDescription}
         </h2>
         {post.postDescription && post.postTitle && (
-          <p className="text-xs text-[#878A8C] line-clamp-2 mb-2 leading-relaxed">
+          <p className="text-xs text-[#9A9A9A] line-clamp-2 mb-2 leading-relaxed">
             {post.postDescription}
           </p>
         )}
 
         <div className="flex items-center gap-1 mt-2">
           <button
-            className="flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold text-[#878A8C] hover:bg-[#E5E6EA] hover:text-[#CC3600] transition-colors"
+            className="flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold text-[#9A9A9A] hover:bg-[#2A2A2A] hover:text-[#CC3600] transition-colors"
             onClick={(e) => {
               e.stopPropagation();
               navigate(`/postPage/${post._id}`);
@@ -168,7 +168,7 @@ const SearchPostCard = ({ post }) => {
             {post.comments?.length ?? 0} Comments
           </button>
           <button
-            className="flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold text-[#878A8C] hover:bg-[#E5E6EA] hover:text-[#CC3600] transition-colors"
+            className="flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold text-[#9A9A9A] hover:bg-[#2A2A2A] hover:text-[#CC3600] transition-colors"
             onClick={(e) => e.stopPropagation()}
           >
             <Icon icon="tabler:share" width="13" height="13" />
@@ -178,7 +178,7 @@ const SearchPostCard = ({ post }) => {
       </div>
 
       {thumbnail && (
-        <div className="shrink-0 w-20 h-20 m-3 rounded-lg overflow-hidden bg-[#E5E6EA] self-center">
+        <div className="shrink-0 w-20 h-20 m-3 rounded-lg overflow-hidden bg-[#2A2A2A] self-center">
           {thumbnail.type === "image" ? (
             <img
               src={thumbnail.url}
@@ -186,7 +186,7 @@ const SearchPostCard = ({ post }) => {
               className="w-full h-full object-cover"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-[#1C1C1C]">
+            <div className="w-full h-full flex items-center justify-center bg-[#D7DADC]">
               <Icon
                 icon="mdi:play-circle"
                 width="24"
@@ -226,7 +226,7 @@ const SearchCommunityCard = ({ community }) => {
   };
 
   return (
-    <div className="bg-[#FFFFFF] border border-[#EDEFF1] rounded-xl overflow-hidden hover:border-[#878A8C] hover:shadow-[0_4px_16px_rgba(255,69,0,0.1)] transition-all duration-200">
+    <div className="bg-[#1E1E1E] border border-[#3A3A3C] rounded-xl overflow-hidden hover:border-[#9A9A9A] hover:shadow-[0_4px_16px_rgba(255,69,0,0.1)] transition-all duration-200">
       <div
         className="h-14 w-full relative cursor-pointer"
         onClick={() => navigate(`/communities/${community._id}`)}
@@ -244,7 +244,7 @@ const SearchCommunityCard = ({ community }) => {
       </div>
       <div className="px-3 pb-3 pt-1 flex items-start gap-3">
         <div
-          className="shrink-0 h-11 w-11 rounded-full border-2 border-[#FFFFFF] overflow-hidden bg-[#E5E6EA] -mt-6 cursor-pointer shadow-[0_2px_8px_rgba(255,69,0,0.2)] z-10"
+          className="shrink-0 h-11 w-11 rounded-full border-2 border-[#1E1E1E] overflow-hidden bg-[#2A2A2A] -mt-6 cursor-pointer shadow-[0_2px_8px_rgba(255,69,0,0.2)] z-10"
           onClick={() => navigate(`/communities/${community._id}`)}
         >
           {community.communityProfilePicture ? (
@@ -270,11 +270,11 @@ const SearchCommunityCard = ({ community }) => {
             <div className="min-w-0">
               <button
                 onClick={() => navigate(`/communities/${community._id}`)}
-                className="font-bold text-[#1C1C1C] hover:text-[#FF4500] transition-colors text-sm leading-tight truncate block max-w-full"
+                className="font-bold text-[#D7DADC] hover:text-[#FF4500] transition-colors text-sm leading-tight truncate block max-w-full"
               >
                 c/{community.communityName}
               </button>
-              <p className="text-xs text-[#878A8C] flex items-center gap-1 mt-0.5">
+              <p className="text-xs text-[#9A9A9A] flex items-center gap-1 mt-0.5">
                 <Icon icon="mdi:account-group" width="11" height="11" />
                 {memberCount} members
               </p>
@@ -284,7 +284,7 @@ const SearchCommunityCard = ({ community }) => {
               disabled={joining}
               className={`shrink-0 px-4 py-1.5 rounded-full text-xs font-bold transition-all duration-200 ${
                 isMember
-                  ? "border border-[#FF4500] text-[#FF4500] hover:bg-[#E5E6EA]"
+                  ? "border border-[#FF4500] text-[#FF4500] hover:bg-[#2A2A2A]"
                   : "bg-[#FF4500] text-white hover:bg-[#CC3600] shadow-[0_2px_8px_rgba(255,69,0,0.3)]"
               }`}
             >
@@ -328,18 +328,18 @@ const SearchResults = () => {
   return (
     <div className="max-w-2xl mx-auto">
       <div className="mb-5">
-        <p className="text-xs font-semibold text-[#878A8C] uppercase tracking-widest mb-1">
+        <p className="text-xs font-semibold text-[#9A9A9A] uppercase tracking-widest mb-1">
           Search results for
         </p>
-        <h1 className="text-2xl font-black text-[#1C1C1C]">"{q}"</h1>
+        <h1 className="text-2xl font-black text-[#D7DADC]">"{q}"</h1>
         {!isLoading && !isError && (
-          <p className="text-sm text-[#878A8C] mt-1">
+          <p className="text-sm text-[#9A9A9A] mt-1">
             {posts.length + communities.length} results
           </p>
         )}
       </div>
 
-      <div className="flex items-center gap-1 border border-[#EDEFF1] bg-[#FFFFFF] rounded-xl px-2 py-2 mb-5">
+      <div className="flex items-center gap-1 border border-[#3A3A3C] bg-[#1E1E1E] rounded-xl px-2 py-2 mb-5">
         {TABS.map((t) => (
           <button
             key={t}
@@ -347,7 +347,7 @@ const SearchResults = () => {
             className={`flex-1 py-1.5 rounded-lg text-sm font-semibold transition-all duration-200 ${
               tab === t
                 ? "bg-[#FF4500] text-white shadow-[0_2px_8px_rgba(255,69,0,0.3)]"
-                : "text-[#878A8C] hover:bg-[#E5E6EA] hover:text-[#CC3600]"
+                : "text-[#9A9A9A] hover:bg-[#2A2A2A] hover:text-[#CC3600]"
             }`}
           >
             {t}
@@ -376,7 +376,7 @@ const SearchResults = () => {
         </div>
       )}
       {isError && (
-        <div className="flex flex-col items-center gap-3 py-12 text-[#878A8C]">
+        <div className="flex flex-col items-center gap-3 py-12 text-[#9A9A9A]">
           <Icon icon="material-symbols:error-outline" width="40" height="40" />
           <p className="font-semibold">
             Something went wrong. Please try again.
@@ -385,7 +385,7 @@ const SearchResults = () => {
       )}
 
       {!q && !isLoading && (
-        <div className="flex flex-col items-center gap-4 py-16 text-[#878A8C]">
+        <div className="flex flex-col items-center gap-4 py-16 text-[#9A9A9A]">
           <Icon icon="mdi:magnify" width="48" height="48" />
           <div className="text-center">
             <p className="font-bold text-[#A83200]">Start searching</p>
@@ -401,7 +401,7 @@ const SearchResults = () => {
         !isError &&
         posts.length === 0 &&
         communities.length === 0 && (
-          <div className="flex flex-col items-center gap-4 py-16 text-[#878A8C]">
+          <div className="flex flex-col items-center gap-4 py-16 text-[#9A9A9A]">
             <Icon icon="mdi:magnify-close" width="48" height="48" />
             <div className="text-center">
               <p className="font-bold text-[#A83200]">No results for "{q}"</p>
@@ -426,7 +426,7 @@ const SearchResults = () => {
               <div>
                 {tab === "All" && (
                   <div className="flex items-center justify-between mb-3">
-                    <h2 className="font-black text-[#1C1C1C] text-xs uppercase tracking-widest flex items-center gap-2">
+                    <h2 className="font-black text-[#D7DADC] text-xs uppercase tracking-widest flex items-center gap-2">
                       <Icon
                         icon="mdi:account-group"
                         width="15"
@@ -459,7 +459,7 @@ const SearchResults = () => {
               <div>
                 {tab === "All" && (
                   <div className="flex items-center justify-between mb-3">
-                    <h2 className="font-black text-[#1C1C1C] text-xs uppercase tracking-widest flex items-center gap-2">
+                    <h2 className="font-black text-[#D7DADC] text-xs uppercase tracking-widest flex items-center gap-2">
                       <Icon
                         icon="mdi:post-outline"
                         width="15"

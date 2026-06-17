@@ -24,13 +24,13 @@ const Home = () => {
           </div>
         )}
         {isError && (
-          <div className="flex flex-col items-center gap-2 py-10 text-[#878A8C]">
+          <div className="flex flex-col items-center gap-2 py-10 text-[#9A9A9A]">
             <Icon icon="material-symbols:error-outline" width="32" height="32" />
             <p className="text-sm font-medium">Failed to load posts</p>
           </div>
         )}
         {!isLoading && !isError && posts.length === 0 && (
-          <div className="flex flex-col items-center gap-2 py-10 text-[#878A8C]">
+          <div className="flex flex-col items-center gap-2 py-10 text-[#9A9A9A]">
             <Icon icon="mdi:post-outline" width="32" height="32" />
             <p className="text-sm font-medium">No posts yet</p>
           </div>

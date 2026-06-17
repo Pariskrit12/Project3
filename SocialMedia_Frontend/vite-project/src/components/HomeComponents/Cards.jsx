@@ -79,7 +79,7 @@ const MediaCarousel = ({ media }) => {
                 onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIndex(i); }}
                 className={`rounded-full transition-all duration-200 ${
                   i === index
-                    ? "bg-white w-4 h-1.5"
+                    ? "bg-[#1E1E1E] w-4 h-1.5"
                     : "bg-white/50 w-1.5 h-1.5"
                 }`}
               />
@@ -202,11 +202,11 @@ const Cards = ({
   return (
     <div
       onClick={onClick}
-      className="border border-[#EDEFF1] bg-[#FFFFFF] shadow-[0_2px_16px_rgba(255,69,0,0.07)] flex flex-col gap-4 rounded-2xl hover:shadow-[0_8px_28px_rgba(255,69,0,0.13)] hover:border-[#878A8C] hover:-translate-y-0.5 transition-all duration-300 cursor-pointer overflow-hidden"
+      className="border border-[#3A3A3C] bg-[#1E1E1E] shadow-[0_2px_16px_rgba(255,69,0,0.07)] flex flex-col gap-4 rounded-2xl hover:shadow-[0_8px_28px_rgba(255,69,0,0.13)] hover:border-[#9A9A9A] hover:-translate-y-0.5 transition-all duration-300 cursor-pointer overflow-hidden"
     >
       <div className="p-5 pb-0 flex justify-between items-start">
         <div onClick={handleUserClick} className="flex gap-2.5 items-center cursor-pointer group">
-          <div className="shrink-0 h-10 w-10 rounded-full ring-2 ring-[#FF6534] ring-offset-1 ring-offset-[#FFFFFF] shadow-[0_2px_8px_rgba(255,69,0,0.25)] overflow-hidden bg-linear-to-br from-[#FF6534] to-[#CC3600]">
+          <div className="shrink-0 h-10 w-10 rounded-full ring-2 ring-[#FF6534] ring-offset-1 ring-offset-[#1E1E1E] shadow-[0_2px_8px_rgba(255,69,0,0.25)] overflow-hidden bg-linear-to-br from-[#FF6534] to-[#CC3600]">
             {userProfilePic ? (
               <img className="h-full w-full object-cover" src={userProfilePic} alt={username} />
             ) : (
@@ -217,7 +217,7 @@ const Cards = ({
           </div>
           <div>
             <p className="text-[#CC3600] font-bold text-sm leading-tight">{communitteName}</p>
-            <p className="text-xs text-[#878A8C] group-hover:text-[#CC3600] transition-colors">
+            <p className="text-xs text-[#9A9A9A] group-hover:text-[#CC3600] transition-colors">
               /{username} · {uploadedTime}
             </p>
           </div>
@@ -235,27 +235,27 @@ const Cards = ({
           )}
           <div ref={menuRef} className="relative">
             <button
-              className="p-1.5 rounded-lg hover:bg-[#E5E6EA] transition-colors"
+              className="p-1.5 rounded-lg hover:bg-[#2A2A2A] transition-colors"
               onClick={(e) => { e.stopPropagation(); setMenuOpen((p) => !p); }}
             >
-              <Icon className="text-[#878A8C]" icon="tabler:dots-filled" width="20" height="20" />
+              <Icon className="text-[#9A9A9A]" icon="tabler:dots-filled" width="20" height="20" />
             </button>
 
             {menuOpen && (
               <div
-                className="absolute right-0 top-full mt-1 w-44 bg-white rounded-xl border border-[#EDEFF1] shadow-[0_8px_24px_rgba(255,69,0,0.12)] z-50 overflow-hidden"
+                className="absolute right-0 top-full mt-1 w-44 bg-[#1E1E1E] rounded-xl border border-[#3A3A3C] shadow-[0_8px_24px_rgba(255,69,0,0.12)] z-50 overflow-hidden"
                 onClick={(e) => e.stopPropagation()}
               >
                 {isOwnPost ? (
                   <>
                     <button
                       onClick={(e) => { e.stopPropagation(); setMenuOpen(false); navigate(`/postPage/${postId}`); }}
-                      className="flex items-center gap-2.5 w-full px-4 py-2.5 text-sm font-medium text-[#A83200] hover:bg-[#DAE0E6] hover:text-[#FF4500] transition-colors"
+                      className="flex items-center gap-2.5 w-full px-4 py-2.5 text-sm font-medium text-[#A83200] hover:bg-[#111111] hover:text-[#FF4500] transition-colors"
                     >
                       <Icon icon="material-symbols:edit-outline-rounded" width="16" height="16" className="text-[#FF4500]" />
                       Edit Post
                     </button>
-                    <div className="h-px bg-[#E5E6EA] mx-3" />
+                    <div className="h-px bg-[#2A2A2A] mx-3" />
                     <button
                       disabled={isDeleting}
                       onClick={async (e) => {
@@ -289,7 +289,7 @@ const Cards = ({
       </div>
 
       <div className="px-5">
-        <h1 className="text-lg font-bold text-[#1C1C1C] leading-snug">{titleOfPost}</h1>
+        <h1 className="text-lg font-bold text-[#D7DADC] leading-snug">{titleOfPost}</h1>
       </div>
 
       <MediaCarousel media={resolvedMedia} />
@@ -300,11 +300,11 @@ const Cards = ({
         </div>
       )}
 
-      <div className="px-5 pb-4 flex items-center gap-2 pt-1 border-t border-[#E5E6EA]">
+      <div className="px-5 pb-4 flex items-center gap-2 pt-1 border-t border-[#2A2A2A]">
         <button
           onClick={handleLike}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold transition-all duration-200 ${
-            isLiked ? "bg-[#E5E6EA] text-[#CC3600]" : "text-[#878A8C] hover:bg-[#E5E6EA] hover:text-[#CC3600]"
+            isLiked ? "bg-[#2A2A2A] text-[#CC3600]" : "text-[#9A9A9A] hover:bg-[#2A2A2A] hover:text-[#CC3600]"
           }`}
         >
           <Icon icon={isLiked ? "boxicons:like-filled" : "boxicons:like"} width="16" height="16" />
@@ -313,21 +313,21 @@ const Cards = ({
         <button
           onClick={handleDislike}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold transition-all duration-200 ${
-            isDisliked ? "bg-[#E5E6EA] text-[#CC3600]" : "text-[#878A8C] hover:bg-[#E5E6EA] hover:text-[#CC3600]"
+            isDisliked ? "bg-[#2A2A2A] text-[#CC3600]" : "text-[#9A9A9A] hover:bg-[#2A2A2A] hover:text-[#CC3600]"
           }`}
         >
           <Icon icon={isDisliked ? "boxicons:dislike-filled" : "boxicons:dislike"} width="16" height="16" />
           <span>{localDislikes.length > 0 ? localDislikes.length : "Dislike"}</span>
         </button>
         <button
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold text-[#878A8C] hover:bg-[#E5E6EA] hover:text-[#CC3600] transition-all duration-200"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold text-[#9A9A9A] hover:bg-[#2A2A2A] hover:text-[#CC3600] transition-all duration-200"
           onClick={(e) => { e.stopPropagation(); navigate(`/postPage/${postId}`); }}
         >
           <Icon icon="mdi:comments-outline" width="16" height="16" />
           <span>{comments.length > 0 ? comments.length : "Comment"}</span>
         </button>
         <button
-          className="ml-auto p-1.5 rounded-full text-[#878A8C] hover:bg-[#E5E6EA] hover:text-[#CC3600] transition-all duration-200"
+          className="ml-auto p-1.5 rounded-full text-[#9A9A9A] hover:bg-[#2A2A2A] hover:text-[#CC3600] transition-all duration-200"
           onClick={(e) => e.stopPropagation()}
         >
           <Icon icon="tabler:share" width="16" height="16" />

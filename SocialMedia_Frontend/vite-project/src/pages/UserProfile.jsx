@@ -10,18 +10,18 @@ import SuggestedUsers from "../components/UserProfile/SuggestedUsers";
 const UserListModal = ({ title, users, onClose, onUserClick }) => (
   <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={onClose}>
     <div
-      className="bg-[#FFFFFF] border border-[#EDEFF1] rounded-2xl w-full max-w-sm mx-4 shadow-[0_8px_40px_rgba(255,69,0,0.18)] overflow-hidden"
+      className="bg-[#1E1E1E] border border-[#3A3A3C] rounded-2xl w-full max-w-sm mx-4 shadow-[0_8px_40px_rgba(255,69,0,0.18)] overflow-hidden"
       onClick={(e) => e.stopPropagation()}
     >
-      <div className="flex items-center justify-between px-5 py-4 border-b border-[#EDEFF1]">
-        <h2 className="font-black text-[#1C1C1C] text-base">{title}</h2>
-        <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-[#E5E6EA] transition-colors text-[#FF4500]">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-[#3A3A3C]">
+        <h2 className="font-black text-[#D7DADC] text-base">{title}</h2>
+        <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-[#2A2A2A] transition-colors text-[#FF4500]">
           <Icon icon="mdi:close" width="18" height="18" />
         </button>
       </div>
       <div className="overflow-y-auto max-h-80">
         {users.length === 0 ? (
-          <div className="flex flex-col items-center gap-2 py-10 text-[#878A8C]">
+          <div className="flex flex-col items-center gap-2 py-10 text-[#9A9A9A]">
             <Icon icon="mdi:account-group-outline" width="32" height="32" />
             <p className="text-sm font-medium">No users yet</p>
           </div>
@@ -30,9 +30,9 @@ const UserListModal = ({ title, users, onClose, onUserClick }) => (
             <button
               key={u._id}
               onClick={() => onUserClick(u._id)}
-              className="flex items-center gap-3 w-full px-5 py-3 hover:bg-[#E5E6EA] transition-colors text-left"
+              className="flex items-center gap-3 w-full px-5 py-3 hover:bg-[#2A2A2A] transition-colors text-left"
             >
-              <div className="shrink-0 h-10 w-10 rounded-full overflow-hidden bg-linear-to-br from-[#FF6534] to-[#CC3600] flex items-center justify-center border-2 border-[#EDEFF1]">
+              <div className="shrink-0 h-10 w-10 rounded-full overflow-hidden bg-linear-to-br from-[#FF6534] to-[#CC3600] flex items-center justify-center border-2 border-[#3A3A3C]">
                 {u.userProfilePic ? (
                   <img src={u.userProfilePic} alt={u.username} className="w-full h-full object-cover" />
                 ) : (
@@ -40,8 +40,8 @@ const UserListModal = ({ title, users, onClose, onUserClick }) => (
                 )}
               </div>
               <div className="min-w-0">
-                <p className="font-bold text-sm text-[#1C1C1C] truncate">{u.fullName || u.username}</p>
-                <p className="text-xs text-[#878A8C] truncate">@{u.username}</p>
+                <p className="font-bold text-sm text-[#D7DADC] truncate">{u.fullName || u.username}</p>
+                <p className="text-xs text-[#9A9A9A] truncate">@{u.username}</p>
               </div>
             </button>
           ))
@@ -102,7 +102,7 @@ const UserProfile = () => {
 
   if (!user) {
     return (
-      <div className="flex flex-col items-center gap-2 py-20 text-[#878A8C]">
+      <div className="flex flex-col items-center gap-2 py-20 text-[#9A9A9A]">
         <Icon icon="material-symbols:error-outline" width="32" height="32" />
         <p className="text-sm font-medium">User not found</p>
       </div>
@@ -123,7 +123,7 @@ const UserProfile = () => {
           </div>
         </div>
         <div className="absolute bottom-0 left-6 translate-y-1/2 z-10">
-          <div className="border-4 border-[#DAE0E6] rounded-full shadow-[0_4px_20px_rgba(255,69,0,0.25)] h-20 w-20 overflow-hidden bg-linear-to-br from-[#FF6534] to-[#CC3600] flex items-center justify-center">
+          <div className="border-4 border-[#111111] rounded-full shadow-[0_4px_20px_rgba(255,69,0,0.25)] h-20 w-20 overflow-hidden bg-linear-to-br from-[#FF6534] to-[#CC3600] flex items-center justify-center">
             {user.userProfilePic ? (
               <img className="h-full w-full object-cover rounded-full" src={user.userProfilePic} alt={user.username} />
             ) : (
@@ -149,7 +149,7 @@ const UserProfile = () => {
               {(isFollowingProfile || profileFollowsMe) && (
                 <button
                   onClick={() => navigate(`/chat?userId=${userId}`)}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold border border-[#EDEFF1] bg-[#FFFFFF] text-[#A83200] hover:bg-[#E5E6EA] transition-colors"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold border border-[#3A3A3C] bg-[#1E1E1E] text-[#A83200] hover:bg-[#2A2A2A] transition-colors"
                 >
                   <Icon icon="mdi:message-outline" width="16" height="16" />
                   Message
@@ -157,35 +157,35 @@ const UserProfile = () => {
               )}
             </>
           )}
-          <button className="p-2 rounded-xl hover:bg-[#E5E6EA] transition-colors border border-[#EDEFF1] bg-[#FFFFFF]">
+          <button className="p-2 rounded-xl hover:bg-[#2A2A2A] transition-colors border border-[#3A3A3C] bg-[#1E1E1E]">
             <Icon className="text-[#FF4500]" icon="fa7-solid:share" width="18" height="18" />
           </button>
-          <button className="p-2 rounded-xl hover:bg-[#E5E6EA] transition-colors border border-[#EDEFF1] bg-[#FFFFFF]">
+          <button className="p-2 rounded-xl hover:bg-[#2A2A2A] transition-colors border border-[#3A3A3C] bg-[#1E1E1E]">
             <Icon className="text-[#FF4500]" icon="tabler:dots" width="18" height="18" />
           </button>
         </div>
 
-        <h1 className="font-black text-2xl text-[#1C1C1C]">{user.fullName || user.username}</h1>
-        <p className="text-sm text-[#878A8C]">@{user.username}</p>
+        <h1 className="font-black text-2xl text-[#D7DADC]">{user.fullName || user.username}</h1>
+        <p className="text-sm text-[#9A9A9A]">@{user.username}</p>
 
         <div className="text-sm text-[#A83200] flex gap-5 mt-3">
           <button onClick={() => setModal("following")} className="text-center hover:opacity-70 transition-opacity cursor-pointer">
-            <p className="font-black text-lg text-[#1C1C1C]">{user.following?.length ?? 0}</p>
-            <p className="text-xs text-[#878A8C]">following</p>
+            <p className="font-black text-lg text-[#D7DADC]">{user.following?.length ?? 0}</p>
+            <p className="text-xs text-[#9A9A9A]">following</p>
           </button>
           <button onClick={() => setModal("followers")} className="text-center hover:opacity-70 transition-opacity cursor-pointer">
-            <p className="font-black text-lg text-[#1C1C1C]">{user.followers?.length ?? 0}</p>
-            <p className="text-xs text-[#878A8C]">followers</p>
+            <p className="font-black text-lg text-[#D7DADC]">{user.followers?.length ?? 0}</p>
+            <p className="text-xs text-[#9A9A9A]">followers</p>
           </button>
           <div className="text-center">
-            <p className="font-black text-lg text-[#1C1C1C]">{posts.length}</p>
-            <p className="text-xs text-[#878A8C]">posts</p>
+            <p className="font-black text-lg text-[#D7DADC]">{posts.length}</p>
+            <p className="text-xs text-[#9A9A9A]">posts</p>
           </div>
         </div>
       </section>
 
       {/* Tabs */}
-      <section className="mt-6 border-b border-[#EDEFF1]">
+      <section className="mt-6 border-b border-[#3A3A3C]">
         <div className="flex gap-1">
           {tabs.map((tab, index) => (
             <button
@@ -194,7 +194,7 @@ const UserProfile = () => {
               className={`px-4 py-2.5 text-sm font-bold border-b-2 transition-all duration-200 -mb-px ${
                 active === index
                   ? "border-[#CC3600] text-[#CC3600]"
-                  : "border-transparent text-[#878A8C] hover:text-[#A83200] hover:border-[#878A8C]"
+                  : "border-transparent text-[#9A9A9A] hover:text-[#A83200] hover:border-[#9A9A9A]"
               }`}
             >
               {tab}
@@ -213,10 +213,10 @@ const UserProfile = () => {
               </div>
             )}
             {!postsLoading && posts.length === 0 && (
-              <div className="flex flex-col items-center gap-2 py-10 text-[#878A8C]">
+              <div className="flex flex-col items-center gap-2 py-10 text-[#9A9A9A]">
                 <Icon icon="mdi:camera-outline" width="40" height="40" />
                 <p className="text-sm font-semibold text-[#A83200]">No posts yet</p>
-                <p className="text-xs text-[#878A8C]">Share photos and videos</p>
+                <p className="text-xs text-[#9A9A9A]">Share photos and videos</p>
               </div>
             )}
             {!postsLoading && posts.length > 0 && (
@@ -250,8 +250,8 @@ const UserProfile = () => {
                         )
                       ) : (
                         <div className="w-full h-full flex flex-col items-center justify-center gap-1 px-2">
-                          <Icon icon="mdi:text-box-outline" width="24" height="24" className="text-[#878A8C]" />
-                          <p className="text-[10px] text-[#878A8C] text-center font-medium leading-tight line-clamp-3">
+                          <Icon icon="mdi:text-box-outline" width="24" height="24" className="text-[#9A9A9A]" />
+                          <p className="text-[10px] text-[#9A9A9A] text-center font-medium leading-tight line-clamp-3">
                             {post.postTitle}
                           </p>
                         </div>
@@ -293,12 +293,12 @@ const UserProfile = () => {
         {active === 1 && (
           <div className="flex flex-col gap-3 px-1">
             {user.email && (
-              <div className="flex items-center gap-3 p-4 bg-[#FFFFFF] border border-[#EDEFF1] rounded-2xl">
+              <div className="flex items-center gap-3 p-4 bg-[#1E1E1E] border border-[#3A3A3C] rounded-2xl">
                 <Icon icon="material-symbols:mail-outline" width="18" height="18" className="text-[#FF4500]" />
                 <p className="text-sm text-[#A83200]">{user.email}</p>
               </div>
             )}
-            <div className="flex items-center gap-3 p-4 bg-[#FFFFFF] border border-[#EDEFF1] rounded-2xl">
+            <div className="flex items-center gap-3 p-4 bg-[#1E1E1E] border border-[#3A3A3C] rounded-2xl">
               <Icon icon="material-symbols:calendar-today-outline" width="18" height="18" className="text-[#FF4500]" />
               <p className="text-sm text-[#A83200]">
                 Joined {new Date(user.createdAt).toLocaleDateString("en-US", { month: "long", year: "numeric" })}

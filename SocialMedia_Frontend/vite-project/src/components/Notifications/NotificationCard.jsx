@@ -31,13 +31,13 @@ const NotificationCard = ({ notification }) => {
       onClick={handleClick}
       className={`flex justify-between items-center p-4 rounded-2xl border transition-all duration-200 cursor-pointer group ${
         isRead
-          ? "border-[#EDEFF1] bg-white hover:bg-[#FFFFFF]"
-          : "border-[#878A8C] bg-[#FFFFFF] hover:bg-[#E5E6EA] hover:border-[#878A8C] hover:shadow-[0_4px_16px_rgba(255,69,0,0.1)]"
+          ? "border-[#3A3A3C] bg-[#1E1E1E] hover:bg-[#2A2A2A]"
+          : "border-[#9A9A9A] bg-[#1E1E1E] hover:bg-[#2A2A2A] hover:border-[#9A9A9A] hover:shadow-[0_4px_16px_rgba(255,69,0,0.1)]"
       }`}
     >
       <div className="flex gap-3.5 items-center">
         <div className="relative shrink-0">
-          <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#EDEFF1] group-hover:border-[#FF4500] transition-colors duration-200 bg-[#E5E6EA] flex items-center justify-center">
+          <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#3A3A3C] group-hover:border-[#FF4500] transition-colors duration-200 bg-[#2A2A2A] flex items-center justify-center">
             {sender?.userProfilePic ? (
               <img
                 src={sender.userProfilePic}
@@ -45,20 +45,20 @@ const NotificationCard = ({ notification }) => {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <Icon icon="mdi:account" width="24" height="24" className="text-[#878A8C]" />
+              <Icon icon="mdi:account" width="24" height="24" className="text-[#9A9A9A]" />
             )}
           </div>
-          <div className={`absolute -bottom-0.5 -right-0.5 bg-linear-to-br ${bg} rounded-full p-1 border-2 border-[#FFFFFF] shadow-sm`}>
+          <div className={`absolute -bottom-0.5 -right-0.5 bg-linear-to-br ${bg} rounded-full p-1 border-2 border-[#1E1E1E] shadow-sm`}>
             <Icon icon={icon} width="8" height="8" className="text-white" />
           </div>
         </div>
 
         <div className="flex flex-col gap-0.5">
-          <h2 className="font-bold text-sm text-[#1C1C1C]">
+          <h2 className="font-bold text-sm text-[#D7DADC]">
             {sender?.username ?? "Someone"}
           </h2>
           <p className="text-xs text-[#A83200]">{message}</p>
-          <p className="text-xs text-[#878A8C] flex items-center gap-1 mt-0.5">
+          <p className="text-xs text-[#9A9A9A] flex items-center gap-1 mt-0.5">
             <Icon icon="mdi:clock-outline" width="11" height="11" />
             {createdAt ? formatTime(createdAt) : ""}
           </p>

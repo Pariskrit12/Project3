@@ -25,8 +25,8 @@ const Setting = () => {
           <Icon icon="lets-icons:setting-fill" width="26" height="26" className="text-white" />
         </div>
         <div>
-          <h1 className="font-black text-2xl text-[#1C1C1C]">Settings</h1>
-          <p className="text-sm text-[#878A8C]">Manage your account preferences</p>
+          <h1 className="font-black text-2xl text-[#D7DADC]">Settings</h1>
+          <p className="text-sm text-[#9A9A9A]">Manage your account preferences</p>
         </div>
       </div>
       <section className="grid grid-cols-1 gap-3">

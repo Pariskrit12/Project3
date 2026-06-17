@@ -33,7 +33,7 @@ const Login = () => {
         password: form.password,
       }).unwrap();
       dispatch(setUser(res.data.user));
-      navigate("/");
+      navigate(res.data.user.role === "admin" ? "/admin" : "/");
     } catch (err) {
       setError(err?.data?.message || "Login failed. Please try again.");
     }
@@ -46,7 +46,7 @@ const Login = () => {
 
       <form
         onSubmit={handleSubmit}
-        className="w-96 rounded-3xl p-8 flex flex-col gap-6 items-center bg-[#FFFFFF]/95 backdrop-blur-sm shadow-[0_12px_48px_rgba(255,69,0,0.18)] border border-[#EDEFF1] relative z-10"
+        className="w-96 rounded-3xl p-8 flex flex-col gap-6 items-center bg-[#1E1E1E]/95 backdrop-blur-sm shadow-[0_12px_48px_rgba(255,69,0,0.18)] border border-[#3A3A3C] relative z-10"
       >
         <div className="flex flex-col items-center gap-3">
           <div className="bg-[#FF4500] p-4 rounded-2xl shadow-[0_6px_20px_rgba(255,69,0,0.4)]">
@@ -58,8 +58,8 @@ const Login = () => {
             />
           </div>
           <div className="text-center">
-            <h1 className="text-2xl font-black text-[#1C1C1C]">Welcome back</h1>
-            <p className="text-sm text-[#878A8C] mt-0.5">
+            <h1 className="text-2xl font-black text-[#D7DADC]">Welcome back</h1>
+            <p className="text-sm text-[#9A9A9A] mt-0.5">
               Sign in to SocialSphere
             </p>
           </div>
@@ -112,11 +112,11 @@ const Login = () => {
         </div>
 
         <div className="flex items-center gap-3 w-full">
-          <div className="h-px flex-1 bg-[#EDEFF1]"></div>
-          <span className="text-xs text-[#878A8C] font-medium">
+          <div className="h-px flex-1 bg-[#3A3A3C]"></div>
+          <span className="text-xs text-[#9A9A9A] font-medium">
             or continue with
           </span>
-          <div className="h-px flex-1 bg-[#EDEFF1]"></div>
+          <div className="h-px flex-1 bg-[#3A3A3C]"></div>
         </div>
 
         <GoogleLogin

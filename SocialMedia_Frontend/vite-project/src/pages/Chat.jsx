@@ -38,22 +38,22 @@ const NewMessageModal = ({ onClose, onSelect }) => {
       onClick={onClose}
     >
       <div
-        className="bg-[#FFFFFF] border border-[#EDEFF1] rounded-2xl w-full max-w-sm mx-4 shadow-[0_8px_40px_rgba(255,69,0,0.18)] overflow-hidden"
+        className="bg-[#1E1E1E] border border-[#3A3A3C] rounded-2xl w-full max-w-sm mx-4 shadow-[0_8px_40px_rgba(255,69,0,0.18)] overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between px-5 py-4 border-b border-[#EDEFF1]">
-          <h2 className="font-black text-[#1C1C1C]">New Message</h2>
+        <div className="flex items-center justify-between px-5 py-4 border-b border-[#3A3A3C]">
+          <h2 className="font-black text-[#D7DADC]">New Message</h2>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-[#E5E6EA] transition-colors text-[#FF4500]"
+            className="p-1.5 rounded-lg hover:bg-[#2A2A2A] transition-colors text-[#FF4500]"
           >
             <Icon icon="mdi:close" width="18" height="18" />
           </button>
         </div>
-        <div className="px-4 py-3 border-b border-[#EDEFF1]">
+        <div className="px-4 py-3 border-b border-[#3A3A3C]">
           <input
             autoFocus
-            className="w-full bg-[#E5E6EA] rounded-xl px-3 py-2 text-sm outline-none text-[#1C1C1C] placeholder:text-[#878A8C]"
+            className="w-full bg-[#2A2A2A] rounded-xl px-3 py-2 text-sm outline-none text-[#D7DADC] placeholder:text-[#9A9A9A]"
             placeholder="Search followers..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -61,7 +61,7 @@ const NewMessageModal = ({ onClose, onSelect }) => {
         </div>
         <div className="overflow-y-auto max-h-72">
           {filtered.length === 0 ? (
-            <div className="flex flex-col items-center gap-2 py-10 text-[#878A8C]">
+            <div className="flex flex-col items-center gap-2 py-10 text-[#9A9A9A]">
               <Icon icon="mdi:account-group-outline" width="32" height="32" />
               <p className="text-sm">No followers yet</p>
             </div>
@@ -70,9 +70,9 @@ const NewMessageModal = ({ onClose, onSelect }) => {
               <button
                 key={u._id}
                 onClick={() => onSelect(u._id)}
-                className="flex items-center gap-3 w-full px-5 py-3 hover:bg-[#E5E6EA] transition-colors text-left"
+                className="flex items-center gap-3 w-full px-5 py-3 hover:bg-[#2A2A2A] transition-colors text-left"
               >
-                <div className="shrink-0 h-10 w-10 rounded-full overflow-hidden bg-linear-to-br from-[#FF6534] to-[#CC3600] border-2 border-[#EDEFF1] flex items-center justify-center">
+                <div className="shrink-0 h-10 w-10 rounded-full overflow-hidden bg-linear-to-br from-[#FF6534] to-[#CC3600] border-2 border-[#3A3A3C] flex items-center justify-center">
                   {u.userProfilePic ? (
                     <img src={u.userProfilePic} alt={u.username} className="w-full h-full object-cover" />
                   ) : (
@@ -80,7 +80,7 @@ const NewMessageModal = ({ onClose, onSelect }) => {
                   )}
                 </div>
                 <div className="min-w-0">
-                  <p className="font-bold text-sm text-[#1C1C1C] truncate">{u.username}</p>
+                  <p className="font-bold text-sm text-[#D7DADC] truncate">{u.username}</p>
                 </div>
               </button>
             ))
@@ -172,13 +172,13 @@ const Chat = () => {
   );
 
   return (
-    <main className="grid grid-cols-[300px_1fr] gap-0 h-[calc(100vh-80px)] overflow-hidden rounded-2xl border border-[#EDEFF1] shadow-[0_4px_24px_rgba(255,69,0,0.1)] bg-[#FFFFFF]">
+    <main className="grid grid-cols-[300px_1fr] gap-0 h-[calc(100vh-80px)] overflow-hidden rounded-2xl border border-[#3A3A3C] shadow-[0_4px_24px_rgba(255,69,0,0.1)] bg-[#1E1E1E]">
 
       {/* ── Left panel: conversation list ── */}
-      <div className="flex flex-col border-r border-[#EDEFF1] overflow-hidden">
-        <div className="p-4 border-b border-[#EDEFF1]">
+      <div className="flex flex-col border-r border-[#3A3A3C] overflow-hidden">
+        <div className="p-4 border-b border-[#3A3A3C]">
           <div className="flex items-center justify-between mb-3">
-            <h1 className="text-xl font-black text-[#1C1C1C]">Messages</h1>
+            <h1 className="text-xl font-black text-[#D7DADC]">Messages</h1>
             <button
               onClick={() => setShowNewMsg(true)}
               className="p-2 rounded-xl bg-[#FF4500] text-white hover:bg-[#CC3600] transition-colors"
@@ -187,10 +187,10 @@ const Chat = () => {
               <Icon icon="mdi:pencil-plus-outline" width="18" height="18" />
             </button>
           </div>
-          <div className="flex items-center gap-2 bg-[#E5E6EA] rounded-xl px-3 py-2">
-            <Icon icon="material-symbols:search" width="16" height="16" className="text-[#878A8C]" />
+          <div className="flex items-center gap-2 bg-[#2A2A2A] rounded-xl px-3 py-2">
+            <Icon icon="material-symbols:search" width="16" height="16" className="text-[#9A9A9A]" />
             <input
-              className="flex-1 bg-transparent text-sm outline-none text-[#1C1C1C] placeholder:text-[#878A8C]"
+              className="flex-1 bg-transparent text-sm outline-none text-[#D7DADC] placeholder:text-[#9A9A9A]"
               placeholder="Search..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -205,7 +205,7 @@ const Chat = () => {
             </div>
           )}
           {!convsLoading && filteredConvs.length === 0 && (
-            <div className="flex flex-col items-center gap-2 py-12 text-[#878A8C]">
+            <div className="flex flex-col items-center gap-2 py-12 text-[#9A9A9A]">
               <Icon icon="mdi:chat-outline" width="36" height="36" />
               <p className="text-sm text-center px-4">No conversations yet. Start one with a follower!</p>
             </div>
@@ -219,11 +219,11 @@ const Chat = () => {
                 key={conv._id}
                 onClick={() => setSelectedConvId(conv._id)}
                 className={`flex items-center gap-3 w-full px-4 py-3 transition-colors text-left ${
-                  isActive ? "bg-[#E5E6EA]" : "hover:bg-[#DAE0E6]"
+                  isActive ? "bg-[#2A2A2A]" : "hover:bg-[#111111]"
                 }`}
               >
                 <div className="relative shrink-0">
-                  <div className="h-11 w-11 rounded-full overflow-hidden bg-linear-to-br from-[#FF6534] to-[#CC3600] border-2 border-[#EDEFF1] flex items-center justify-center">
+                  <div className="h-11 w-11 rounded-full overflow-hidden bg-linear-to-br from-[#FF6534] to-[#CC3600] border-2 border-[#3A3A3C] flex items-center justify-center">
                     {other?.userProfilePic ? (
                       <img src={other.userProfilePic} alt={other.username} className="w-full h-full object-cover" />
                     ) : (
@@ -232,12 +232,12 @@ const Chat = () => {
                   </div>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-bold text-sm text-[#1C1C1C] truncate">{other?.username}</p>
-                  <p className="text-xs text-[#878A8C] truncate">{conv.lastMessage || "Say hi!"}</p>
+                  <p className="font-bold text-sm text-[#D7DADC] truncate">{other?.username}</p>
+                  <p className="text-xs text-[#9A9A9A] truncate">{conv.lastMessage || "Say hi!"}</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
                   {conv.lastMessageAt && (
-                    <span className="text-[10px] text-[#878A8C]">
+                    <span className="text-[10px] text-[#9A9A9A]">
                       {formatTime(conv.lastMessageAt)}
                     </span>
                   )}
@@ -255,13 +255,13 @@ const Chat = () => {
 
       {/* ── Right panel: message thread ── */}
       {!selectedConvId ? (
-        <div className="flex flex-col items-center justify-center gap-4 text-[#878A8C]">
-          <div className="p-5 rounded-full bg-[#E5E6EA]">
+        <div className="flex flex-col items-center justify-center gap-4 text-[#9A9A9A]">
+          <div className="p-5 rounded-full bg-[#2A2A2A]">
             <Icon icon="mdi:chat-processing-outline" width="48" height="48" className="text-[#FF4500]" />
           </div>
           <div className="text-center">
-            <p className="font-black text-lg text-[#1C1C1C]">Your Messages</p>
-            <p className="text-sm text-[#878A8C] mt-1">Send a message to a follower to start chatting</p>
+            <p className="font-black text-lg text-[#D7DADC]">Your Messages</p>
+            <p className="text-sm text-[#9A9A9A] mt-1">Send a message to a follower to start chatting</p>
           </div>
           <button
             onClick={() => setShowNewMsg(true)}
@@ -273,7 +273,7 @@ const Chat = () => {
       ) : (
         <div className="flex flex-col overflow-hidden">
           {/* Header */}
-          <div className="flex items-center justify-between px-5 py-3.5 border-b border-[#EDEFF1] bg-[#DAE0E6]">
+          <div className="flex items-center justify-between px-5 py-3.5 border-b border-[#3A3A3C] bg-[#111111]">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-full overflow-hidden bg-linear-to-br from-[#FF6534] to-[#CC3600] border-2 border-[#FF4500] flex items-center justify-center">
                 {selectedConv?.otherUser?.userProfilePic ? (
@@ -287,7 +287,7 @@ const Chat = () => {
                 )}
               </div>
               <div>
-                <p className="font-bold text-[#1C1C1C] text-sm">
+                <p className="font-bold text-[#D7DADC] text-sm">
                   {selectedConv?.otherUser?.username}
                 </p>
                 <p
@@ -300,7 +300,7 @@ const Chat = () => {
             </div>
             <button
               onClick={() => setSelectedConvId(null)}
-              className="p-2 rounded-xl hover:bg-[#E5E6EA] transition-colors text-[#878A8C]"
+              className="p-2 rounded-xl hover:bg-[#2A2A2A] transition-colors text-[#9A9A9A]"
             >
               <Icon icon="charm:cross" width="20" height="20" />
             </button>
@@ -314,7 +314,7 @@ const Chat = () => {
               </div>
             )}
             {!msgsLoading && messages.length === 0 && (
-              <div className="flex flex-col items-center gap-2 py-10 text-[#878A8C]">
+              <div className="flex flex-col items-center gap-2 py-10 text-[#9A9A9A]">
                 <Icon icon="mdi:chat-outline" width="32" height="32" />
                 <p className="text-sm">No messages yet. Say hi!</p>
               </div>
@@ -327,7 +327,7 @@ const Chat = () => {
                   className={`flex items-end gap-2 ${isMe ? "justify-end" : "justify-start"}`}
                 >
                   {!isMe && (
-                    <div className="shrink-0 h-7 w-7 rounded-full overflow-hidden bg-linear-to-br from-[#FF6534] to-[#CC3600] flex items-center justify-center border border-[#EDEFF1]">
+                    <div className="shrink-0 h-7 w-7 rounded-full overflow-hidden bg-linear-to-br from-[#FF6534] to-[#CC3600] flex items-center justify-center border border-[#3A3A3C]">
                       {msg.sender?.userProfilePic ? (
                         <img src={msg.sender.userProfilePic} alt="" className="w-full h-full object-cover" />
                       ) : (
@@ -339,11 +339,11 @@ const Chat = () => {
                     className={`max-w-xs px-4 py-2.5 rounded-2xl shadow-sm ${
                       isMe
                         ? "bg-[#FF4500] rounded-br-sm text-white shadow-[0_2px_8px_rgba(255,69,0,0.25)]"
-                        : "bg-[#E5E6EA] rounded-bl-sm text-[#1C1C1C]"
+                        : "bg-[#2A2A2A] rounded-bl-sm text-[#D7DADC]"
                     }`}
                   >
                     <p className="text-sm leading-relaxed">{msg.text}</p>
-                    <p className={`text-[10px] mt-1 ${isMe ? "text-white/60 text-right" : "text-[#878A8C]"}`}>
+                    <p className={`text-[10px] mt-1 ${isMe ? "text-white/60 text-right" : "text-[#9A9A9A]"}`}>
                       {formatTime(msg.createdAt)}
                     </p>
                   </div>
@@ -354,7 +354,7 @@ const Chat = () => {
           </div>
 
           {/* Input */}
-          <div className="relative flex items-center gap-2 px-3 py-3 bg-[#DAE0E6] border-t border-[#EDEFF1]">
+          <div className="relative flex items-center gap-2 px-3 py-3 bg-[#111111] border-t border-[#3A3A3C]">
             {showPicker && (
               <div className="absolute bottom-16 right-4 z-50">
                 <EmojiPicker
@@ -372,11 +372,11 @@ const Chat = () => {
               onChange={(e) => setMessage(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Type a message..."
-              className="flex-1 bg-[#E5E6EA] rounded-xl px-4 py-2.5 text-sm text-[#1C1C1C] placeholder:text-[#878A8C] outline-none resize-none leading-relaxed"
+              className="flex-1 bg-[#2A2A2A] rounded-xl px-4 py-2.5 text-sm text-[#D7DADC] placeholder:text-[#9A9A9A] outline-none resize-none leading-relaxed"
             />
             <button
               onClick={() => setShowPicker((p) => !p)}
-              className="text-[#FF4500] p-2 rounded-xl hover:bg-[#E5E6EA] transition-colors shrink-0"
+              className="text-[#FF4500] p-2 rounded-xl hover:bg-[#2A2A2A] transition-colors shrink-0"
             >
               <Icon icon="mdi:emoji" width="22" height="22" />
             </button>

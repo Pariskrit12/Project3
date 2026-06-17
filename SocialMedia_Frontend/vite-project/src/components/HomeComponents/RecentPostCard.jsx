@@ -13,7 +13,7 @@ const RecentPostCard = ({ post, onClick }) => {
   return (
     <div
       onClick={onClick}
-      className="py-3 border-b border-[#EDEFF1] last:border-0 group cursor-pointer"
+      className="py-3 border-b border-[#3A3A3C] last:border-0 group cursor-pointer"
     >
       <div className="flex gap-3">
         {/* Text content */}
@@ -32,18 +32,18 @@ const RecentPostCard = ({ post, onClick }) => {
             <p className="text-[11px] font-bold text-[#CC3600] truncate">
               {communityName || post.creator?.username || "Unknown"}
             </p>
-            <p className="text-[11px] text-[#878A8C] shrink-0">
+            <p className="text-[11px] text-[#9A9A9A] shrink-0">
               · {formatTime(post.createdAt)}
             </p>
           </div>
 
           {/* Title */}
-          <p className="font-bold text-sm text-[#1C1C1C] leading-snug group-hover:text-[#CC3600] transition-colors duration-200 line-clamp-2">
+          <p className="font-bold text-sm text-[#D7DADC] leading-snug group-hover:text-[#CC3600] transition-colors duration-200 line-clamp-2">
             {truncateWords(title, 8)}
           </p>
 
           {/* Stats */}
-          <div className="flex items-center gap-3 text-[11px] text-[#878A8C]">
+          <div className="flex items-center gap-3 text-[11px] text-[#9A9A9A]">
             <span className="flex items-center gap-1">
               <Icon icon="boxicons:like-filled" width="11" height="11" className="text-[#FF4500]" />
               {post.likes?.length ?? 0}
@@ -56,7 +56,7 @@ const RecentPostCard = ({ post, onClick }) => {
         </div>
 
         {/* Thumbnail */}
-        <div className="shrink-0 w-16 h-14 rounded-xl overflow-hidden border border-[#EDEFF1] bg-[#E5E6EA] flex items-center justify-center">
+        <div className="shrink-0 w-16 h-14 rounded-xl overflow-hidden border border-[#3A3A3C] bg-[#2A2A2A] flex items-center justify-center">
           {thumbnail ? (
             thumbnailType === "video" ? (
               <video src={thumbnail} className="w-full h-full object-cover" muted />
@@ -64,7 +64,7 @@ const RecentPostCard = ({ post, onClick }) => {
               <img src={thumbnail} alt="thumbnail" className="w-full h-full object-cover" />
             )
           ) : (
-            <Icon icon="mdi:image-outline" width="22" height="22" className="text-[#878A8C]" />
+            <Icon icon="mdi:image-outline" width="22" height="22" className="text-[#9A9A9A]" />
           )}
         </div>
       </div>

@@ -17,8 +17,8 @@ const Top = () => {
           <Icon icon="mdi:arrow-up-bold-circle" width="20" height="20" className="text-white" />
         </div>
         <div>
-          <h1 className="font-black text-2xl text-[#1C1C1C]">Top Posts</h1>
-          <p className="text-sm text-[#878A8C]">Most liked across the community</p>
+          <h1 className="font-black text-2xl text-[#D7DADC]">Top Posts</h1>
+          <p className="text-sm text-[#9A9A9A]">Most liked across the community</p>
         </div>
       </div>
 
@@ -29,14 +29,14 @@ const Top = () => {
       )}
 
       {isError && (
-        <div className="flex flex-col items-center gap-2 py-20 text-[#878A8C]">
+        <div className="flex flex-col items-center gap-2 py-20 text-[#9A9A9A]">
           <Icon icon="material-symbols:error-outline" width="32" height="32" />
           <p className="text-sm font-medium">Failed to load top posts</p>
         </div>
       )}
 
       {!isLoading && !isError && posts.length === 0 && (
-        <div className="flex flex-col items-center gap-2 py-20 text-[#878A8C]">
+        <div className="flex flex-col items-center gap-2 py-20 text-[#9A9A9A]">
           <Icon icon="mdi:arrow-up-bold-circle" width="32" height="32" />
           <p className="text-sm font-medium">No top posts yet</p>
         </div>

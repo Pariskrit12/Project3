@@ -11,13 +11,13 @@ const SuggestedUsers = () => {
   const users = data?.data ?? [];
 
   return (
-    <div className="border border-[#EDEFF1] bg-[#FFFFFF] rounded-2xl overflow-hidden shadow-[0_4px_20px_rgba(255,69,0,0.08)] sticky top-20">
-      <div className="px-4 py-3 border-b border-[#EDEFF1]">
-        <p className="font-black text-sm text-[#1C1C1C] flex items-center gap-2">
+    <div className="border border-[#3A3A3C] bg-[#1E1E1E] rounded-2xl overflow-hidden shadow-[0_4px_20px_rgba(255,69,0,0.08)] sticky top-20">
+      <div className="px-4 py-3 border-b border-[#3A3A3C]">
+        <p className="font-black text-sm text-[#D7DADC] flex items-center gap-2">
           <Icon icon="mdi:account-star-outline" width="16" height="16" className="text-[#FF4500]" />
           People you may know
         </p>
-        <p className="text-xs text-[#878A8C] mt-0.5">Based on shared interests</p>
+        <p className="text-xs text-[#9A9A9A] mt-0.5">Based on shared interests</p>
       </div>
 
       {isLoading && (
@@ -27,19 +27,19 @@ const SuggestedUsers = () => {
       )}
 
       {!isLoading && (isError || users.length === 0) && (
-        <div className="flex flex-col items-center gap-2 py-8 text-[#878A8C] px-4">
+        <div className="flex flex-col items-center gap-2 py-8 text-[#9A9A9A] px-4">
           <Icon icon="mdi:account-search-outline" width="28" height="28" />
-          <p className="text-xs text-center text-[#878A8C]">No suggestions right now</p>
+          <p className="text-xs text-center text-[#9A9A9A]">No suggestions right now</p>
         </div>
       )}
 
       {!isLoading && users.length > 0 && (
-        <div className="flex flex-col divide-y divide-[#EDEFF1]">
+        <div className="flex flex-col divide-y divide-[#3A3A3C]">
           {users.map((u) => (
             <div key={u._id} className="flex items-center gap-3 px-4 py-3">
               <button
                 onClick={() => navigate(`/userProfile/${u._id}`)}
-                className="shrink-0 h-9 w-9 rounded-full overflow-hidden bg-linear-to-br from-[#FF6534] to-[#CC3600] flex items-center justify-center border-2 border-[#EDEFF1]"
+                className="shrink-0 h-9 w-9 rounded-full overflow-hidden bg-linear-to-br from-[#FF6534] to-[#CC3600] flex items-center justify-center border-2 border-[#3A3A3C]"
               >
                 {u.userProfilePic ? (
                   <img src={u.userProfilePic} alt={u.username} className="w-full h-full object-cover" />
@@ -51,12 +51,12 @@ const SuggestedUsers = () => {
               <div className="flex-1 min-w-0">
                 <button
                   onClick={() => navigate(`/userProfile/${u._id}`)}
-                  className="font-bold text-sm text-[#1C1C1C] truncate block hover:text-[#FF4500] transition-colors text-left w-full"
+                  className="font-bold text-sm text-[#D7DADC] truncate block hover:text-[#FF4500] transition-colors text-left w-full"
                 >
                   {u.username}
                 </button>
                 {u.commonInterestsCount > 0 && (
-                  <p className="text-xs text-[#878A8C] truncate">
+                  <p className="text-xs text-[#9A9A9A] truncate">
                     {u.commonInterestsCount} shared interest{u.commonInterestsCount !== 1 ? "s" : ""}
                   </p>
                 )}

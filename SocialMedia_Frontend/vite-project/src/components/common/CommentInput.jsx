@@ -37,14 +37,14 @@ const CommentInput = ({ postId, currentUser, placeholder }) => {
 
   return (
     <div
-      className={`border bg-[#FFFFFF] rounded-2xl p-4 flex flex-col gap-3 transition-all duration-300 ${
+      className={`border bg-[#1E1E1E] rounded-2xl p-4 flex flex-col gap-3 transition-all duration-300 ${
         open
           ? "border-[#FF4500] shadow-[0_0_0_3px_rgba(255,69,0,0.1)]"
-          : "border-[#EDEFF1] hover:border-[#878A8C]"
+          : "border-[#3A3A3C] hover:border-[#9A9A9A]"
       }`}
     >
       <div className="flex items-start gap-3">
-        <div className="shrink-0 w-8 h-8 rounded-full overflow-hidden bg-linear-to-br from-[#FF6534] to-[#CC3600] flex items-center justify-center border border-[#EDEFF1]">
+        <div className="shrink-0 w-8 h-8 rounded-full overflow-hidden bg-linear-to-br from-[#FF6534] to-[#CC3600] flex items-center justify-center border border-[#3A3A3C]">
           {currentUser?.userProfilePic ? (
             <img
               src={currentUser.userProfilePic}
@@ -57,7 +57,7 @@ const CommentInput = ({ postId, currentUser, placeholder }) => {
         </div>
         <textarea
           onFocus={() => setOpen(true)}
-          className={`w-full text-sm outline-none bg-transparent text-[#1C1C1C] placeholder:text-[#878A8C] resize-none transition-all duration-300 ${
+          className={`w-full text-sm outline-none bg-transparent text-[#D7DADC] placeholder:text-[#9A9A9A] resize-none transition-all duration-300 ${
             open ? "min-h-20" : "min-h-5"
           }`}
           placeholder={placeholder || "Write a comment..."}
@@ -70,7 +70,7 @@ const CommentInput = ({ postId, currentUser, placeholder }) => {
       {open && (
         <div className="flex justify-between items-center pl-11">
           <div className="flex items-center gap-2">
-            <button className="p-1.5 rounded-lg hover:bg-[#E5E6EA] transition-colors">
+            <button className="p-1.5 rounded-lg hover:bg-[#2A2A2A] transition-colors">
               <Icon
                 icon="material-symbols:image"
                 width="18"

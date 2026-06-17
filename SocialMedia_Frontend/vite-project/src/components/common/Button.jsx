@@ -4,7 +4,7 @@ import React from "react";
 const Button = ({ name, icon, onClick, isActive, loading }) => {
   const buttonStyle = isActive
     ? "bg-[#FF4500] text-white shadow-[0_3px_12px_rgba(255,69,0,0.35)] hover:shadow-[0_4px_16px_rgba(255,69,0,0.45)] hover:bg-[#CC3600]"
-    : "bg-[#E5E6EA] text-[#A83200] hover:bg-[#E5E6EA] hover:text-[#CC3600] border border-transparent hover:border-[#EDEFF1]";
+    : "bg-[#2A2A2A] text-[#A83200] hover:bg-[#2A2A2A] hover:text-[#CC3600] border border-transparent hover:border-[#3A3A3C]";
 
   return (
     <button

@@ -69,15 +69,15 @@ const Register = () => {
       <div className="absolute top-0 right-1/4 w-64 h-64 bg-[#FF4500]/10 rounded-full blur-3xl pointer-events-none"></div>
       <div className="absolute bottom-10 left-1/4 w-80 h-80 bg-[#CC3600]/10 rounded-full blur-3xl pointer-events-none"></div>
 
-      <form onSubmit={handleSubmit} className="w-96 rounded-3xl p-8 flex flex-col gap-6 items-center bg-[#FFFFFF]/95 backdrop-blur-sm shadow-[0_12px_48px_rgba(255,69,0,0.18)] border border-[#EDEFF1] relative z-10">
+      <form onSubmit={handleSubmit} className="w-96 rounded-3xl p-8 flex flex-col gap-6 items-center bg-[#1E1E1E]/95 backdrop-blur-sm shadow-[0_12px_48px_rgba(255,69,0,0.18)] border border-[#3A3A3C] relative z-10">
         {/* Header */}
         <div className="flex flex-col items-center gap-3">
           <div className="bg-[#FF4500] p-4 rounded-2xl shadow-[0_6px_20px_rgba(255,69,0,0.4)]">
             <Icon icon="mdi:account-plus" width="32" height="32" className="text-white" />
           </div>
           <div className="text-center">
-            <h1 className="text-2xl font-black text-[#1C1C1C]">Create Account</h1>
-            <p className="text-sm text-[#878A8C] mt-0.5">Join SocialSphere today</p>
+            <h1 className="text-2xl font-black text-[#D7DADC]">Create Account</h1>
+            <p className="text-sm text-[#9A9A9A] mt-0.5">Join SocialSphere today</p>
           </div>
         </div>
 
@@ -95,9 +95,9 @@ const Register = () => {
                 className="w-24 h-24 rounded-full object-cover border-2 border-[#FF4500]"
               />
             ) : (
-              <div className="w-24 h-24 rounded-full bg-[#E5E6EA] border-2 border-dashed border-[#878A8C] flex flex-col items-center justify-center gap-1 group-hover:border-[#FF4500] group-hover:bg-[#EDEFF1] transition-all duration-200">
+              <div className="w-24 h-24 rounded-full bg-[#2A2A2A] border-2 border-dashed border-[#9A9A9A] flex flex-col items-center justify-center gap-1 group-hover:border-[#FF4500] group-hover:bg-[#3A3A3C] transition-all duration-200">
                 <Icon icon="mdi:camera-plus-outline" width="24" height="24" className="text-[#FF4500]" />
-                <span className="text-[10px] text-[#878A8C] font-medium">Upload</span>
+                <span className="text-[10px] text-[#9A9A9A] font-medium">Upload</span>
               </div>
             )}
             <div className="absolute bottom-0 right-0 bg-[#FF4500] rounded-full p-1.5 shadow-md group-hover:bg-[#CC3600] transition-colors">
@@ -141,7 +141,7 @@ const Register = () => {
                 className={`flex-1 flex flex-col items-center gap-1 py-2.5 rounded-xl border text-xs font-semibold transition-all duration-200 cursor-pointer ${
                   selectedGender === g.value
                     ? "border-[#FF4500] bg-[#FF4500]/10 text-[#FF4500] shadow-[0_0_0_2px_rgba(255,69,0,0.2)]"
-                    : "border-[#EDEFF1] bg-[#FFFFFF] text-[#878A8C] hover:border-[#878A8C] hover:bg-[#E5E6EA]"
+                    : "border-[#3A3A3C] bg-[#1E1E1E] text-[#9A9A9A] hover:border-[#9A9A9A] hover:bg-[#2A2A2A]"
                 }`}
               >
                 <Icon icon={g.icon} width="18" height="18" />

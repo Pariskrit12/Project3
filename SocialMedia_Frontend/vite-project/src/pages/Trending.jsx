@@ -18,8 +18,8 @@ const Trending = () => {
           <Icon icon="mingcute:trending-up-fill" width="20" height="20" className="text-white" />
         </div>
         <div>
-          <h1 className="font-black text-2xl text-[#1C1C1C]">Trending</h1>
-          <p className="text-sm text-[#878A8C]">Most active in the last 48 hours</p>
+          <h1 className="font-black text-2xl text-[#D7DADC]">Trending</h1>
+          <p className="text-sm text-[#9A9A9A]">Most active in the last 48 hours</p>
         </div>
       </div>
 
@@ -30,14 +30,14 @@ const Trending = () => {
       )}
 
       {isError && (
-        <div className="flex flex-col items-center gap-2 py-20 text-[#878A8C]">
+        <div className="flex flex-col items-center gap-2 py-20 text-[#9A9A9A]">
           <Icon icon="material-symbols:error-outline" width="32" height="32" />
           <p className="text-sm font-medium">Failed to load trending posts</p>
         </div>
       )}
 
       {!isLoading && !isError && posts.length === 0 && (
-        <div className="flex flex-col items-center gap-2 py-20 text-[#878A8C]">
+        <div className="flex flex-col items-center gap-2 py-20 text-[#9A9A9A]">
           <Icon icon="mingcute:trending-up-fill" width="32" height="32" />
           <p className="text-sm font-medium">No trending posts yet</p>
         </div>

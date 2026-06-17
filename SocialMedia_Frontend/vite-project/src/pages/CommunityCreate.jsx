@@ -60,13 +60,13 @@ const CommunityCreate = () => {
       <div className="flex items-center gap-3 mb-6">
         <button
           onClick={() => navigate(-1)}
-          className="p-2 rounded-xl hover:bg-[#E5E6EA] text-[#FF4500] transition-colors duration-200"
+          className="p-2 rounded-xl hover:bg-[#2A2A2A] text-[#FF4500] transition-colors duration-200"
         >
           <Icon icon="material-symbols:arrow-back-rounded" width="20" height="20" />
         </button>
         <div>
-          <h1 className="text-xl font-bold text-[#1C1C1C]">Create Community</h1>
-          <p className="text-xs text-[#878A8C]">Build a space for people who share your interests</p>
+          <h1 className="text-xl font-bold text-[#D7DADC]">Create Community</h1>
+          <p className="text-xs text-[#9A9A9A]">Build a space for people who share your interests</p>
         </div>
       </div>
 
@@ -74,12 +74,12 @@ const CommunityCreate = () => {
 
         {/* Banner upload */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-[10px] font-extrabold text-[#878A8C] uppercase tracking-[0.2em] px-1">
+          <label className="text-[10px] font-extrabold text-[#9A9A9A] uppercase tracking-[0.2em] px-1">
             Banner Image <span className="text-[#FF4500]">*</span>
           </label>
           <div
             onClick={() => bannerRef.current?.click()}
-            className="relative h-36 rounded-2xl overflow-hidden border-2 border-dashed border-[#EDEFF1] bg-[#FFFFFF] cursor-pointer hover:border-[#FF4500] hover:bg-[#DAE0E6] transition-all duration-200 group"
+            className="relative h-36 rounded-2xl overflow-hidden border-2 border-dashed border-[#3A3A3C] bg-[#1E1E1E] cursor-pointer hover:border-[#FF4500] hover:bg-[#111111] transition-all duration-200 group"
           >
             {bannerPreview ? (
               <>
@@ -90,9 +90,9 @@ const CommunityCreate = () => {
               </>
             ) : (
               <div className="h-full flex flex-col items-center justify-center gap-2">
-                <Icon icon="material-symbols:image-outline" width="28" height="28" className="text-[#878A8C]" />
-                <p className="text-sm font-medium text-[#878A8C]">Click to upload banner</p>
-                <p className="text-xs text-[#EDEFF1]">Recommended: 1500 × 500px</p>
+                <Icon icon="material-symbols:image-outline" width="28" height="28" className="text-[#9A9A9A]" />
+                <p className="text-sm font-medium text-[#9A9A9A]">Click to upload banner</p>
+                <p className="text-xs text-[#3A3A3C]">Recommended: 1500 × 500px</p>
               </div>
             )}
             <input ref={bannerRef} type="file" accept="image/*" onChange={handleBannerChange} className="hidden" />
@@ -101,13 +101,13 @@ const CommunityCreate = () => {
 
         {/* Profile picture upload */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-[10px] font-extrabold text-[#878A8C] uppercase tracking-[0.2em] px-1">
+          <label className="text-[10px] font-extrabold text-[#9A9A9A] uppercase tracking-[0.2em] px-1">
             Profile Picture <span className="text-[#FF4500]">*</span>
           </label>
           <div className="flex items-center gap-4">
             <div
               onClick={() => profileRef.current?.click()}
-              className="relative h-20 w-20 rounded-full overflow-hidden border-2 border-dashed border-[#EDEFF1] bg-[#FFFFFF] cursor-pointer hover:border-[#FF4500] transition-all duration-200 group shrink-0"
+              className="relative h-20 w-20 rounded-full overflow-hidden border-2 border-dashed border-[#3A3A3C] bg-[#1E1E1E] cursor-pointer hover:border-[#FF4500] transition-all duration-200 group shrink-0"
             >
               {profilePreview ? (
                 <>
@@ -118,48 +118,48 @@ const CommunityCreate = () => {
                 </>
               ) : (
                 <div className="h-full flex flex-col items-center justify-center">
-                  <Icon icon="mdi:account-group" width="28" height="28" className="text-[#878A8C]" />
+                  <Icon icon="mdi:account-group" width="28" height="28" className="text-[#9A9A9A]" />
                 </div>
               )}
               <input ref={profileRef} type="file" accept="image/*" onChange={handleProfileChange} className="hidden" />
             </div>
-            <div className="text-sm text-[#878A8C]">
+            <div className="text-sm text-[#9A9A9A]">
               <p className="font-medium text-[#A83200]">Community avatar</p>
               <p className="text-xs mt-0.5">Square image recommended</p>
-              <p className="text-xs text-[#878A8C]">Click the circle to upload</p>
+              <p className="text-xs text-[#9A9A9A]">Click the circle to upload</p>
             </div>
           </div>
         </div>
 
         {/* Name */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-[10px] font-extrabold text-[#878A8C] uppercase tracking-[0.2em] px-1">
+          <label className="text-[10px] font-extrabold text-[#9A9A9A] uppercase tracking-[0.2em] px-1">
             Community Name <span className="text-[#FF4500]">*</span>
           </label>
-          <div className="flex w-full border border-[#EDEFF1] bg-[#FFFFFF] rounded-xl p-3 gap-2.5 focus-within:border-[#FF4500] focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(255,69,0,0.1)] transition-all duration-200">
+          <div className="flex w-full border border-[#3A3A3C] bg-[#1E1E1E] rounded-xl p-3 gap-2.5 focus-within:border-[#FF4500] focus-within:bg-[#2A2A2A] focus-within:shadow-[0_0_0_3px_rgba(255,69,0,0.1)] transition-all duration-200">
             <Icon icon="mdi:account-group" width="18" height="18" className="text-[#FF4500] shrink-0 mt-px" />
             <input
               value={communityName}
               onChange={(e) => setCommunityName(e.target.value)}
               placeholder="e.g. Football, Photography, Travel..."
-              className="w-full outline-none bg-transparent text-[#1C1C1C] placeholder:text-[#878A8C] text-sm font-medium"
+              className="w-full outline-none bg-transparent text-[#D7DADC] placeholder:text-[#9A9A9A] text-sm font-medium"
             />
           </div>
         </div>
 
         {/* Description */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-[10px] font-extrabold text-[#878A8C] uppercase tracking-[0.2em] px-1">
+          <label className="text-[10px] font-extrabold text-[#9A9A9A] uppercase tracking-[0.2em] px-1">
             Description <span className="text-[#FF4500]">*</span>
           </label>
-          <div className="flex w-full border border-[#EDEFF1] bg-[#FFFFFF] rounded-xl p-3 gap-2.5 focus-within:border-[#FF4500] focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(255,69,0,0.1)] transition-all duration-200">
+          <div className="flex w-full border border-[#3A3A3C] bg-[#1E1E1E] rounded-xl p-3 gap-2.5 focus-within:border-[#FF4500] focus-within:bg-[#2A2A2A] focus-within:shadow-[0_0_0_3px_rgba(255,69,0,0.1)] transition-all duration-200">
             <Icon icon="material-symbols:description-outline" width="18" height="18" className="text-[#FF4500] shrink-0 mt-px" />
             <textarea
               value={communityDescription}
               onChange={(e) => setCommunityDescription(e.target.value)}
               placeholder="What is this community about? What can members expect?"
               rows={4}
-              className="w-full outline-none bg-transparent text-[#1C1C1C] placeholder:text-[#878A8C] text-sm resize-none"
+              className="w-full outline-none bg-transparent text-[#D7DADC] placeholder:text-[#9A9A9A] text-sm resize-none"
             />
           </div>
         </div>
@@ -176,7 +176,7 @@ const CommunityCreate = () => {
           <button
             type="button"
             onClick={() => navigate(-1)}
-            className="flex-1 py-2.5 rounded-full font-semibold text-sm text-[#A83200] bg-[#E5E6EA] hover:bg-[#E5E6EA] hover:text-[#CC3600] border border-transparent hover:border-[#EDEFF1] transition-all duration-200 cursor-pointer"
+            className="flex-1 py-2.5 rounded-full font-semibold text-sm text-[#A83200] bg-[#2A2A2A] hover:bg-[#2A2A2A] hover:text-[#CC3600] border border-transparent hover:border-[#3A3A3C] transition-all duration-200 cursor-pointer"
           >
             Cancel
           </button>
@@ -186,7 +186,7 @@ const CommunityCreate = () => {
             className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-full font-semibold text-sm transition-all duration-200 ${
               canSubmit && !isLoading
                 ? "bg-[#FF4500] text-white shadow-[0_3px_12px_rgba(255,69,0,0.35)] hover:shadow-[0_5px_18px_rgba(255,69,0,0.5)] hover:-translate-y-0.5 cursor-pointer"
-                : "bg-[#EDEFF1] text-[#878A8C] cursor-not-allowed"
+                : "bg-[#3A3A3C] text-[#9A9A9A] cursor-not-allowed"
             }`}
           >
             {isLoading ? (

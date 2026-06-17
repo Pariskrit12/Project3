@@ -20,7 +20,7 @@ const NavigationLink = ({ icon, label, onClick, isActive, path }) => {
       className={`w-full flex gap-3 items-center py-2.5 px-3 rounded-xl transition-all duration-200 font-medium relative ${
         isActive
           ? "bg-[#FF4500] text-white shadow-[0_3px_12px_rgba(255,69,0,0.3)]"
-          : "text-[#1C1C1C] hover:bg-[#E5E6EA] hover:text-[#CC3600]"
+          : "text-[#D7DADC] hover:bg-[#2A2A2A] hover:text-[#CC3600]"
       }`}
     >
       <Icon

@@ -51,17 +51,17 @@ const ChangePassword = () => {
       <div className="flex items-center gap-3 mb-6">
         <button
           onClick={() => navigate("/settings")}
-          className="p-2 rounded-xl hover:bg-[#E5E6EA] transition-colors text-[#1C1C1C] border border-[#EDEFF1] bg-[#FFFFFF]"
+          className="p-2 rounded-xl hover:bg-[#2A2A2A] transition-colors text-[#D7DADC] border border-[#3A3A3C] bg-[#1E1E1E]"
         >
           <Icon icon="tabler:arrow-left" width="22" height="22" />
         </button>
         <div>
-          <h1 className="text-2xl font-black text-[#1C1C1C]">Change Password</h1>
-          <p className="text-sm text-[#878A8C]">Keep your account secure</p>
+          <h1 className="text-2xl font-black text-[#D7DADC]">Change Password</h1>
+          <p className="text-sm text-[#9A9A9A]">Keep your account secure</p>
         </div>
       </div>
 
-      <div className="bg-[#FFFFFF] border border-[#EDEFF1] rounded-2xl p-6 shadow-[0_4px_20px_rgba(255,69,0,0.08)]">
+      <div className="bg-[#1E1E1E] border border-[#3A3A3C] rounded-2xl p-6 shadow-[0_4px_20px_rgba(255,69,0,0.08)]">
         <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-bold text-[#A83200]">Current Password</label>

@@ -21,6 +21,8 @@ import Communites from "./pages/Communites";
 import CreatePost from "./pages/CreatePost";
 import CommunityCreate from "./pages/CommunityCreate";
 import SearchResults from "./pages/SearchResults";
+import AdminLayout from "./pages/admin/AdminLayout";
+import AdminUsers from "./pages/admin/AdminUsers";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetCurrentUserQuery } from "./services/userApi";
 import { setUser } from "./slices/authSlice";
@@ -33,6 +35,19 @@ import InterestSelectorModal from "./components/InterestSelectorModal";
 const PageWrapper = ({ children }) => (
   <div className="px-5 py-6">{children}</div>
 );
+
+const AdminRoute = ({ children, user, isLoading }) => {
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Icon icon="svg-spinners:ring-resize" width="40" height="40" className="text-[#FF4500]" />
+      </div>
+    );
+  }
+  if (!user) return <Navigate to="/login" replace />;
+  if (user.role !== "admin") return <Navigate to="/" replace />;
+  return children;
+};
 
 const ProtectedRoute = ({ children, isAuthenticated, isLoading }) => {
   if (isLoading) {
@@ -89,6 +104,21 @@ const App = () => {
       "/create-community",
     ].includes(location.pathname) ||
     location.pathname === "/search";
+
+  const isAdminPage = location.pathname.startsWith("/admin");
+
+  if (isAdminPage) {
+    return (
+      <AdminRoute user={reduxUser} isLoading={isAuthLoading}>
+        <Routes>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<Navigate to="/admin/users" replace />} />
+            <Route path="users" element={<AdminUsers />} />
+          </Route>
+        </Routes>
+      </AdminRoute>
+    );
+  }
 
   return (
     <>

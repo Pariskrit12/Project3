@@ -62,16 +62,16 @@ const InterestSelectorModal = ({ currentUser }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-      <div className="bg-[#FFFFFF] rounded-3xl shadow-2xl w-full max-w-lg max-h-[90vh] flex flex-col overflow-hidden border border-[#EDEFF1]">
+      <div className="bg-[#1E1E1E] rounded-3xl shadow-2xl w-full max-w-lg max-h-[90vh] flex flex-col overflow-hidden border border-[#3A3A3C]">
         {/* Header */}
-        <div className="px-6 pt-6 pb-4 border-b border-[#EDEFF1] bg-linear-to-br from-[#DAE0E6] to-[#FFFFFF]">
+        <div className="px-6 pt-6 pb-4 border-b border-[#3A3A3C] bg-linear-to-br from-[#111111] to-[#1E1E1E]">
           <div className="flex items-center gap-3 mb-1">
             <div className="p-2 rounded-xl bg-[#FF4500]">
               <Icon icon="mdi:tag-heart" width="20" height="20" className="text-white" />
             </div>
-            <h2 className="text-xl font-black text-[#1C1C1C]">What are you into?</h2>
+            <h2 className="text-xl font-black text-[#D7DADC]">What are you into?</h2>
           </div>
-          <p className="text-sm text-[#878A8C] ml-11">
+          <p className="text-sm text-[#9A9A9A] ml-11">
             Pick topics to personalise your home feed. You can always change these later.
           </p>
         </div>
@@ -80,7 +80,7 @@ const InterestSelectorModal = ({ currentUser }) => {
         <div className="flex-1 overflow-y-auto px-6 py-4 flex flex-col gap-5">
           {/* Preset tags */}
           <div>
-            <p className="text-[10px] font-extrabold text-[#878A8C] uppercase tracking-[0.2em] mb-2">
+            <p className="text-[10px] font-extrabold text-[#9A9A9A] uppercase tracking-[0.2em] mb-2">
               Popular topics
             </p>
             <div className="flex flex-wrap gap-2">
@@ -94,7 +94,7 @@ const InterestSelectorModal = ({ currentUser }) => {
                     className={`px-3 py-1.5 rounded-full text-sm font-semibold border transition-all duration-150 capitalize ${
                       active
                         ? "bg-[#FF4500] text-white border-transparent shadow-[0_2px_8px_rgba(255,69,0,0.35)]"
-                        : "bg-[#E5E6EA] text-[#A83200] border-[#EDEFF1] hover:bg-[#E5E6EA] hover:border-[#878A8C]"
+                        : "bg-[#2A2A2A] text-[#A83200] border-[#3A3A3C] hover:bg-[#2A2A2A] hover:border-[#9A9A9A]"
                     }`}
                   >
                     {active && (
@@ -109,11 +109,11 @@ const InterestSelectorModal = ({ currentUser }) => {
 
           {/* Custom tag input */}
           <div>
-            <p className="text-[10px] font-extrabold text-[#878A8C] uppercase tracking-[0.2em] mb-2">
+            <p className="text-[10px] font-extrabold text-[#9A9A9A] uppercase tracking-[0.2em] mb-2">
               Add your own
             </p>
             <div className="flex gap-2">
-              <div className="flex-1 flex items-center gap-2 border border-[#EDEFF1] bg-white rounded-xl px-3 py-2 focus-within:border-[#FF4500] focus-within:shadow-[0_0_0_3px_rgba(255,69,0,0.1)] transition-all">
+              <div className="flex-1 flex items-center gap-2 border border-[#3A3A3C] bg-[#1E1E1E] rounded-xl px-3 py-2 focus-within:border-[#FF4500] focus-within:shadow-[0_0_0_3px_rgba(255,69,0,0.1)] transition-all">
                 <Icon icon="mdi:tag-plus-outline" width="16" height="16" className="text-[#FF4500] shrink-0" />
                 <input
                   type="text"
@@ -121,14 +121,14 @@ const InterestSelectorModal = ({ currentUser }) => {
                   onChange={(e) => setCustomInput(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && addCustomTag()}
                   placeholder="e.g. astronomy, skateboarding…"
-                  className="flex-1 outline-none bg-transparent text-sm text-[#1C1C1C] placeholder:text-[#878A8C]"
+                  className="flex-1 outline-none bg-transparent text-sm text-[#D7DADC] placeholder:text-[#9A9A9A]"
                 />
               </div>
               <button
                 type="button"
                 onClick={addCustomTag}
                 disabled={!customInput.trim()}
-                className="px-4 py-2 rounded-xl bg-[#E5E6EA] text-[#FF4500] font-semibold text-sm hover:bg-[#E5E6EA] disabled:opacity-40 transition-colors"
+                className="px-4 py-2 rounded-xl bg-[#2A2A2A] text-[#FF4500] font-semibold text-sm hover:bg-[#2A2A2A] disabled:opacity-40 transition-colors"
               >
                 Add
               </button>
@@ -157,8 +157,8 @@ const InterestSelectorModal = ({ currentUser }) => {
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-[#EDEFF1] bg-[#FFFFFF] flex items-center justify-between gap-3">
-          <div className="text-sm text-[#878A8C]">
+        <div className="px-6 py-4 border-t border-[#3A3A3C] bg-[#1E1E1E] flex items-center justify-between gap-3">
+          <div className="text-sm text-[#9A9A9A]">
             {selected.size > 0 ? (
               <span>
                 <span className="font-bold text-[#FF4500]">{selected.size}</span> topic{selected.size !== 1 ? "s" : ""} selected
@@ -171,7 +171,7 @@ const InterestSelectorModal = ({ currentUser }) => {
             <button
               type="button"
               onClick={handleSkip}
-              className="px-4 py-2 rounded-full text-sm font-semibold text-[#878A8C] hover:text-[#A83200] hover:bg-[#E5E6EA] transition-all"
+              className="px-4 py-2 rounded-full text-sm font-semibold text-[#9A9A9A] hover:text-[#A83200] hover:bg-[#2A2A2A] transition-all"
             >
               Skip
             </button>
@@ -182,7 +182,7 @@ const InterestSelectorModal = ({ currentUser }) => {
               className={`flex items-center gap-2 px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
                 selected.size > 0 && !isLoading
                   ? "bg-[#FF4500] text-white shadow-[0_3px_12px_rgba(255,69,0,0.35)] hover:shadow-[0_5px_18px_rgba(255,69,0,0.5)] hover:-translate-y-0.5"
-                  : "bg-[#EDEFF1] text-[#878A8C] cursor-not-allowed"
+                  : "bg-[#3A3A3C] text-[#9A9A9A] cursor-not-allowed"
               }`}
             >
               {isLoading ? (

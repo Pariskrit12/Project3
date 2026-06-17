@@ -17,8 +17,8 @@ const New = () => {
           <Icon icon="fluent:new-16-filled" width="20" height="20" className="text-white" />
         </div>
         <div>
-          <h1 className="font-black text-2xl text-[#1C1C1C]">New Posts</h1>
-          <p className="text-sm text-[#878A8C]">Fresh from the community</p>
+          <h1 className="font-black text-2xl text-[#D7DADC]">New Posts</h1>
+          <p className="text-sm text-[#9A9A9A]">Fresh from the community</p>
         </div>
       </div>
 
@@ -29,14 +29,14 @@ const New = () => {
       )}
 
       {isError && (
-        <div className="flex flex-col items-center gap-2 py-20 text-[#878A8C]">
+        <div className="flex flex-col items-center gap-2 py-20 text-[#9A9A9A]">
           <Icon icon="material-symbols:error-outline" width="32" height="32" />
           <p className="text-sm font-medium">Failed to load new posts</p>
         </div>
       )}
 
       {!isLoading && !isError && posts.length === 0 && (
-        <div className="flex flex-col items-center gap-2 py-20 text-[#878A8C]">
+        <div className="flex flex-col items-center gap-2 py-20 text-[#9A9A9A]">
           <Icon icon="fluent:new-16-filled" width="32" height="32" />
           <p className="text-sm font-medium">No new posts yet</p>
         </div>

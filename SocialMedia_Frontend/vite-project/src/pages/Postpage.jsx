@@ -69,7 +69,7 @@ const Postpage = () => {
 
   if (postError || !post) {
     return (
-      <div className="flex flex-col items-center gap-2 py-20 text-[#878A8C]">
+      <div className="flex flex-col items-center gap-2 py-20 text-[#9A9A9A]">
         <Icon icon="material-symbols:error-outline" width="32" height="32" />
         <p className="text-sm font-medium">Post not found</p>
       </div>
@@ -98,12 +98,12 @@ const Postpage = () => {
       </section>
 
       {/* Comments section */}
-      <section className="flex flex-col gap-5 bg-[#FFFFFF] border border-[#EDEFF1] rounded-2xl p-5 shadow-[0_2px_16px_rgba(255,69,0,0.07)]">
+      <section className="flex flex-col gap-5 bg-[#1E1E1E] border border-[#3A3A3C] rounded-2xl p-5 shadow-[0_2px_16px_rgba(255,69,0,0.07)]">
         {/* Header */}
-        <div className="flex items-center gap-3 pb-4 border-b border-[#E5E6EA]">
+        <div className="flex items-center gap-3 pb-4 border-b border-[#2A2A2A]">
           <Icon icon="mdi:comments-outline" width="22" height="22" className="text-[#FF4500]" />
-          <h2 className="font-black text-lg text-[#1C1C1C]">Comments</h2>
-          <span className="bg-[#E5E6EA] text-[#CC3600] text-xs font-bold px-2.5 py-0.5 rounded-full">
+          <h2 className="font-black text-lg text-[#D7DADC]">Comments</h2>
+          <span className="bg-[#2A2A2A] text-[#CC3600] text-xs font-bold px-2.5 py-0.5 rounded-full">
             {commentsData?.data?.totalComments ?? 0}
           </span>
         </div>
@@ -133,7 +133,7 @@ const Postpage = () => {
           )}
 
           {!commentsLoading && comments.length === 0 && (
-            <div className="flex flex-col items-center gap-2 py-8 text-[#878A8C]">
+            <div className="flex flex-col items-center gap-2 py-8 text-[#9A9A9A]">
               <Icon icon="mdi:comment-outline" width="32" height="32" />
               <p className="text-sm font-medium">No comments yet. Be the first!</p>
             </div>
@@ -151,12 +151,12 @@ const Postpage = () => {
             return (
               <div
                 key={c._id}
-                className={`relative flex gap-3 p-4 bg-white border border-[#EDEFF1] rounded-2xl transition-opacity ${
+                className={`relative flex gap-3 p-4 bg-[#1E1E1E] border border-[#3A3A3C] rounded-2xl transition-opacity ${
                   c.isOptimistic ? "opacity-60" : "opacity-100"
                 }`}
               >
                 {/* Avatar */}
-                <div className="shrink-0 h-9 w-9 rounded-full overflow-hidden bg-linear-to-br from-[#FF6534] to-[#CC3600] flex items-center justify-center border border-[#EDEFF1] ring-2 ring-[#FF6534] ring-offset-1">
+                <div className="shrink-0 h-9 w-9 rounded-full overflow-hidden bg-linear-to-br from-[#FF6534] to-[#CC3600] flex items-center justify-center border border-[#3A3A3C] ring-2 ring-[#FF6534] ring-offset-1">
                   {c.creator?.userProfilePic ? (
                     <img
                       src={c.creator.userProfilePic}
@@ -177,11 +177,11 @@ const Postpage = () => {
                   {/* Top row: name + time + menu */}
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
-                      <p className="font-bold text-sm text-[#1C1C1C]">
+                      <p className="font-bold text-sm text-[#D7DADC]">
                         {c.creator?.username ?? "user"}
                       </p>
-                      <span className="w-1 h-1 rounded-full bg-[#EDEFF1]" />
-                      <p className="text-xs text-[#878A8C]">
+                      <span className="w-1 h-1 rounded-full bg-[#3A3A3C]" />
+                      <p className="text-xs text-[#9A9A9A]">
                         {formatTime(c.createdAt)}
                       </p>
                     </div>
@@ -194,7 +194,7 @@ const Postpage = () => {
                               openDropdownId === c._id ? null : c._id
                             )
                           }
-                          className="p-1 rounded-lg hover:bg-[#E5E6EA] text-[#878A8C] hover:text-[#CC3600] transition-colors"
+                          className="p-1 rounded-lg hover:bg-[#2A2A2A] text-[#9A9A9A] hover:text-[#CC3600] transition-colors"
                         >
                           <Icon
                             icon="mdi:dots-horizontal"
@@ -204,11 +204,11 @@ const Postpage = () => {
                         </button>
 
                         {openDropdownId === c._id && (
-                          <div className="absolute right-0 top-8 z-20 bg-white border border-[#EDEFF1] rounded-xl shadow-lg overflow-hidden min-w-32.5">
+                          <div className="absolute right-0 top-8 z-20 bg-[#1E1E1E] border border-[#3A3A3C] rounded-xl shadow-lg overflow-hidden min-w-32.5">
                             {isCommentOwner && (
                               <button
                                 onClick={() => handleEditStart(c)}
-                                className="flex items-center gap-2 w-full px-3 py-2 text-sm text-[#1C1C1C] hover:bg-[#E5E6EA] transition-colors"
+                                className="flex items-center gap-2 w-full px-3 py-2 text-sm text-[#D7DADC] hover:bg-[#2A2A2A] transition-colors"
                               >
                                 <Icon
                                   icon="mdi:pencil"
@@ -244,14 +244,14 @@ const Postpage = () => {
                       <textarea
                         value={editText}
                         onChange={(e) => setEditText(e.target.value)}
-                        className="w-full border border-[#EDEFF1] rounded-lg p-2 text-sm text-[#1C1C1C] outline-none focus:border-[#FF4500] resize-none bg-[#FFFFFF]"
+                        className="w-full border border-[#3A3A3C] rounded-lg p-2 text-sm text-[#D7DADC] outline-none focus:border-[#FF4500] resize-none bg-[#1E1E1E]"
                         rows={2}
                         autoFocus
                       />
                       <div className="flex gap-2 justify-end">
                         <button
                           onClick={() => setEditingCommentId(null)}
-                          className="px-3 py-1 text-xs rounded-full bg-[#E5E6EA] text-[#A83200] font-semibold transition-colors"
+                          className="px-3 py-1 text-xs rounded-full bg-[#2A2A2A] text-[#A83200] font-semibold transition-colors"
                         >
                           Cancel
                         </button>
@@ -271,7 +271,7 @@ const Postpage = () => {
                   )}
 
                   {/* Action row */}
-                  <div className="flex items-center gap-2 mt-2 pt-2 border-t border-[#E5E6EA]">
+                  <div className="flex items-center gap-2 mt-2 pt-2 border-t border-[#2A2A2A]">
                     <button
                       onClick={() =>
                         !c.isOptimistic &&
@@ -279,8 +279,8 @@ const Postpage = () => {
                       }
                       className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${
                         isLiked
-                          ? "bg-[#E5E6EA] text-[#CC3600]"
-                          : "text-[#878A8C] hover:bg-[#E5E6EA] hover:text-[#CC3600]"
+                          ? "bg-[#2A2A2A] text-[#CC3600]"
+                          : "text-[#9A9A9A] hover:bg-[#2A2A2A] hover:text-[#CC3600]"
                       }`}
                     >
                       <Icon
@@ -292,7 +292,7 @@ const Postpage = () => {
                     </button>
 
                     <button
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-[#878A8C] hover:bg-[#E5E6EA] hover:text-[#CC3600] transition-all duration-200"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-[#9A9A9A] hover:bg-[#2A2A2A] hover:text-[#CC3600] transition-all duration-200"
                     >
                       <Icon icon="mdi:reply" width="14" height="14" />
                       Reply

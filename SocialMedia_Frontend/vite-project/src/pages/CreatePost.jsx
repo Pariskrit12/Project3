@@ -95,7 +95,7 @@ const CreatePost = () => {
       <div className="flex items-center gap-3 mb-6">
         <button
           onClick={() => navigate(-1)}
-          className="p-2 rounded-xl hover:bg-[#E5E6EA] text-[#FF4500] transition-colors duration-200"
+          className="p-2 rounded-xl hover:bg-[#2A2A2A] text-[#FF4500] transition-colors duration-200"
         >
           <Icon
             icon="material-symbols:arrow-back-rounded"
@@ -104,8 +104,8 @@ const CreatePost = () => {
           />
         </button>
         <div>
-          <h1 className="text-xl font-bold text-[#1C1C1C]">Create Post</h1>
-          <p className="text-xs text-[#878A8C]">
+          <h1 className="text-xl font-bold text-[#D7DADC]">Create Post</h1>
+          <p className="text-xs text-[#9A9A9A]">
             {communityId && community
               ? `Posting to ${community.communityName}`
               : "Share something with everyone"}
@@ -117,11 +117,11 @@ const CreatePost = () => {
         {/* Community badge — only shown when coming from a community page */}
         {communityId && (
           <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-extrabold text-[#878A8C] uppercase tracking-[0.2em] px-1">
+            <label className="text-[10px] font-extrabold text-[#9A9A9A] uppercase tracking-[0.2em] px-1">
               Posting in
             </label>
-            <div className="flex items-center gap-2.5 border border-[#EDEFF1] bg-[#FFFFFF] rounded-xl p-3">
-              <div className="shrink-0 h-7 w-7 rounded-full overflow-hidden bg-[#E5E6EA] border border-[#EDEFF1]">
+            <div className="flex items-center gap-2.5 border border-[#3A3A3C] bg-[#1E1E1E] rounded-xl p-3">
+              <div className="shrink-0 h-7 w-7 rounded-full overflow-hidden bg-[#2A2A2A] border border-[#3A3A3C]">
                 {community?.communityProfilePicture ? (
                   <img
                     src={community.communityProfilePicture}
@@ -134,20 +134,20 @@ const CreatePost = () => {
                   </div>
                 )}
               </div>
-              <p className="text-sm font-semibold text-[#1C1C1C] flex-1">
+              <p className="text-sm font-semibold text-[#D7DADC] flex-1">
                 {community?.communityName ?? "Loading…"}
               </p>
-              <Icon icon="mdi:lock" width="14" height="14" className="text-[#878A8C]" />
+              <Icon icon="mdi:lock" width="14" height="14" className="text-[#9A9A9A]" />
             </div>
           </div>
         )}
 
         {/* Title */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-[10px] font-extrabold text-[#878A8C] uppercase tracking-[0.2em] px-1">
+          <label className="text-[10px] font-extrabold text-[#9A9A9A] uppercase tracking-[0.2em] px-1">
             Title
           </label>
-          <div className="flex w-full border border-[#EDEFF1] bg-[#FFFFFF] rounded-xl p-3 gap-2.5 focus-within:border-[#FF4500] focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(255,69,0,0.1)] transition-all duration-200">
+          <div className="flex w-full border border-[#3A3A3C] bg-[#1E1E1E] rounded-xl p-3 gap-2.5 focus-within:border-[#FF4500] focus-within:bg-[#2A2A2A] focus-within:shadow-[0_0_0_3px_rgba(255,69,0,0.1)] transition-all duration-200">
             <Icon
               icon="fluent:text-header-1-24-filled"
               width="18"
@@ -158,17 +158,17 @@ const CreatePost = () => {
               value={postTitle}
               onChange={(e) => setPostTitle(e.target.value)}
               placeholder="Give your post a title..."
-              className="w-full outline-none bg-transparent text-[#1C1C1C] placeholder:text-[#878A8C] text-sm font-medium"
+              className="w-full outline-none bg-transparent text-[#D7DADC] placeholder:text-[#9A9A9A] text-sm font-medium"
             />
           </div>
         </div>
 
         {/* Description */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-[10px] font-extrabold text-[#878A8C] uppercase tracking-[0.2em] px-1">
+          <label className="text-[10px] font-extrabold text-[#9A9A9A] uppercase tracking-[0.2em] px-1">
             Description
           </label>
-          <div className="flex w-full border border-[#EDEFF1] bg-[#FFFFFF] rounded-xl p-3 gap-2.5 focus-within:border-[#FF4500] focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(255,69,0,0.1)] transition-all duration-200">
+          <div className="flex w-full border border-[#3A3A3C] bg-[#1E1E1E] rounded-xl p-3 gap-2.5 focus-within:border-[#FF4500] focus-within:bg-[#2A2A2A] focus-within:shadow-[0_0_0_3px_rgba(255,69,0,0.1)] transition-all duration-200">
             <Icon
               icon="material-symbols:description-outline"
               width="18"
@@ -180,17 +180,17 @@ const CreatePost = () => {
               onChange={(e) => setPostDescription(e.target.value)}
               placeholder="What's on your mind?"
               rows={5}
-              className="w-full outline-none bg-transparent text-[#1C1C1C] placeholder:text-[#878A8C] text-sm resize-none"
+              className="w-full outline-none bg-transparent text-[#D7DADC] placeholder:text-[#9A9A9A] text-sm resize-none"
             />
           </div>
         </div>
 
         {/* Tags */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-[10px] font-extrabold text-[#878A8C] uppercase tracking-[0.2em] px-1">
+          <label className="text-[10px] font-extrabold text-[#9A9A9A] uppercase tracking-[0.2em] px-1">
             Tags (optional)
           </label>
-          <div className="border border-[#EDEFF1] bg-[#FFFFFF] rounded-xl p-3 flex flex-col gap-3">
+          <div className="border border-[#3A3A3C] bg-[#1E1E1E] rounded-xl p-3 flex flex-col gap-3">
             <div className="flex flex-wrap gap-1.5">
               {PRESET_TAGS.map((tag) => {
                 const active = selectedTags.includes(tag);
@@ -202,7 +202,7 @@ const CreatePost = () => {
                     className={`px-2.5 py-1 rounded-full text-xs font-semibold border transition-all capitalize ${
                       active
                         ? "bg-[#FF4500] text-white border-transparent"
-                        : "bg-[#E5E6EA] text-[#A83200] border-[#EDEFF1] hover:bg-[#E5E6EA]"
+                        : "bg-[#2A2A2A] text-[#A83200] border-[#3A3A3C] hover:bg-[#2A2A2A]"
                     }`}
                   >
                     {active && <Icon icon="mdi:check" width="10" height="10" className="inline mr-1 -mt-0.5" />}
@@ -212,7 +212,7 @@ const CreatePost = () => {
               })}
             </div>
             <div className="flex gap-2">
-              <div className="flex-1 flex items-center gap-2 border border-[#EDEFF1] bg-white rounded-lg px-3 py-1.5 focus-within:border-[#FF4500] transition-all">
+              <div className="flex-1 flex items-center gap-2 border border-[#3A3A3C] bg-[#1E1E1E] rounded-lg px-3 py-1.5 focus-within:border-[#FF4500] transition-all">
                 <Icon icon="mdi:tag-plus-outline" width="14" height="14" className="text-[#FF4500] shrink-0" />
                 <input
                   type="text"
@@ -220,14 +220,14 @@ const CreatePost = () => {
                   onChange={(e) => setTagInput(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addCustomTag())}
                   placeholder="Custom tag…"
-                  className="flex-1 outline-none bg-transparent text-xs text-[#1C1C1C] placeholder:text-[#878A8C]"
+                  className="flex-1 outline-none bg-transparent text-xs text-[#D7DADC] placeholder:text-[#9A9A9A]"
                 />
               </div>
               <button
                 type="button"
                 onClick={addCustomTag}
                 disabled={!tagInput.trim()}
-                className="px-3 py-1.5 rounded-lg bg-[#E5E6EA] text-[#FF4500] text-xs font-semibold hover:bg-[#E5E6EA] disabled:opacity-40 transition-colors"
+                className="px-3 py-1.5 rounded-lg bg-[#2A2A2A] text-[#FF4500] text-xs font-semibold hover:bg-[#2A2A2A] disabled:opacity-40 transition-colors"
               >
                 Add
               </button>
@@ -258,14 +258,14 @@ const CreatePost = () => {
 
         {/* Media Upload */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-[10px] font-extrabold text-[#878A8C] uppercase tracking-[0.2em] px-1">
+          <label className="text-[10px] font-extrabold text-[#9A9A9A] uppercase tracking-[0.2em] px-1">
             Media (optional)
           </label>
           <div
             onClick={() => fileInputRef.current?.click()}
-            className="border-2 border-dashed border-[#EDEFF1] bg-[#FFFFFF] rounded-xl p-6 flex flex-col items-center gap-2 cursor-pointer hover:border-[#FF4500] hover:bg-[#DAE0E6] transition-all duration-200 group"
+            className="border-2 border-dashed border-[#3A3A3C] bg-[#1E1E1E] rounded-xl p-6 flex flex-col items-center gap-2 cursor-pointer hover:border-[#FF4500] hover:bg-[#111111] transition-all duration-200 group"
           >
-            <div className="p-3 rounded-full bg-[#E5E6EA] group-hover:bg-[#E5E6EA] transition-colors">
+            <div className="p-3 rounded-full bg-[#2A2A2A] group-hover:bg-[#2A2A2A] transition-colors">
               <Icon
                 icon="material-symbols:upload-rounded"
                 width="22"
@@ -276,7 +276,7 @@ const CreatePost = () => {
             <p className="text-sm font-semibold text-[#A83200]">
               Click to upload images or videos
             </p>
-            <p className="text-xs text-[#878A8C]">Multiple files supported</p>
+            <p className="text-xs text-[#9A9A9A]">Multiple files supported</p>
             <input
               ref={fileInputRef}
               type="file"
@@ -292,7 +292,7 @@ const CreatePost = () => {
               {previews.map((preview, index) => (
                 <div
                   key={index}
-                  className="relative rounded-xl overflow-hidden border border-[#EDEFF1] aspect-square bg-[#E5E6EA]"
+                  className="relative rounded-xl overflow-hidden border border-[#3A3A3C] aspect-square bg-[#2A2A2A]"
                 >
                   {preview.type === "image" ? (
                     <img
@@ -335,7 +335,7 @@ const CreatePost = () => {
           <button
             type="button"
             onClick={() => navigate(-1)}
-            className="flex-1 py-2.5 rounded-full font-semibold text-sm text-[#A83200] bg-[#E5E6EA] hover:bg-[#E5E6EA] hover:text-[#CC3600] border border-transparent hover:border-[#EDEFF1] transition-all duration-200 cursor-pointer"
+            className="flex-1 py-2.5 rounded-full font-semibold text-sm text-[#A83200] bg-[#2A2A2A] hover:bg-[#2A2A2A] hover:text-[#CC3600] border border-transparent hover:border-[#3A3A3C] transition-all duration-200 cursor-pointer"
           >
             Cancel
           </button>
@@ -345,7 +345,7 @@ const CreatePost = () => {
             className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-full font-semibold text-sm transition-all duration-200 ${
               hasContent && !isLoading
                 ? "bg-[#FF4500] text-white shadow-[0_3px_12px_rgba(255,69,0,0.35)] hover:shadow-[0_5px_18px_rgba(255,69,0,0.5)] hover:-translate-y-0.5 cursor-pointer"
-                : "bg-[#EDEFF1] text-[#878A8C] cursor-not-allowed"
+                : "bg-[#3A3A3C] text-[#9A9A9A] cursor-not-allowed"
             }`}
           >
             {isLoading ? (

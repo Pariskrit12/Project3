@@ -21,7 +21,7 @@ const Dropdown = ({ icon, value, options = [], onSelect }) => {
       </div>
 
       {isOpen && (
-        <div className="absolute mt-2 w-full min-w-28 bg-[#FFFFFF] border border-[#EDEFF1] rounded-xl shadow-[0_8px_24px_rgba(255,69,0,0.15)] z-20 overflow-hidden">
+        <div className="absolute mt-2 w-full min-w-28 bg-[#1E1E1E] border border-[#3A3A3C] rounded-xl shadow-[0_8px_24px_rgba(255,69,0,0.15)] z-20 overflow-hidden">
           {options.map((option, i) => (
             <div
               key={i}
@@ -31,8 +31,8 @@ const Dropdown = ({ icon, value, options = [], onSelect }) => {
               }}
               className={`px-4 py-2.5 text-sm cursor-pointer transition-colors duration-150 font-medium ${
                 value === option
-                  ? "bg-[#E5E6EA] text-[#CC3600]"
-                  : "text-[#1C1C1C] hover:bg-[#E5E6EA] hover:text-[#CC3600]"
+                  ? "bg-[#2A2A2A] text-[#CC3600]"
+                  : "text-[#D7DADC] hover:bg-[#2A2A2A] hover:text-[#CC3600]"
               }`}
             >
               {option}

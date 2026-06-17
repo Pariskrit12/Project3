@@ -8,7 +8,7 @@ const Input = ({ onChange, icon, type, placeholder, value, className }) => {
 
   return (
     <div
-      className={`flex w-full border border-[#EDEFF1] bg-[#FFFFFF] rounded-xl p-3 gap-2.5 focus-within:border-[#FF4500] focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(255,69,0,0.1)] transition-all duration-200 ${className}`}
+      className={`flex w-full border border-[#3A3A3C] bg-[#1E1E1E] rounded-xl p-3 gap-2.5 focus-within:border-[#FF4500] focus-within:bg-[#2A2A2A] focus-within:shadow-[0_0_0_3px_rgba(255,69,0,0.1)] transition-all duration-200 ${className}`}
     >
       {icon && (
         <Icon
@@ -20,7 +20,7 @@ const Input = ({ onChange, icon, type, placeholder, value, className }) => {
       )}
       <input
         onChange={onChange}
-        className="w-full outline-none bg-transparent text-[#1C1C1C] placeholder:text-[#878A8C] text-sm"
+        className="w-full outline-none bg-transparent text-[#D7DADC] placeholder:text-[#9A9A9A] text-sm"
         type={inputType}
         placeholder={placeholder}
         value={value}
@@ -29,7 +29,7 @@ const Input = ({ onChange, icon, type, placeholder, value, className }) => {
         <button
           type="button"
           onClick={() => setShowPassword((prev) => !prev)}
-          className="shrink-0 mt-px text-[#878A8C] hover:text-[#FF4500] transition-colors duration-200 cursor-pointer"
+          className="shrink-0 mt-px text-[#9A9A9A] hover:text-[#FF4500] transition-colors duration-200 cursor-pointer"
           tabIndex={-1}
         >
           <Icon
