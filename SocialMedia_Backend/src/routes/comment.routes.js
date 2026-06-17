@@ -9,7 +9,6 @@ import {
   deleteComment,
   getCommentOfPost,
 } from "../controllers/comments.controller.js";
-
 const router = Router();
 
 router

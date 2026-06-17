@@ -223,7 +223,6 @@ const likePost = asyncHandler(async (req, res) => {
       );
     }
     message = "Liked post successfully";
-    await post.save();
     if (post.creator.toString() !== userId.toString()) {
       await sendNotification({
         sender: userId,
@@ -235,6 +234,7 @@ const likePost = asyncHandler(async (req, res) => {
     }
   }
 
+  await post.save();
   return res.status(200).json(new ApiResponse(200, post, message));
 });
 const dislikePost = asyncHandler(async (req, res) => {

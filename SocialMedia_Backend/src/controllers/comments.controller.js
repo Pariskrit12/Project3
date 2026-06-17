@@ -139,7 +139,7 @@ const updateComment = asyncHandler(async (req, res) => {
   comment.imagePublicId = imagePublicId;
   const updatedComment = await comment.save().catch(async (err) => {
     if (req.file && imagePublicId) {
-      await deleteFromCloudinary(imagePublicId);
+      await cloudinary.uploader.destroy(imagePublicId);
     }
     throw new ApiError(500, "Failed to update comment", err);
   });

@@ -493,7 +493,7 @@ const deactivateAccount = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, "User account deactivated successfully"));
+    .json(new ApiResponse(200, {}, "User account deactivated successfully"));
 });
 const getFollowers = asyncHandler(async (req, res) => {
   const userId = req.user?._id;
@@ -697,6 +697,7 @@ const googleLogin = asyncHandler(async (req, res) => {
     idToken: token,
     audience: process.env.GOOGLE_CLIENT_ID,
   });
+
 
   const payload = ticket.getPayload();
   const email = payload.email;

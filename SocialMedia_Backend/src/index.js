@@ -6,7 +6,7 @@ import connection from "./db/connection.js";
 import { User } from "./models/user.models.js";
 import { initIO } from "./socket/socketManager.js";
 
-const port = process.env.PORT || 8001;
+const port = process.env.PORT;
 
 function parseCookies(cookieHeader) {
   const cookies = {};
