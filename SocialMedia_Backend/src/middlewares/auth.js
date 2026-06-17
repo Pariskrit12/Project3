@@ -25,4 +25,11 @@ const verifyJwt = asyncHandler(async (req, res, next) => {
   }
 });
 
-export { verifyJwt };
+const isAdmin = asyncHandler(async (req, res, next) => {
+  if (!req.user || req.user.role !== "admin") {
+    throw new ApiError(403, "Admin access required");
+  }
+  next();
+});
+
+export { verifyJwt, isAdmin };

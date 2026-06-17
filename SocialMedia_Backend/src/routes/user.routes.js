@@ -23,7 +23,7 @@ import {
   getSuggestedUsers,
   googleLogin,
 } from "../controllers/users.controller.js";
-import { verifyJwt } from "../middlewares/auth.js";
+import { verifyJwt, isAdmin } from "../middlewares/auth.js";
 
 const router = Router();
 
@@ -38,7 +38,7 @@ router
 router.route("/changeUsername").put(verifyJwt, changeUsername);
 router.route("/getCurrentUser").get(verifyJwt, getCurrentUser);
 router.route("/getProfile/:id").get(verifyJwt, getUserProfileById);
-router.route("/getAllUsers").get(verifyJwt, getAllUsers);
+router.route("/getAllUsers").get(verifyJwt, isAdmin, getAllUsers);
 router.route("/followUser/:id").post(verifyJwt, followUser);
 router.route("/unfollowUser/:id").post(verifyJwt, unfollowUser);
 router.route("/changePassword").put(verifyJwt, changePassword);
