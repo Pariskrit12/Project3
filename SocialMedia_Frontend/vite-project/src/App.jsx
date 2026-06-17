@@ -38,7 +38,7 @@ const ProtectedRoute = ({ children, isAuthenticated, isLoading }) => {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <Icon icon="svg-spinners:ring-resize" width="40" height="40" className="text-[#E11D48]" />
+        <Icon icon="svg-spinners:ring-resize" width="40" height="40" className="text-[#FF4500]" />
       </div>
     );
   }

@@ -158,19 +158,19 @@ const AccountInformation = () => {
         <div className="flex items-center gap-3 mb-5">
           <button
             onClick={() => navigate("/settings")}
-            className="p-2 rounded-xl hover:bg-[#FFE4E6] transition-colors text-[#1C0714] border border-[#FECDD3] bg-[#FFF5F6]"
+            className="p-2 rounded-xl hover:bg-[#E5E6EA] transition-colors text-[#1C1C1C] border border-[#EDEFF1] bg-[#FFFFFF]"
           >
             <Icon icon="tabler:arrow-left" width="22" height="22" />
           </button>
           <div>
-            <h1 className="text-2xl font-black text-[#1C0714]">Account Info</h1>
-            <p className="text-sm text-[#BE7090]">Click a field to edit</p>
+            <h1 className="text-2xl font-black text-[#1C1C1C]">Account Info</h1>
+            <p className="text-sm text-[#878A8C]">Click a field to edit</p>
           </div>
         </div>
         {/* Profile pic */}
         <div className="flex flex-col items-center gap-2 mb-5">
           <div className="relative group cursor-pointer" onClick={() => fileInputRef.current?.click()}>
-            <div className="h-20 w-20 rounded-full overflow-hidden border-4 border-[#FECDD3] shadow-md">
+            <div className="h-20 w-20 rounded-full overflow-hidden border-4 border-[#EDEFF1] shadow-md">
               {picPreview || user?.userProfilePic ? (
                 <img
                   src={picPreview ?? user.userProfilePic}
@@ -178,7 +178,7 @@ const AccountInformation = () => {
                   className="h-full w-full object-cover"
                 />
               ) : (
-                <div className="h-full w-full bg-linear-to-br from-[#FB7185] to-[#BE123C] flex items-center justify-center">
+                <div className="h-full w-full bg-linear-to-br from-[#FF6534] to-[#CC3600] flex items-center justify-center">
                   <Icon icon="mdi:account" width="36" height="36" className="text-white" />
                 </div>
               )}
@@ -204,7 +204,7 @@ const AccountInformation = () => {
               />
               <button
                 onClick={() => { setPicFile(null); setPicPreview(null); setPicMessage(null); }}
-                className="text-xs text-[#BE7090] hover:text-[#BE123C] transition-colors"
+                className="text-xs text-[#878A8C] hover:text-[#CC3600] transition-colors"
               >
                 Cancel
               </button>
@@ -248,7 +248,7 @@ const AccountInformation = () => {
 
       <section className="flex items-center justify-center px-5">
         {activeField === "deactivate" ? (
-          <div className="flex flex-col items-center w-90 gap-5 p-8 bg-[#FFF5F6] border border-red-200 rounded-2xl shadow-[0_4px_24px_rgba(239,68,68,0.1)]">
+          <div className="flex flex-col items-center w-90 gap-5 p-8 bg-[#FFFFFF] border border-red-200 rounded-2xl shadow-[0_4px_24px_rgba(239,68,68,0.1)]">
             <div className="bg-red-100 rounded-2xl p-4">
               <Icon icon="mdi:alert-circle" width="32" height="32" className="text-red-500" />
             </div>
@@ -258,20 +258,20 @@ const AccountInformation = () => {
                 {user?.userProfilePic ? (
                   <img src={user.userProfilePic} alt="profile" className="h-full w-full object-cover" />
                 ) : (
-                  <div className="h-full w-full bg-linear-to-br from-[#FB7185] to-[#BE123C] flex items-center justify-center">
+                  <div className="h-full w-full bg-linear-to-br from-[#FF6534] to-[#CC3600] flex items-center justify-center">
                     <Icon icon="mdi:account" width="24" height="24" className="text-white" />
                   </div>
                 )}
               </div>
               <div>
-                <p className="font-bold text-sm text-[#1C0714]">{user?.name}</p>
-                <p className="text-xs text-[#BE7090]">{user?.email}</p>
+                <p className="font-bold text-sm text-[#1C1C1C]">{user?.name}</p>
+                <p className="text-xs text-[#878A8C]">{user?.email}</p>
               </div>
             </div>
 
             <div className="text-center">
-              <h2 className="font-black text-lg text-[#1C0714] mb-1">Deactivate Account?</h2>
-              <p className="text-sm text-[#BE7090] leading-relaxed">
+              <h2 className="font-black text-lg text-[#1C1C1C] mb-1">Deactivate Account?</h2>
+              <p className="text-sm text-[#878A8C] leading-relaxed">
                 Your profile and posts will be hidden. You can reactivate anytime by logging back in.
               </p>
             </div>
@@ -295,18 +295,18 @@ const AccountInformation = () => {
               </button>
               <button
                 onClick={() => { setActiveField(null); setDeactivateMessage(null); }}
-                className="w-full py-2.5 rounded-full border border-[#FECDD3] text-[#9F1239] font-bold text-sm hover:bg-[#FFE4E6] transition-all duration-200 cursor-pointer"
+                className="w-full py-2.5 rounded-full border border-[#EDEFF1] text-[#A83200] font-bold text-sm hover:bg-[#E5E6EA] transition-all duration-200 cursor-pointer"
               >
                 Cancel
               </button>
             </div>
           </div>
         ) : activeEntry ? (
-          <div className="flex flex-col items-center w-90 gap-5 p-8 bg-[#FFF5F6] border border-[#FECDD3] rounded-2xl shadow-[0_4px_24px_rgba(225,29,72,0.1)]">
-            <div className="bg-linear-to-br from-[#E11D48] to-[#FB7185] rounded-2xl p-4 shadow-[0_4px_16px_rgba(225,29,72,0.3)]">
+          <div className="flex flex-col items-center w-90 gap-5 p-8 bg-[#FFFFFF] border border-[#EDEFF1] rounded-2xl shadow-[0_4px_24px_rgba(255,69,0,0.1)]">
+            <div className="bg-[#FF4500] rounded-2xl p-4 shadow-[0_4px_16px_rgba(255,69,0,0.3)]">
               <Icon icon="mdi:user-edit" width="32" height="32" className="text-white" />
             </div>
-            <h2 className="font-black text-lg text-[#1C0714]">
+            <h2 className="font-black text-lg text-[#1C1C1C]">
               Update {activeEntry.name}
             </h2>
 
@@ -356,14 +356,14 @@ const AccountInformation = () => {
           </div>
         ) : (
           <div className="flex flex-col items-center gap-4 text-center p-8">
-            <div className="bg-[#FFE4E6] rounded-full p-6 shadow-inner">
-              <Icon icon="mdi:user" width="44" height="44" className="text-[#FDA4AF]" />
+            <div className="bg-[#E5E6EA] rounded-full p-6 shadow-inner">
+              <Icon icon="mdi:user" width="44" height="44" className="text-[#878A8C]" />
             </div>
             <div>
-              <p className="text-lg font-bold text-[#1C0714]">
+              <p className="text-lg font-bold text-[#1C1C1C]">
                 Select a field to update
               </p>
-              <p className="text-sm text-[#BE7090] mt-1">
+              <p className="text-sm text-[#878A8C] mt-1">
                 Choose an option from the left to edit
               </p>
             </div>

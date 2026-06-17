@@ -13,30 +13,30 @@ const Top = () => {
   return (
     <main className="flex flex-col gap-5">
       <div className="flex items-center gap-3">
-        <div className="bg-linear-to-br from-[#BE123C] to-[#E11D48] p-2.5 rounded-xl shadow-[0_3px_12px_rgba(225,29,72,0.3)]">
+        <div className="bg-[#FF4500] p-2.5 rounded-xl shadow-[0_3px_12px_rgba(255,69,0,0.3)]">
           <Icon icon="mdi:arrow-up-bold-circle" width="20" height="20" className="text-white" />
         </div>
         <div>
-          <h1 className="font-black text-2xl text-[#1C0714]">Top Posts</h1>
-          <p className="text-sm text-[#BE7090]">Most liked across the community</p>
+          <h1 className="font-black text-2xl text-[#1C1C1C]">Top Posts</h1>
+          <p className="text-sm text-[#878A8C]">Most liked across the community</p>
         </div>
       </div>
 
       {isLoading && (
         <div className="flex justify-center py-20">
-          <Icon icon="svg-spinners:ring-resize" width="36" height="36" className="text-[#E11D48]" />
+          <Icon icon="svg-spinners:ring-resize" width="36" height="36" className="text-[#FF4500]" />
         </div>
       )}
 
       {isError && (
-        <div className="flex flex-col items-center gap-2 py-20 text-[#FDA4AF]">
+        <div className="flex flex-col items-center gap-2 py-20 text-[#878A8C]">
           <Icon icon="material-symbols:error-outline" width="32" height="32" />
           <p className="text-sm font-medium">Failed to load top posts</p>
         </div>
       )}
 
       {!isLoading && !isError && posts.length === 0 && (
-        <div className="flex flex-col items-center gap-2 py-20 text-[#FDA4AF]">
+        <div className="flex flex-col items-center gap-2 py-20 text-[#878A8C]">
           <Icon icon="mdi:arrow-up-bold-circle" width="32" height="32" />
           <p className="text-sm font-medium">No top posts yet</p>
         </div>

@@ -15,14 +15,14 @@ html {
 }
 
 body {
-  background-color: #FFF1F2;
+  background-color: #DAE0E6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #D4B89A #FFF1F2;
+  scrollbar-color: #878A8C #DAE0E6;
 }
 
 *::-webkit-scrollbar {
@@ -31,10 +31,10 @@ body {
 }
 
 *::-webkit-scrollbar-track {
-  background: #FFF1F2;
+  background: #DAE0E6;
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: #D4B89A;
+  background-color: #878A8C;
   border-radius: 99px;
 }

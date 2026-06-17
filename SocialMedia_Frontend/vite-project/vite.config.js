@@ -6,14 +6,14 @@ export default defineConfig({
   plugins: [tailwindcss(), react()],
   server: {
     proxy: {
-      "/users": "http://localhost:8000",
-      "/post/": "http://localhost:8000",
-      "/comment": "http://localhost:8000",
-      "/community": "http://localhost:8000",
-      "/notification/": "http://localhost:8000",
-      "/chat": "http://localhost:8000",
+      "/users": "http://localhost:9000",
+      "/post/": "http://localhost:9000",
+      "/comment": "http://localhost:9000",
+      "/community": "http://localhost:9000",
+      "/notification/": "http://localhost:9000",
+      "/chat": "http://localhost:9000",
       "/socket.io": {
-        target: "http://localhost:8000",
+        target: "http://localhost:9000",
         ws: true,
         changeOrigin: true,
       },

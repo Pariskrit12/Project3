@@ -19,18 +19,18 @@ const Home = () => {
               icon="svg-spinners:ring-resize"
               width="36"
               height="36"
-              className="text-[#E11D48]"
+              className="text-[#FF4500]"
             />
           </div>
         )}
         {isError && (
-          <div className="flex flex-col items-center gap-2 py-10 text-[#FDA4AF]">
+          <div className="flex flex-col items-center gap-2 py-10 text-[#878A8C]">
             <Icon icon="material-symbols:error-outline" width="32" height="32" />
             <p className="text-sm font-medium">Failed to load posts</p>
           </div>
         )}
         {!isLoading && !isError && posts.length === 0 && (
-          <div className="flex flex-col items-center gap-2 py-10 text-[#FDA4AF]">
+          <div className="flex flex-col items-center gap-2 py-10 text-[#878A8C]">
             <Icon icon="mdi:post-outline" width="32" height="32" />
             <p className="text-sm font-medium">No posts yet</p>
           </div>

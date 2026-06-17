@@ -8,7 +8,7 @@ const Dropdown = ({ icon, value, options = [], onSelect }) => {
     <div className="relative inline-block max-w-fit">
       <div
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 border border-[#E11D48]/30 px-4 py-2 rounded-full cursor-pointer bg-linear-to-r from-[#E11D48] to-[#FB7185] text-white shadow-[0_2px_8px_rgba(225,29,72,0.25)] hover:shadow-[0_3px_12px_rgba(225,29,72,0.35)] transition-all duration-200 select-none"
+        className="flex items-center gap-2 border border-[#FF4500]/30 px-4 py-2 rounded-full cursor-pointer bg-[#FF4500] text-white shadow-[0_2px_8px_rgba(255,69,0,0.25)] hover:shadow-[0_3px_12px_rgba(255,69,0,0.35)] transition-all duration-200 select-none"
       >
         <span className="text-sm font-semibold">{value}</span>
         {icon && (
@@ -21,7 +21,7 @@ const Dropdown = ({ icon, value, options = [], onSelect }) => {
       </div>
 
       {isOpen && (
-        <div className="absolute mt-2 w-full min-w-28 bg-[#FFF5F6] border border-[#FECDD3] rounded-xl shadow-[0_8px_24px_rgba(225,29,72,0.15)] z-20 overflow-hidden">
+        <div className="absolute mt-2 w-full min-w-28 bg-[#FFFFFF] border border-[#EDEFF1] rounded-xl shadow-[0_8px_24px_rgba(255,69,0,0.15)] z-20 overflow-hidden">
           {options.map((option, i) => (
             <div
               key={i}
@@ -31,8 +31,8 @@ const Dropdown = ({ icon, value, options = [], onSelect }) => {
               }}
               className={`px-4 py-2.5 text-sm cursor-pointer transition-colors duration-150 font-medium ${
                 value === option
-                  ? "bg-[#FFE4E6] text-[#BE123C]"
-                  : "text-[#1C0714] hover:bg-[#FFE4E6] hover:text-[#BE123C]"
+                  ? "bg-[#E5E6EA] text-[#CC3600]"
+                  : "text-[#1C1C1C] hover:bg-[#E5E6EA] hover:text-[#CC3600]"
               }`}
             >
               {option}

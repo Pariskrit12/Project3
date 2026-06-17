@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const IconLink = ({ pageLink, icon }) => {
   return (
     <Link to={pageLink}>
-      <Icon className="text-[#E11D48]" icon={icon} width="24" height="24" />
+      <Icon className="text-[#FF4500]" icon={icon} width="24" height="24" />
     </Link>
   );
 };

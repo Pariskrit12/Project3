@@ -51,20 +51,20 @@ const ChangePassword = () => {
       <div className="flex items-center gap-3 mb-6">
         <button
           onClick={() => navigate("/settings")}
-          className="p-2 rounded-xl hover:bg-[#FFE4E6] transition-colors text-[#1C0714] border border-[#FECDD3] bg-[#FFF5F6]"
+          className="p-2 rounded-xl hover:bg-[#E5E6EA] transition-colors text-[#1C1C1C] border border-[#EDEFF1] bg-[#FFFFFF]"
         >
           <Icon icon="tabler:arrow-left" width="22" height="22" />
         </button>
         <div>
-          <h1 className="text-2xl font-black text-[#1C0714]">Change Password</h1>
-          <p className="text-sm text-[#BE7090]">Keep your account secure</p>
+          <h1 className="text-2xl font-black text-[#1C1C1C]">Change Password</h1>
+          <p className="text-sm text-[#878A8C]">Keep your account secure</p>
         </div>
       </div>
 
-      <div className="bg-[#FFF5F6] border border-[#FECDD3] rounded-2xl p-6 shadow-[0_4px_20px_rgba(225,29,72,0.08)]">
+      <div className="bg-[#FFFFFF] border border-[#EDEFF1] rounded-2xl p-6 shadow-[0_4px_20px_rgba(255,69,0,0.08)]">
         <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-bold text-[#9F1239]">Current Password</label>
+            <label className="text-sm font-bold text-[#A83200]">Current Password</label>
             <Input
               type="password"
               placeholder="Enter current password"
@@ -72,14 +72,14 @@ const ChangePassword = () => {
               value={form.oldPassword}
               onChange={handleChange("oldPassword")}
             />
-            <p className="text-[#BE123C] text-xs font-semibold px-1 cursor-pointer hover:text-[#9F1239] transition-colors">
+            <p className="text-[#CC3600] text-xs font-semibold px-1 cursor-pointer hover:text-[#A83200] transition-colors">
               Forgot password?
             </p>
           </div>
 
           <div className="flex flex-col gap-3">
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-bold text-[#9F1239]">New Password</label>
+              <label className="text-sm font-bold text-[#A83200]">New Password</label>
               <Input
                 type="password"
                 placeholder="Enter new password"
@@ -89,7 +89,7 @@ const ChangePassword = () => {
               />
             </div>
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-bold text-[#9F1239]">Confirm Password</label>
+              <label className="text-sm font-bold text-[#A83200]">Confirm Password</label>
               <Input
                 type="password"
                 placeholder="Confirm new password"

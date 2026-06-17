@@ -46,17 +46,17 @@ const Communites = () => {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[50vh]">
-        <Icon icon="svg-spinners:ring-resize" width="40" height="40" className="text-[#E11D48]" />
+        <Icon icon="svg-spinners:ring-resize" width="40" height="40" className="text-[#FF4500]" />
       </div>
     );
   }
 
   if (isError || !community) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[50vh] gap-3 text-[#BE7090]">
+      <div className="flex flex-col items-center justify-center min-h-[50vh] gap-3 text-[#878A8C]">
         <Icon icon="material-symbols:error-outline" width="40" height="40" />
         <p className="font-semibold">Community not found</p>
-        <button onClick={() => navigate(-1)} className="text-sm text-[#E11D48] hover:underline">
+        <button onClick={() => navigate(-1)} className="text-sm text-[#FF4500] hover:underline">
           Go back
         </button>
       </div>
@@ -67,16 +67,16 @@ const Communites = () => {
     <main>
 
       <div className="relative mb-14">
-        <div className="relative h-48 rounded-2xl overflow-hidden shadow-[0_4px_20px_rgba(225,29,72,0.15)]">
+        <div className="relative h-48 rounded-2xl overflow-hidden shadow-[0_4px_20px_rgba(255,69,0,0.15)]">
           <img
             className="w-full h-full object-cover"
             src={community.communityBanner || "./Banner1.jpg"}
             alt="banner"
           />
-          <div className="absolute inset-0 bg-linear-to-t from-[#1C0714]/50 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-[#1C1C1C]/50 to-transparent" />
         </div>
         {/* Profile pic sits on the border — half inside banner, half outside */}
-        <div className="absolute left-6 bottom-0 translate-y-1/2 h-[88px] w-[88px] rounded-full border-4 border-[#FFF1F2] shadow-[0_4px_20px_rgba(225,29,72,0.25)] overflow-hidden bg-[#FFE4E6]">
+        <div className="absolute left-6 bottom-0 translate-y-1/2 h-[88px] w-[88px] rounded-full border-4 border-[#DAE0E6] shadow-[0_4px_20px_rgba(255,69,0,0.25)] overflow-hidden bg-[#E5E6EA]">
           <img
             className="w-full h-full object-cover"
             src={community.communityProfilePicture || "./Sharbani.png"}
@@ -88,8 +88,8 @@ const Communites = () => {
       {/* Community info + action buttons */}
       <div className="flex justify-between items-start mb-5 ml-1">
         <div className="pl-[112px]">
-          <h1 className="text-2xl font-black text-[#1C0714]">{community.communityName}</h1>
-          <p className="text-sm text-[#BE7090] flex items-center gap-1 mt-0.5">
+          <h1 className="text-2xl font-black text-[#1C1C1C]">{community.communityName}</h1>
+          <p className="text-sm text-[#878A8C] flex items-center gap-1 mt-0.5">
             <Icon icon="mdi:account-group" width="14" height="14" />
             {community.members?.length ?? 0} members
           </p>
@@ -101,12 +101,12 @@ const Communites = () => {
             <>
               <button
                 onClick={() => navigate(`/create-post?communityId=${communityId}`)}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold bg-[#E11D48] text-white hover:bg-[#BE123C] transition-colors shadow-[0_3px_12px_rgba(225,29,72,0.3)]"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold bg-[#FF4500] text-white hover:bg-[#CC3600] transition-colors shadow-[0_3px_12px_rgba(255,69,0,0.3)]"
               >
                 <Icon icon="ic:round-plus" width="16" height="16" />
                 Create Post
               </button>
-              <button className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold border border-[#FECDD3] bg-[#FFF5F6] text-[#9F1239] hover:bg-[#FFE4E6] transition-colors">
+              <button className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold border border-[#EDEFF1] bg-[#FFFFFF] text-[#A83200] hover:bg-[#E5E6EA] transition-colors">
                 <Icon icon="material-symbols:edit-outline" width="16" height="16" />
                 Edit
               </button>
@@ -118,7 +118,7 @@ const Communites = () => {
             <>
               <button
                 onClick={() => navigate(`/create-post?communityId=${communityId}`)}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold bg-[#E11D48] text-white hover:bg-[#BE123C] transition-colors shadow-[0_3px_12px_rgba(225,29,72,0.3)]"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold bg-[#FF4500] text-white hover:bg-[#CC3600] transition-colors shadow-[0_3px_12px_rgba(255,69,0,0.3)]"
               >
                 <Icon icon="ic:round-plus" width="16" height="16" />
                 Create Post
@@ -126,7 +126,7 @@ const Communites = () => {
               <button
                 onClick={() => toggleJoin(communityId)}
                 disabled={joining}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold border border-[#FECDD3] bg-[#FFF5F6] text-[#9F1239] hover:bg-[#FFE4E6] transition-colors"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold border border-[#EDEFF1] bg-[#FFFFFF] text-[#A83200] hover:bg-[#E5E6EA] transition-colors"
               >
                 {joining ? (
                   <Icon icon="svg-spinners:ring-resize" width="14" height="14" />
@@ -143,7 +143,7 @@ const Communites = () => {
             <button
               onClick={() => toggleJoin(communityId)}
               disabled={joining}
-              className="flex items-center gap-1.5 px-5 py-2 rounded-full text-sm font-semibold bg-[#E11D48] text-white hover:bg-[#BE123C] transition-colors shadow-[0_3px_12px_rgba(225,29,72,0.3)]"
+              className="flex items-center gap-1.5 px-5 py-2 rounded-full text-sm font-semibold bg-[#FF4500] text-white hover:bg-[#CC3600] transition-colors shadow-[0_3px_12px_rgba(255,69,0,0.3)]"
             >
               {joining ? (
                 <Icon icon="svg-spinners:ring-resize" width="14" height="14" />
@@ -154,8 +154,8 @@ const Communites = () => {
             </button>
           )}
 
-          <button className="p-2 rounded-xl hover:bg-[#FFE4E6] transition-colors border border-[#FECDD3] bg-[#FFF5F6]">
-            <Icon className="text-[#E11D48]" icon="pepicons-pop:dots-x" width="18" height="18" />
+          <button className="p-2 rounded-xl hover:bg-[#E5E6EA] transition-colors border border-[#EDEFF1] bg-[#FFFFFF]">
+            <Icon className="text-[#FF4500]" icon="pepicons-pop:dots-x" width="18" height="18" />
           </button>
         </div>
       </div>
@@ -165,15 +165,15 @@ const Communites = () => {
         {/* Posts column */}
         <div className="flex flex-col gap-4">
           {/* Filter tabs */}
-          <div className="flex items-center gap-2 border border-[#FECDD3] bg-[#FFF5F6] rounded-xl px-3 py-2">
+          <div className="flex items-center gap-2 border border-[#EDEFF1] bg-[#FFFFFF] rounded-xl px-3 py-2">
             {FILTERS.map((f) => (
               <button
                 key={f}
                 onClick={() => setFilter(f)}
                 className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-200 ${
                   filter === f
-                    ? "bg-[#E11D48] text-white shadow-[0_2px_8px_rgba(225,29,72,0.3)]"
-                    : "text-[#BE7090] hover:bg-[#FFE4E6] hover:text-[#BE123C]"
+                    ? "bg-[#FF4500] text-white shadow-[0_2px_8px_rgba(255,69,0,0.3)]"
+                    : "text-[#878A8C] hover:bg-[#E5E6EA] hover:text-[#CC3600]"
                 }`}
               >
                 {f === "New" && <Icon icon="mdi:clock-outline" width="14" height="14" />}
@@ -187,16 +187,16 @@ const Communites = () => {
           {/* Posts list */}
           {postsLoading ? (
             <div className="flex justify-center py-12">
-              <Icon icon="svg-spinners:ring-resize" width="32" height="32" className="text-[#E11D48]" />
+              <Icon icon="svg-spinners:ring-resize" width="32" height="32" className="text-[#FF4500]" />
             </div>
           ) : posts.length === 0 ? (
-            <div className="flex flex-col items-center justify-center gap-3 py-16 text-[#FDA4AF] border border-[#FECDD3] rounded-2xl bg-[#FFF5F6]">
+            <div className="flex flex-col items-center justify-center gap-3 py-16 text-[#878A8C] border border-[#EDEFF1] rounded-2xl bg-[#FFFFFF]">
               <Icon icon="mdi:post-outline" width="36" height="36" />
               <p className="text-sm font-medium">No posts yet in this community</p>
               {(isCreator || isMember) && (
                 <button
                   onClick={() => navigate("/create-post")}
-                  className="mt-1 px-4 py-1.5 rounded-full text-sm font-semibold bg-[#E11D48] text-white hover:bg-[#BE123C] transition-colors"
+                  className="mt-1 px-4 py-1.5 rounded-full text-sm font-semibold bg-[#FF4500] text-white hover:bg-[#CC3600] transition-colors"
                 >
                   Be the first to post
                 </button>
@@ -225,13 +225,13 @@ const Communites = () => {
         </div>
 
         {/* Sidebar */}
-        <div className="border border-[#FECDD3] bg-[#FFF5F6] rounded-2xl max-h-fit sticky top-20 overflow-hidden shadow-[0_4px_20px_rgba(225,29,72,0.08)]">
-          <div className="p-4 border-b border-[#FECDD3]">
-            <p className="font-black text-[#1C0714]">About Community</p>
-            <p className="text-sm text-[#9F1239] mt-2.5 leading-relaxed">
+        <div className="border border-[#EDEFF1] bg-[#FFFFFF] rounded-2xl max-h-fit sticky top-20 overflow-hidden shadow-[0_4px_20px_rgba(255,69,0,0.08)]">
+          <div className="p-4 border-b border-[#EDEFF1]">
+            <p className="font-black text-[#1C1C1C]">About Community</p>
+            <p className="text-sm text-[#A83200] mt-2.5 leading-relaxed">
               {community.communityDescription}
             </p>
-            <p className="text-xs text-[#FDA4AF] mt-2 flex items-center gap-1">
+            <p className="text-xs text-[#878A8C] mt-2 flex items-center gap-1">
               <Icon icon="mdi:calendar" width="12" height="12" />
               Created{" "}
               {new Date(community.createdAt).toLocaleDateString("en-US", {
@@ -242,35 +242,35 @@ const Communites = () => {
             </p>
             <div className="flex gap-4 mt-3">
               <div>
-                <p className="font-black text-xl text-[#1C0714]">{community.members?.length ?? 0}</p>
-                <p className="text-xs text-[#BE7090]">Members</p>
+                <p className="font-black text-xl text-[#1C1C1C]">{community.members?.length ?? 0}</p>
+                <p className="text-xs text-[#878A8C]">Members</p>
               </div>
               <div>
-                <p className="font-black text-xl text-[#1C0714]">{posts.length}</p>
-                <p className="text-xs text-[#BE7090]">Posts</p>
+                <p className="font-black text-xl text-[#1C1C1C]">{posts.length}</p>
+                <p className="text-xs text-[#878A8C]">Posts</p>
               </div>
             </div>
           </div>
 
           <div className="p-4">
-            <p className="font-black text-sm text-[#1C0714] uppercase tracking-wide mb-2 flex items-center gap-2">
-              <Icon icon="mdi:shield-crown" width="16" height="16" className="text-[#E11D48]" />
+            <p className="font-black text-sm text-[#1C1C1C] uppercase tracking-wide mb-2 flex items-center gap-2">
+              <Icon icon="mdi:shield-crown" width="16" height="16" className="text-[#FF4500]" />
               Created by
             </p>
             <div
-              className="flex items-center gap-2 cursor-pointer hover:text-[#E11D48] transition-colors"
+              className="flex items-center gap-2 cursor-pointer hover:text-[#FF4500] transition-colors"
               onClick={() => navigate(`/userProfile/${community.creator?._id}`)}
             >
-              <div className="h-7 w-7 rounded-full overflow-hidden bg-[#FFE4E6] shrink-0">
+              <div className="h-7 w-7 rounded-full overflow-hidden bg-[#E5E6EA] shrink-0">
                 {community.creator?.userProfilePic ? (
                   <img className="w-full h-full object-cover" src={community.creator.userProfilePic} alt="" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
-                    <Icon icon="mdi:account" width="16" height="16" className="text-[#E11D48]" />
+                    <Icon icon="mdi:account" width="16" height="16" className="text-[#FF4500]" />
                   </div>
                 )}
               </div>
-              <p className="text-sm text-[#9F1239] font-medium">{community.creator?.username ?? "Unknown"}</p>
+              <p className="text-sm text-[#A83200] font-medium">{community.creator?.username ?? "Unknown"}</p>
             </div>
           </div>
         </div>

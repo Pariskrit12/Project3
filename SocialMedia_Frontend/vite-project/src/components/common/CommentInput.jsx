@@ -37,14 +37,14 @@ const CommentInput = ({ postId, currentUser, placeholder }) => {
 
   return (
     <div
-      className={`border bg-[#FFF5F6] rounded-2xl p-4 flex flex-col gap-3 transition-all duration-300 ${
+      className={`border bg-[#FFFFFF] rounded-2xl p-4 flex flex-col gap-3 transition-all duration-300 ${
         open
-          ? "border-[#E11D48] shadow-[0_0_0_3px_rgba(225,29,72,0.1)]"
-          : "border-[#FECDD3] hover:border-[#FDA4AF]"
+          ? "border-[#FF4500] shadow-[0_0_0_3px_rgba(255,69,0,0.1)]"
+          : "border-[#EDEFF1] hover:border-[#878A8C]"
       }`}
     >
       <div className="flex items-start gap-3">
-        <div className="shrink-0 w-8 h-8 rounded-full overflow-hidden bg-linear-to-br from-[#FB7185] to-[#BE123C] flex items-center justify-center border border-[#FECDD3]">
+        <div className="shrink-0 w-8 h-8 rounded-full overflow-hidden bg-linear-to-br from-[#FF6534] to-[#CC3600] flex items-center justify-center border border-[#EDEFF1]">
           {currentUser?.userProfilePic ? (
             <img
               src={currentUser.userProfilePic}
@@ -57,7 +57,7 @@ const CommentInput = ({ postId, currentUser, placeholder }) => {
         </div>
         <textarea
           onFocus={() => setOpen(true)}
-          className={`w-full text-sm outline-none bg-transparent text-[#1C0714] placeholder:text-[#FDA4AF] resize-none transition-all duration-300 ${
+          className={`w-full text-sm outline-none bg-transparent text-[#1C1C1C] placeholder:text-[#878A8C] resize-none transition-all duration-300 ${
             open ? "min-h-20" : "min-h-5"
           }`}
           placeholder={placeholder || "Write a comment..."}
@@ -70,12 +70,12 @@ const CommentInput = ({ postId, currentUser, placeholder }) => {
       {open && (
         <div className="flex justify-between items-center pl-11">
           <div className="flex items-center gap-2">
-            <button className="p-1.5 rounded-lg hover:bg-[#FFE4E6] transition-colors">
+            <button className="p-1.5 rounded-lg hover:bg-[#E5E6EA] transition-colors">
               <Icon
                 icon="material-symbols:image"
                 width="18"
                 height="18"
-                className="text-[#E11D48]"
+                className="text-[#FF4500]"
               />
             </button>
           </div>

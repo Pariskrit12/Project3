@@ -19,15 +19,15 @@ const NavigationLink = ({ icon, label, onClick, isActive, path }) => {
       onClick={handleClick}
       className={`w-full flex gap-3 items-center py-2.5 px-3 rounded-xl transition-all duration-200 font-medium relative ${
         isActive
-          ? "bg-linear-to-r from-[#E11D48] to-[#FB7185] text-white shadow-[0_3px_12px_rgba(225,29,72,0.3)]"
-          : "text-[#1C0714] hover:bg-[#FFE4E6] hover:text-[#BE123C]"
+          ? "bg-[#FF4500] text-white shadow-[0_3px_12px_rgba(255,69,0,0.3)]"
+          : "text-[#1C1C1C] hover:bg-[#E5E6EA] hover:text-[#CC3600]"
       }`}
     >
       <Icon
         icon={icon}
         width="19"
         height="19"
-        className={isActive ? "text-white" : "text-[#E11D48]"}
+        className={isActive ? "text-white" : "text-[#FF4500]"}
       />
       <span className="text-sm">{label}</span>
       {isActive && (
