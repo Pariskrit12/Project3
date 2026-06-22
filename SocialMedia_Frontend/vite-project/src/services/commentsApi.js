@@ -104,6 +104,31 @@ export const commentsApi = createApi({
         { type: "Comment", id: postId },
       ],
     }),
+    reportComment: builder.mutation({
+      query: ({ postId, commentId, reason }) => ({
+        url: "/${postId}/${commentId}/report",
+        method: "POST",
+        body: { reason },
+      }),
+    }),
+    getReportedComments: builder.query({
+      query: () => "/admin/reports",
+      providesTags: ["Report"],
+    }),
+    dismissReport: builder.mutation({
+      query: ({ reportId }) => ({
+        url: "/admin/reports/${reportId}/dismiss",
+        method: "PATCH",
+      }),
+      invalidatesTags: ["Report"],
+    }),
+    deleteReportedComment: builder.mutation({
+      query: ({ reportId }) => ({
+        url: "/admin/reports/${reportId}/delete-comment",
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Report"],
+    }),
   }),
 });
 
@@ -114,4 +139,8 @@ export const {
   useDeleteCommentMutation,
   useLikeCommentMutation,
   useDislikeCommentMutation,
+  useReportCommentMutation,
+  useGetReportedCommentsQuery,
+  useDismissReportMutation,
+  useDeleteReportedCommentMutation
 } = commentsApi;
