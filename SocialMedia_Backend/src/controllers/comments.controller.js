@@ -1,4 +1,5 @@
 import { Comment } from "../models/comment.model.js";
+import { CommentReport } from "../models/commentReport.model.js";
 import { sendNotification } from "../utils/sendNotification.js";
 import { Post } from "../models/post.model.js";
 import { User } from "../models/user.models.js";
@@ -309,6 +310,75 @@ const getCommentOfPost = asyncHandler(async (req, res) => {
       ),
     );
 });
+const reportComment = asyncHandler(async (req, res) => {
+  const userId = req.user?._id;
+  const { commentId, postId } = req.params;
+  const { reason } = req.body;
+
+  if (!reason || !reason.trim()) {
+    throw new ApiError(400, "Reason is required for reporting a comment");
+  }
+
+  const comment = await Comment.findById(commentId);
+  if (!comment) throw new ApiError(404, "Comment not found");
+
+  if (comment.creator.toString() === userId.toString()) {
+    throw new ApiError(403, "You cannot report your own comment");
+  }
+
+  const existing = await CommentReport.findOne({ reporter: userId, comment: commentId });
+  if (existing) throw new ApiError(409, "You have already reported this comment");
+
+  await CommentReport.create({
+    reporter: userId,
+    comment: commentId,
+    post: comment.post,
+    reason: reason.trim(),
+  });
+
+  return res.status(201).json(new ApiResponse(201, {}, "Comment reported successfully"));
+});
+
+const getReportedComments = asyncHandler(async (req, res) => {
+  const reports = await CommentReport.find()
+    .populate("reporter", "username userProfilePic")
+    .populate({ path: "comment", populate: { path: "creator", select: "username userProfilePic" } })
+    .populate("post", "postTitle")
+    .sort({ createdAt: -1 })
+    .lean();
+
+  return res.status(200).json(new ApiResponse(200, { reports }, "Reported comments fetched"));
+});
+
+const dismissReport = asyncHandler(async (req, res) => {
+  const { reportId } = req.params;
+  const report = await CommentReport.findByIdAndUpdate(reportId, { status: "dismissed" }, { new: true });
+  if (!report) throw new ApiError(404, "Report not found");
+  return res.status(200).json(new ApiResponse(200, {}, "Report dismissed"));
+});
+
+const deleteReportedComment = asyncHandler(async (req, res) => {
+  const { reportId } = req.params;
+  const report = await CommentReport.findById(reportId);
+  if (!report) throw new ApiError(404, "Report not found");
+
+  const comment = await Comment.findById(report.comment);
+  if (comment) {
+    if (comment.imagePublicId) {
+      try { await cloudinary.uploader.destroy(comment.imagePublicId); } catch (_) {}
+    }
+    await Promise.all([
+      comment.deleteOne(),
+      Post.findByIdAndUpdate(comment.post, { $pull: { comments: comment._id } }),
+      CommentReport.deleteMany({ comment: comment._id }),
+    ]);
+  } else {
+    await report.deleteOne();
+  }
+
+  return res.status(200).json(new ApiResponse(200, {}, "Comment deleted and reports cleared"));
+});
+
 export {
   createComment,
   updateComment,
@@ -316,4 +386,8 @@ export {
   dislikeComment,
   deleteComment,
   getCommentOfPost,
+  reportComment,
+  getReportedComments,
+  dismissReport,
+  deleteReportedComment,
 };
