@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 
 const sidebarLinks = [
   { label: "Users", icon: "mdi:account-group", path: "/admin/users" },
+  { label: "Reports", icon: "mdi:flag-outline", path: "/admin/reports" },
 ];
 
 const AdminLayout = () => {

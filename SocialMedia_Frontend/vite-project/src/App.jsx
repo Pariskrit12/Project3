@@ -23,6 +23,7 @@ import CommunityCreate from "./pages/CommunityCreate";
 import SearchResults from "./pages/SearchResults";
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminUsers from "./pages/admin/AdminUsers";
+import AdminReportedComments from "./pages/admin/AdminReportedComments";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetCurrentUserQuery } from "./services/userApi";
 import { setUser } from "./slices/authSlice";
@@ -114,6 +115,7 @@ const App = () => {
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<Navigate to="/admin/users" replace />} />
             <Route path="users" element={<AdminUsers />} />
+            <Route path="reports" element={<AdminReportedComments />} />
           </Route>
         </Routes>
       </AdminRoute>
