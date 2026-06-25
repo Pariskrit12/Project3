@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Cards from "../components/HomeComponents/Cards";
 import CommentInput from "../components/common/CommentInput";
+import ReportCommentModal from "../components/common/ReportCommentModal";
 import { Icon } from "@iconify/react";
 import { useGetPostQuery } from "../services/postApi";
 import {
@@ -20,6 +21,7 @@ const Postpage = () => {
   const [openDropdownId, setOpenDropdownId] = useState(null);
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editText, setEditText] = useState("");
+  const [reportingCommentId, setReportingCommentId] = useState(null);
 
   const { data: postData, isLoading: postLoading, isError: postError } =
     useGetPostQuery(postId);
@@ -54,6 +56,11 @@ const Postpage = () => {
     setEditingCommentId(null);
   };
 
+  const handleReportOpen = (commentId) => {
+    setOpenDropdownId(null);
+    setReportingCommentId(commentId);
+  };
+
   if (postLoading) {
     return (
       <div className="flex justify-center py-20">
@@ -78,6 +85,14 @@ const Postpage = () => {
 
   return (
     <main className="w-full flex flex-col gap-6">
+      {reportingCommentId && (
+        <ReportCommentModal
+          postId={postId}
+          commentId={reportingCommentId}
+          onClose={() => setReportingCommentId(null)}
+        />
+      )}
+
       {/* Post card — full width */}
       <section>
         <Cards
@@ -143,6 +158,7 @@ const Postpage = () => {
             const isCommentOwner =
               user && c.creator?._id?.toString() === user._id?.toString();
             const canDelete = isCommentOwner || isPostOwner;
+            const canReport = user && !isCommentOwner;
             const isEditing = editingCommentId === c._id;
             const isLiked = c.likes?.some(
               (id) => id.toString() === user?._id?.toString()
@@ -186,7 +202,7 @@ const Postpage = () => {
                       </p>
                     </div>
 
-                    {(isCommentOwner || canDelete) && !c.isOptimistic && (
+                    {(isCommentOwner || canDelete || canReport) && !c.isOptimistic && (
                       <div className="relative z-20">
                         <button
                           onClick={() =>
@@ -222,7 +238,7 @@ const Postpage = () => {
                             {canDelete && (
                               <button
                                 onClick={() => handleDelete(c._id)}
-                                className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                                className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-500 hover:bg-[#2A2A2A] transition-colors"
                               >
                                 <Icon
                                   icon="mdi:trash-can-outline"
@@ -230,6 +246,19 @@ const Postpage = () => {
                                   height="15"
                                 />
                                 Delete
+                              </button>
+                            )}
+                            {canReport && (
+                              <button
+                                onClick={() => handleReportOpen(c._id)}
+                                className="flex items-center gap-2 w-full px-3 py-2 text-sm text-orange-400 hover:bg-[#2A2A2A] transition-colors"
+                              >
+                                <Icon
+                                  icon="mdi:flag-outline"
+                                  width="15"
+                                  height="15"
+                                />
+                                Report
                               </button>
                             )}
                           </div>
@@ -265,7 +294,7 @@ const Postpage = () => {
                       </div>
                     </div>
                   ) : (
-                    <p className="text-sm text-[#3D0A1E] leading-relaxed">
+                    <p className="text-sm text-[#D7DADC] leading-relaxed">
                       {c.description}
                     </p>
                   )}
