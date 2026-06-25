@@ -6,7 +6,7 @@ export const commentsApi = createApi({
     baseUrl: "/comment",
     credentials: "include",
   }),
-  tagTypes: ["Comment"],
+  tagTypes: ["Comment", "Report"],
   endpoints: (builder) => ({
     getComments: builder.query({
       query: (postId) => `/${postId}`,
