@@ -30,9 +30,7 @@ const CommentInput = ({ postId, currentUser, placeholder }) => {
     setOpen(false);
     try {
       await createComment({ postId, formData, optimisticComment });
-    } catch {
-      // error handling — refetch will restore correct state
-    }
+    } catch {    }
   };
 
   return (

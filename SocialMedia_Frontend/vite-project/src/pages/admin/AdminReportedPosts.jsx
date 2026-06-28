@@ -1,20 +1,20 @@
 import React, { useState } from "react";
 import { Icon } from "@iconify/react";
 import {
-  useGetReportedCommentsQuery,
-  useDismissReportMutation,
-  useDeleteReportedCommentMutation,
-} from "../../services/commentsApi";
+  useGetReportedPostsQuery,
+  useDismissPostReportMutation,
+  useDeleteReportedPostMutation,
+} from "../../services/postApi";
 
 const statusBadge = {
   pending: "bg-[#FF4500]/10 text-[#FF6534]",
   dismissed: "bg-[#3A3A3C] text-[#9A9A9A]",
 };
 
-const AdminReportedComments = () => {
-  const { data, isLoading, isError } = useGetReportedCommentsQuery();
-  const [dismissReport, { isLoading: dismissing }] = useDismissReportMutation();
-  const [deleteReportedComment, { isLoading: deleting }] = useDeleteReportedCommentMutation();
+const AdminReportedPosts = () => {
+  const { data, isLoading, isError } = useGetReportedPostsQuery();
+  const [dismissReport, { isLoading: dismissing }] = useDismissPostReportMutation();
+  const [deleteReportedPost, { isLoading: deleting }] = useDeleteReportedPostMutation();
   const [filterStatus, setFilterStatus] = useState("all");
   const [actionId, setActionId] = useState(null);
 
@@ -34,7 +34,7 @@ const AdminReportedComments = () => {
 
   const handleDelete = async (reportId) => {
     setActionId(reportId);
-    try { await deleteReportedComment({ reportId }).unwrap(); } catch (_) {}
+    try { await deleteReportedPost({ reportId }).unwrap(); } catch (_) {}
     setActionId(null);
   };
 
@@ -42,9 +42,9 @@ const AdminReportedComments = () => {
     <div className="p-6 flex flex-col gap-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-black text-[#D7DADC]">Reported Comments</h1>
+          <h1 className="text-2xl font-black text-[#D7DADC]">Reported Posts</h1>
           <p className="text-sm text-[#9A9A9A] mt-0.5">
-            Review and act on flagged comments
+            Review and act on flagged posts
           </p>
         </div>
         {pendingCount > 0 && (
@@ -54,6 +54,7 @@ const AdminReportedComments = () => {
           </div>
         )}
       </div>
+
       <div className="flex gap-3">
         <select
           value={filterStatus}
@@ -65,6 +66,7 @@ const AdminReportedComments = () => {
           <option value="dismissed">Dismissed</option>
         </select>
       </div>
+
       <div className="flex flex-col gap-3">
         {isLoading ? (
           <div className="flex justify-center items-center py-20">
@@ -121,13 +123,14 @@ const AdminReportedComments = () => {
                   </span>
                 </div>
               </div>
+
               <div className="bg-[#111111] border border-[#2A2A2A] rounded-xl p-4 flex flex-col gap-2">
                 <div className="flex items-center gap-2">
                   <div className="h-6 w-6 rounded-full overflow-hidden bg-[#3A3A3C] shrink-0">
-                    {report.comment?.creator?.userProfilePic ? (
+                    {report.post?.creator?.userProfilePic ? (
                       <img
-                        src={report.comment.creator.userProfilePic}
-                        alt={report.comment.creator.username}
+                        src={report.post.creator.userProfilePic}
+                        alt={report.post.creator.username}
                         className="w-full h-full object-cover"
                       />
                     ) : (
@@ -137,27 +140,24 @@ const AdminReportedComments = () => {
                     )}
                   </div>
                   <p className="text-xs font-bold text-[#D7DADC]">
-                    @{report.comment?.creator?.username ?? "deleted user"}
+                    @{report.post?.creator?.username ?? "deleted user"}
                   </p>
-                  {report.post?.postTitle && (
-                    <>
-                      <span className="text-[#3A3A3C]">·</span>
-                      <p className="text-xs text-[#9A9A9A] truncate max-w-48">
-                        on "{report.post.postTitle}"
-                      </p>
-                    </>
-                  )}
                 </div>
-                <p className="text-sm text-[#D7DADC] leading-relaxed">
-                  {report.comment?.description ?? (
-                    <span className="italic text-[#9A9A9A]">Comment deleted</span>
-                  )}
-                </p>
+                {report.post?.postTitle ? (
+                  <p className="text-sm font-semibold text-[#D7DADC]">{report.post.postTitle}</p>
+                ) : (
+                  <p className="text-sm italic text-[#9A9A9A]">Post deleted</p>
+                )}
+                {report.post?.postDescription && (
+                  <p className="text-xs text-[#9A9A9A] line-clamp-2">{report.post.postDescription}</p>
+                )}
               </div>
+
               <div className="flex flex-col gap-1">
                 <p className="text-xs font-bold text-[#A83200] uppercase tracking-wide">Reason</p>
                 <p className="text-sm text-[#9A9A9A] leading-relaxed">{report.reason}</p>
               </div>
+
               {report.status === "pending" && (
                 <div className="flex gap-2 pt-2 border-t border-[#2A2A2A]">
                   <button
@@ -168,14 +168,14 @@ const AdminReportedComments = () => {
                     <Icon icon="mdi:check" width="14" height="14" />
                     {actionId === report._id && dismissing ? "Dismissing…" : "Dismiss"}
                   </button>
-                  {report.comment?.description !== undefined && (
+                  {report.post?.postTitle !== undefined && (
                     <button
                       onClick={() => handleDelete(report._id)}
                       disabled={actionId === report._id}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/10 text-red-400 text-xs font-semibold hover:bg-red-500/20 disabled:opacity-50 transition-colors"
                     >
                       <Icon icon="mdi:trash-can-outline" width="14" height="14" />
-                      {actionId === report._id && deleting ? "Deleting…" : "Delete Comment"}
+                      {actionId === report._id && deleting ? "Deleting…" : "Delete Post"}
                     </button>
                   )}
                 </div>
@@ -194,4 +194,4 @@ const AdminReportedComments = () => {
   );
 };
 
-export default AdminReportedComments;
+export default AdminReportedPosts;

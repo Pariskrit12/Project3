@@ -113,9 +113,7 @@ const CreatePost = () => {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        {/* Community badge — only shown when coming from a community page */}
-        {communityId && (
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">        {communityId && (
           <div className="flex flex-col gap-1.5">
             <label className="text-[10px] font-extrabold text-[#9A9A9A] uppercase tracking-[0.2em] px-1">
               Posting in
@@ -141,8 +139,6 @@ const CreatePost = () => {
             </div>
           </div>
         )}
-
-        {/* Title */}
         <div className="flex flex-col gap-1.5">
           <label className="text-[10px] font-extrabold text-[#9A9A9A] uppercase tracking-[0.2em] px-1">
             Title
@@ -162,8 +158,6 @@ const CreatePost = () => {
             />
           </div>
         </div>
-
-        {/* Description */}
         <div className="flex flex-col gap-1.5">
           <label className="text-[10px] font-extrabold text-[#9A9A9A] uppercase tracking-[0.2em] px-1">
             Description
@@ -184,8 +178,6 @@ const CreatePost = () => {
             />
           </div>
         </div>
-
-        {/* Tags */}
         <div className="flex flex-col gap-1.5">
           <label className="text-[10px] font-extrabold text-[#9A9A9A] uppercase tracking-[0.2em] px-1">
             Tags (optional)
@@ -255,8 +247,6 @@ const CreatePost = () => {
             )}
           </div>
         </div>
-
-        {/* Media Upload */}
         <div className="flex flex-col gap-1.5">
           <label className="text-[10px] font-extrabold text-[#9A9A9A] uppercase tracking-[0.2em] px-1">
             Media (optional)
@@ -329,8 +319,6 @@ const CreatePost = () => {
             {error}
           </div>
         )}
-
-        {/* Actions */}
         <div className="flex gap-3 pt-1">
           <button
             type="button"

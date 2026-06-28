@@ -56,7 +56,6 @@ const CommunityCreate = () => {
 
   return (
     <main className="max-w-2xl mx-auto">
-      {/* Header */}
       <div className="flex items-center gap-3 mb-6">
         <button
           onClick={() => navigate(-1)}
@@ -71,8 +70,6 @@ const CommunityCreate = () => {
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-
-        {/* Banner upload */}
         <div className="flex flex-col gap-1.5">
           <label className="text-[10px] font-extrabold text-[#9A9A9A] uppercase tracking-[0.2em] px-1">
             Banner Image <span className="text-[#FF4500]">*</span>
@@ -98,8 +95,6 @@ const CommunityCreate = () => {
             <input ref={bannerRef} type="file" accept="image/*" onChange={handleBannerChange} className="hidden" />
           </div>
         </div>
-
-        {/* Profile picture upload */}
         <div className="flex flex-col gap-1.5">
           <label className="text-[10px] font-extrabold text-[#9A9A9A] uppercase tracking-[0.2em] px-1">
             Profile Picture <span className="text-[#FF4500]">*</span>
@@ -130,8 +125,6 @@ const CommunityCreate = () => {
             </div>
           </div>
         </div>
-
-        {/* Name */}
         <div className="flex flex-col gap-1.5">
           <label className="text-[10px] font-extrabold text-[#9A9A9A] uppercase tracking-[0.2em] px-1">
             Community Name <span className="text-[#FF4500]">*</span>
@@ -146,8 +139,6 @@ const CommunityCreate = () => {
             />
           </div>
         </div>
-
-        {/* Description */}
         <div className="flex flex-col gap-1.5">
           <label className="text-[10px] font-extrabold text-[#9A9A9A] uppercase tracking-[0.2em] px-1">
             Description <span className="text-[#FF4500]">*</span>
@@ -170,8 +161,6 @@ const CommunityCreate = () => {
             {error}
           </div>
         )}
-
-        {/* Actions */}
         <div className="flex gap-3 pt-1">
           <button
             type="button"

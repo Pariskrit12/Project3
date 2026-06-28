@@ -69,9 +69,7 @@ const Register = () => {
       <div className="absolute top-0 right-1/4 w-64 h-64 bg-[#FF4500]/10 rounded-full blur-3xl pointer-events-none"></div>
       <div className="absolute bottom-10 left-1/4 w-80 h-80 bg-[#CC3600]/10 rounded-full blur-3xl pointer-events-none"></div>
 
-      <form onSubmit={handleSubmit} className="w-96 rounded-3xl p-8 flex flex-col gap-6 items-center bg-[#1E1E1E]/95 backdrop-blur-sm shadow-[0_12px_48px_rgba(255,69,0,0.18)] border border-[#3A3A3C] relative z-10">
-        {/* Header */}
-        <div className="flex flex-col items-center gap-3">
+      <form onSubmit={handleSubmit} className="w-96 rounded-3xl p-8 flex flex-col gap-6 items-center bg-[#1E1E1E]/95 backdrop-blur-sm shadow-[0_12px_48px_rgba(255,69,0,0.18)] border border-[#3A3A3C] relative z-10">        <div className="flex flex-col items-center gap-3">
           <div className="bg-[#FF4500] p-4 rounded-2xl shadow-[0_6px_20px_rgba(255,69,0,0.4)]">
             <Icon icon="mdi:account-plus" width="32" height="32" className="text-white" />
           </div>
@@ -80,8 +78,6 @@ const Register = () => {
             <p className="text-sm text-[#9A9A9A] mt-0.5">Join SocialSphere today</p>
           </div>
         </div>
-
-        {/* Profile Picture Upload */}
         <div className="flex flex-col items-center gap-2">
           <p className="text-xs font-bold text-[#A83200] uppercase tracking-wide self-start w-full">Profile Picture</p>
           <div
@@ -112,8 +108,6 @@ const Register = () => {
             onChange={handleProfilePicChange}
           />
         </div>
-
-        {/* Top Fields */}
         <div className="w-full flex flex-col gap-3">
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-bold text-[#A83200] uppercase tracking-wide">Full Name</label>
@@ -128,8 +122,6 @@ const Register = () => {
             <Input placeholder="your@email.com" type="email" icon="mdi:email-outline" value={form.email} onChange={handleChange("email")} />
           </div>
         </div>
-
-        {/* Gender */}
         <div className="w-full flex flex-col gap-1.5">
           <label className="text-xs font-bold text-[#A83200] uppercase tracking-wide">Gender</label>
           <div className="flex gap-2">
@@ -150,8 +142,6 @@ const Register = () => {
             ))}
           </div>
         </div>
-
-        {/* Password Fields */}
         <div className="w-full flex flex-col gap-3">
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-bold text-[#A83200] uppercase tracking-wide">Password</label>
@@ -162,8 +152,6 @@ const Register = () => {
             <Input placeholder="••••••••" type="password" icon="carbon:password" value={form.confirmPassword} onChange={handleChange("confirmPassword")} />
           </div>
         </div>
-
-        {/* Submit */}
         <div className="w-full">
           <Button name={isLoading ? "Creating Account..." : "Create Account"} isActive={!isLoading} loading={isLoading} />
         </div>

@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import { Icon } from "@iconify/react";
-import { useReportCommentMutation } from "../../services/commentsApi";
+import { useReportPostMutation } from "../../services/postApi";
 
-const ReportCommentModal = ({ postId, commentId, onClose }) => {
+const ReportPostModal = ({ postId, onClose }) => {
   const [reason, setReason] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [reportComment, { isLoading, error }] = useReportCommentMutation();
+  const [reportPost, { isLoading, error }] = useReportPostMutation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!reason.trim()) return;
     try {
-      await reportComment({ postId, commentId, reason }).unwrap();
+      await reportPost({ postId, reason }).unwrap();
       setSubmitted(true);
     } catch (_) {}
   };
@@ -19,12 +19,13 @@ const ReportCommentModal = ({ postId, commentId, onClose }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-[#1E1E1E] border border-[#3A3A3C] rounded-2xl shadow-[0_16px_48px_rgba(0,0,0,0.6)] w-full max-w-md z-10">        <div className="flex items-center justify-between px-5 py-4 border-b border-[#2A2A2A]">
+      <div className="relative bg-[#1E1E1E] border border-[#3A3A3C] rounded-2xl shadow-[0_16px_48px_rgba(0,0,0,0.6)] w-full max-w-md z-10">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-[#2A2A2A]">
           <div className="flex items-center gap-2.5">
             <div className="bg-[#FF4500]/10 p-1.5 rounded-lg">
               <Icon icon="mdi:flag-outline" width="18" height="18" className="text-[#FF6534]" />
             </div>
-            <h2 className="font-black text-[#D7DADC] text-base">Report Comment</h2>
+            <h2 className="font-black text-[#D7DADC] text-base">Report Post</h2>
           </div>
           <button
             onClick={onClose}
@@ -41,7 +42,7 @@ const ReportCommentModal = ({ postId, commentId, onClose }) => {
             </div>
             <p className="font-bold text-[#D7DADC]">Report submitted</p>
             <p className="text-sm text-[#9A9A9A] text-center">
-              Our admins will review this comment and take action if needed.
+              Our admins will review this post and take action if needed.
             </p>
             <button
               onClick={onClose}
@@ -53,7 +54,7 @@ const ReportCommentModal = ({ postId, commentId, onClose }) => {
         ) : (
           <form onSubmit={handleSubmit} className="flex flex-col gap-4 px-5 py-5">
             <p className="text-sm text-[#9A9A9A]">
-              Tell us why this comment violates our community guidelines.
+              Tell us why this post violates our community guidelines.
             </p>
 
             <div className="flex flex-col gap-1.5">
@@ -63,7 +64,7 @@ const ReportCommentModal = ({ postId, commentId, onClose }) => {
               <textarea
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
-                placeholder="Describe why you're reporting this comment…"
+                placeholder="Describe why you're reporting this post…"
                 maxLength={500}
                 rows={4}
                 autoFocus
@@ -101,4 +102,4 @@ const ReportCommentModal = ({ postId, commentId, onClose }) => {
   );
 };
 
-export default ReportCommentModal;
+export default ReportPostModal;

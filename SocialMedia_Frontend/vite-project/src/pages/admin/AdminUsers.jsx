@@ -33,7 +33,6 @@ const AdminUsers = () => {
 
   return (
     <div className="p-6 flex flex-col gap-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-black text-[#D7DADC]">Users</h1>
@@ -46,10 +45,7 @@ const AdminUsers = () => {
           Total: {users.length}
         </div>
       </div>
-
-      {/* Filters */}
       <div className="flex flex-wrap gap-3">
-        {/* Search */}
         <div className="flex items-center gap-2 bg-[#1E1E1E] border border-[#3A3A3C] rounded-xl px-3 py-2 flex-1 min-w-48">
           <Icon icon="mdi:magnify" width="16" height="16" className="text-[#9A9A9A]" />
           <input
@@ -65,8 +61,6 @@ const AdminUsers = () => {
             </button>
           )}
         </div>
-
-        {/* Role filter */}
         <select
           value={filterRole}
           onChange={(e) => setFilterRole(e.target.value)}
@@ -76,8 +70,6 @@ const AdminUsers = () => {
           <option value="admin">Admin</option>
           <option value="user">User</option>
         </select>
-
-        {/* Status filter */}
         <select
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
@@ -89,8 +81,6 @@ const AdminUsers = () => {
           <option value="banned">Banned</option>
         </select>
       </div>
-
-      {/* Table */}
       <div className="bg-[#1E1E1E] rounded-2xl border border-[#3A3A3C] overflow-hidden shadow-sm">
         {isLoading ? (
           <div className="flex justify-center items-center py-20">
@@ -129,8 +119,6 @@ const AdminUsers = () => {
                     className="border-b border-[#3A3A3C] last:border-0 hover:bg-[#111111]/20 transition-colors"
                   >
                     <td className="px-4 py-3 text-[#9A9A9A] font-medium">{i + 1}</td>
-
-                    {/* User */}
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2.5">
                         <div className="shrink-0 h-9 w-9 rounded-full overflow-hidden bg-[#3A3A3C] border border-[#111111]">
@@ -151,15 +139,11 @@ const AdminUsers = () => {
 
                     <td className="px-4 py-3 text-[#D7DADC]">{u.email}</td>
                     <td className="px-4 py-3 text-[#9A9A9A] capitalize">{u.gender}</td>
-
-                    {/* Role */}
                     <td className="px-4 py-3">
                       <span className={`px-2.5 py-1 rounded-full text-xs font-bold capitalize ${roleColor[u.role] ?? roleColor.user}`}>
                         {u.role}
                       </span>
                     </td>
-
-                    {/* Status */}
                     <td className="px-4 py-3">
                       <span className={`px-2.5 py-1 rounded-full text-xs font-bold capitalize ${statusColor[u.accountStatus] ?? statusColor.active}`}>
                         {u.accountStatus}
@@ -168,8 +152,6 @@ const AdminUsers = () => {
 
                     <td className="px-4 py-3 font-semibold text-[#D7DADC]">{u.followers?.length ?? 0}</td>
                     <td className="px-4 py-3 font-semibold text-[#D7DADC]">{u.following?.length ?? 0}</td>
-
-                    {/* Joined */}
                     <td className="px-4 py-3 text-[#9A9A9A] text-xs whitespace-nowrap">
                       {new Date(u.createdAt).toLocaleDateString("en-US", {
                         year: "numeric",
@@ -184,8 +166,6 @@ const AdminUsers = () => {
           </div>
         )}
       </div>
-
-      {/* Footer count */}
       {!isLoading && !isError && filtered.length > 0 && (
         <p className="text-xs text-[#9A9A9A] text-center">
           Showing {filtered.length} of {users.length} users

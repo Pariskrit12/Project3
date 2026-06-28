@@ -22,15 +22,11 @@ export function useSocket() {
       dispatch(notificationApi.util.invalidateTags(["Notification"]));
     });
 
-    socket.on("new_message", ({ conversationId, message }) => {
-      // Append message to the open conversation's cache
-      dispatch(
+    socket.on("new_message", ({ conversationId, message }) => {      dispatch(
         chatApi.util.updateQueryData("getMessages", conversationId, (draft) => {
           if (draft?.data) draft.data.push(message);
         })
-      );
-      // Refresh conversations list (updates lastMessage + unread badge)
-      dispatch(chatApi.util.invalidateTags(["Conversation"]));
+      );      dispatch(chatApi.util.invalidateTags(["Conversation"]));
     });
 
     return () => {

@@ -75,7 +75,6 @@ const Communites = () => {
           />
           <div className="absolute inset-0 bg-linear-to-t from-[#D7DADC]/50 to-transparent" />
         </div>
-        {/* Profile pic sits on the border — half inside banner, half outside */}
         <div className="absolute left-6 bottom-0 translate-y-1/2 h-[88px] w-[88px] rounded-full border-4 border-[#111111] shadow-[0_4px_20px_rgba(255,69,0,0.25)] overflow-hidden bg-[#2A2A2A]">
           <img
             className="w-full h-full object-cover"
@@ -84,8 +83,6 @@ const Communites = () => {
           />
         </div>
       </div>
-
-      {/* Community info + action buttons */}
       <div className="flex justify-between items-start mb-5 ml-1">
         <div className="pl-[112px]">
           <h1 className="text-2xl font-black text-[#D7DADC]">{community.communityName}</h1>
@@ -95,9 +92,7 @@ const Communites = () => {
           </p>
         </div>
 
-        <div className="flex items-center gap-2 shrink-0">
-          {/* Creator buttons */}
-          {isCreator && (
+        <div className="flex items-center gap-2 shrink-0">          {isCreator && (
             <>
               <button
                 onClick={() => navigate(`/create-post?communityId=${communityId}`)}
@@ -112,8 +107,6 @@ const Communites = () => {
               </button>
             </>
           )}
-
-          {/* Member (non-creator) buttons */}
           {isMember && !isCreator && (
             <>
               <button
@@ -137,8 +130,6 @@ const Communites = () => {
               </button>
             </>
           )}
-
-          {/* Non-member join button */}
           {!isMember && !isCreator && (
             <button
               onClick={() => toggleJoin(communityId)}
@@ -159,12 +150,8 @@ const Communites = () => {
           </button>
         </div>
       </div>
-
-      {/* Main content grid */}
       <section className="grid grid-cols-[2.3fr_1fr] gap-5">
-        {/* Posts column */}
         <div className="flex flex-col gap-4">
-          {/* Filter tabs */}
           <div className="flex items-center gap-2 border border-[#3A3A3C] bg-[#1E1E1E] rounded-xl px-3 py-2">
             {FILTERS.map((f) => (
               <button
@@ -183,8 +170,6 @@ const Communites = () => {
               </button>
             ))}
           </div>
-
-          {/* Posts list */}
           {postsLoading ? (
             <div className="flex justify-center py-12">
               <Icon icon="svg-spinners:ring-resize" width="32" height="32" className="text-[#FF4500]" />
@@ -223,8 +208,6 @@ const Communites = () => {
             ))
           )}
         </div>
-
-        {/* Sidebar */}
         <div className="border border-[#3A3A3C] bg-[#1E1E1E] rounded-2xl max-h-fit sticky top-20 overflow-hidden shadow-[0_4px_20px_rgba(255,69,0,0.08)]">
           <div className="p-4 border-b border-[#3A3A3C]">
             <p className="font-black text-[#D7DADC]">About Community</p>

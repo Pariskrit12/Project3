@@ -52,8 +52,6 @@ const Navbar = () => {
   const suggestedCommunities = data?.data?.communities?.slice(0, 3) ?? [];
   const suggestedPosts = data?.data?.posts?.slice(0, 4) ?? [];
   const hasResults = suggestedCommunities.length > 0 || suggestedPosts.length > 0;
-
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handler = (e) => {
       if (searchRef.current && !searchRef.current.contains(e.target)) {
@@ -82,7 +80,6 @@ const Navbar = () => {
   return (
     <>
       <nav className="sticky top-0 z-50 flex px-5 py-3 gap-4 justify-between bg-[#111111]/85 backdrop-blur-md border-b border-[#3A3A3C] items-center shadow-[0_2px_16px_rgba(255,69,0,0.08)]">
-        {/* Left: hamburger + logo */}
         <div className="flex items-center gap-2 shrink-0">
           <div
             onClick={() => setToggleSidebar((prev) => !prev)}
@@ -107,15 +104,12 @@ const Navbar = () => {
             </div>
           </div>
         </div>
-
-        {/* Center: search bar + suggestions */}
         <form
           ref={searchRef}
           onSubmit={handleSearch}
           className="flex-1 max-w-md hidden sm:flex relative"
         >
           <div className="relative w-full">
-            {/* Search icon / spinner */}
             <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
               {isFetching && shouldFetch ? (
                 <Icon icon="svg-spinners:ring-resize" width="16" height="16" className="text-[#FF4500]" />
@@ -150,20 +144,14 @@ const Navbar = () => {
                 <Icon icon="mdi:close-circle" width="17" height="17" />
               </button>
             )}
-
-            {/* Suggestions dropdown */}
             {showSuggestions && shouldFetch && (
               <div className="absolute top-full left-0 right-0 mt-2 bg-[#1E1E1E] border border-[#3A3A3C] rounded-2xl shadow-[0_8px_32px_rgba(255,69,0,0.15)] overflow-hidden z-50">
-
-                {/* Loading skeleton */}
                 {isFetching && !hasResults && (
                   <div className="flex items-center justify-center gap-2 py-5 text-[#9A9A9A]">
                     <Icon icon="svg-spinners:ring-resize" width="18" height="18" className="text-[#FF4500]" />
                     <span className="text-xs font-medium">Searching…</span>
                   </div>
                 )}
-
-                {/* No results */}
                 {!isFetching && !hasResults && (
                   <div className="flex flex-col items-center gap-1.5 py-5 text-[#9A9A9A]">
                     <Icon icon="mdi:magnify-close" width="22" height="22" />
@@ -172,9 +160,7 @@ const Navbar = () => {
                 )}
 
                 {hasResults && (
-                  <>
-                    {/* Communities */}
-                    {suggestedCommunities.length > 0 && (
+                  <>                    {suggestedCommunities.length > 0 && (
                       <div>
                         <p className="px-3 pt-3 pb-1 text-[10px] font-extrabold text-[#9A9A9A] uppercase tracking-widest">
                           Communities
@@ -207,13 +193,9 @@ const Navbar = () => {
                         ))}
                       </div>
                     )}
-
-                    {/* Divider */}
                     {suggestedCommunities.length > 0 && suggestedPosts.length > 0 && (
                       <div className="mx-3 my-1 h-px bg-[#2A2A2A]" />
                     )}
-
-                    {/* Posts */}
                     {suggestedPosts.length > 0 && (
                       <div>
                         <p className="px-3 pt-2 pb-1 text-[10px] font-extrabold text-[#9A9A9A] uppercase tracking-widest">
@@ -226,7 +208,6 @@ const Navbar = () => {
                             onClick={() => goToResult(`/postPage/${p._id}`)}
                             className="flex items-center gap-2.5 w-full px-3 py-2 hover:bg-[#111111] transition-colors text-left"
                           >
-                            {/* Thumbnail or fallback icon */}
                             <div className="shrink-0 h-8 w-8 rounded-lg overflow-hidden bg-[#2A2A2A] border border-[#3A3A3C] flex items-center justify-center">
                               {p.media?.[0]?.type === "image" ? (
                                 <img src={p.media[0].url} alt="" className="w-full h-full object-cover" />
@@ -251,8 +232,6 @@ const Navbar = () => {
                         ))}
                       </div>
                     )}
-
-                    {/* Footer: see all results */}
                     <button
                       type="submit"
                       className="flex items-center justify-center gap-2 w-full px-3 py-2.5 mt-1 bg-[#111111] border-t border-[#2A2A2A] text-xs font-semibold text-[#FF4500] hover:bg-[#2A2A2A] transition-colors"
@@ -266,10 +245,7 @@ const Navbar = () => {
             )}
           </div>
         </form>
-
-        {/* Right: notifications + profile */}
         <div className="flex items-center gap-0.5 shrink-0">
-          {/* Mobile search icon */}
           <button
             onClick={() => navigate("/search")}
             className="sm:hidden p-2 rounded-xl hover:bg-[#2A2A2A] cursor-pointer transition-all duration-200 text-[#FF4500]"

@@ -59,7 +59,7 @@ const UserProfile = () => {
 
   const tabs = ["Posts", "Overview"];
   const [active, setActive] = useState(0);
-  const [modal, setModal] = useState(null); // "followers" | "following" | null
+  const [modal, setModal] = useState(null);
 
   const { data: profileData, isLoading: profileLoading } = useGetProfileQuery(userId);
   const { data: postsData, isLoading: postsLoading } = useGetPostsOfUserQuery(userId);
@@ -113,7 +113,6 @@ const UserProfile = () => {
     <main>
       <div className={`grid gap-6 items-start ${isOwnProfile ? "grid-cols-[1fr_280px]" : "max-w-3xl"}`}>
         <div>
-        {/* Banner + Avatar */}
         <section className="relative mb-14">
         <div className="h-36 bg-linear-to-br from-[#FF4500] via-[#FF6534] to-[#CC3600] rounded-2xl overflow-hidden relative">
           <div className="absolute inset-0">
@@ -132,8 +131,6 @@ const UserProfile = () => {
           </div>
         </div>
       </section>
-
-      {/* Info */}
       <section className="px-1 mt-2">
         <div className="flex justify-end mb-3 gap-2">
           {isOwnProfile ? (
@@ -183,8 +180,6 @@ const UserProfile = () => {
           </div>
         </div>
       </section>
-
-      {/* Tabs */}
       <section className="mt-6 border-b border-[#3A3A3C]">
         <div className="flex gap-1">
           {tabs.map((tab, index) => (
@@ -202,8 +197,6 @@ const UserProfile = () => {
           ))}
         </div>
       </section>
-
-      {/* Tab content */}
       <section className="mt-5">
         {active === 0 && (
           <div>
@@ -256,22 +249,16 @@ const UserProfile = () => {
                           </p>
                         </div>
                       )}
-
-                      {/* video play badge */}
                       {isVideo && (
                         <div className="absolute top-2 right-2">
                           <Icon icon="mdi:play-circle" width="20" height="20" className="text-white drop-shadow" />
                         </div>
                       )}
-
-                      {/* multiple media badge */}
                       {multipleMedia && (
                         <div className="absolute top-2 right-2">
                           <Icon icon="material-symbols:collections" width="18" height="18" className="text-white drop-shadow" />
                         </div>
                       )}
-
-                      {/* hover overlay */}
                       <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-4">
                         <div className="flex items-center gap-1.5 text-white font-bold text-sm">
                           <Icon icon="mdi:heart" width="20" height="20" />

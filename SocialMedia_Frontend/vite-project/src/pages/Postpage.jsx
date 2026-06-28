@@ -92,8 +92,6 @@ const Postpage = () => {
           onClose={() => setReportingCommentId(null)}
         />
       )}
-
-      {/* Post card — full width */}
       <section>
         <Cards
           showFull={true}
@@ -111,10 +109,7 @@ const Postpage = () => {
           comments={post.comments ?? []}
         />
       </section>
-
-      {/* Comments section */}
       <section className="flex flex-col gap-5 bg-[#1E1E1E] border border-[#3A3A3C] rounded-2xl p-5 shadow-[0_2px_16px_rgba(255,69,0,0.07)]">
-        {/* Header */}
         <div className="flex items-center gap-3 pb-4 border-b border-[#2A2A2A]">
           <Icon icon="mdi:comments-outline" width="22" height="22" className="text-[#FF4500]" />
           <h2 className="font-black text-lg text-[#D7DADC]">Comments</h2>
@@ -122,19 +117,13 @@ const Postpage = () => {
             {commentsData?.data?.totalComments ?? 0}
           </span>
         </div>
-
-        {/* Comment input */}
         <CommentInput postId={postId} currentUser={user} />
-
-        {/* transparent overlay to close dropdown on outside click */}
         {openDropdownId && (
           <div
             className="fixed inset-0 z-10"
             onClick={() => setOpenDropdownId(null)}
           />
         )}
-
-        {/* Comment list */}
         <div className="flex flex-col gap-3">
           {commentsLoading && (
             <div className="flex justify-center py-6">
@@ -171,7 +160,6 @@ const Postpage = () => {
                   c.isOptimistic ? "opacity-60" : "opacity-100"
                 }`}
               >
-                {/* Avatar */}
                 <div className="shrink-0 h-9 w-9 rounded-full overflow-hidden bg-linear-to-br from-[#FF6534] to-[#CC3600] flex items-center justify-center border border-[#3A3A3C] ring-2 ring-[#FF6534] ring-offset-1">
                   {c.creator?.userProfilePic ? (
                     <img
@@ -190,7 +178,6 @@ const Postpage = () => {
                 </div>
 
                 <div className="flex flex-col gap-1 flex-1 min-w-0">
-                  {/* Top row: name + time + menu */}
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
                       <p className="font-bold text-sm text-[#D7DADC]">
@@ -266,8 +253,6 @@ const Postpage = () => {
                       </div>
                     )}
                   </div>
-
-                  {/* Comment body */}
                   {isEditing ? (
                     <div className="flex flex-col gap-2 mt-1">
                       <textarea
@@ -298,8 +283,6 @@ const Postpage = () => {
                       {c.description}
                     </p>
                   )}
-
-                  {/* Action row */}
                   <div className="flex items-center gap-2 mt-2 pt-2 border-t border-[#2A2A2A]">
                     <button
                       onClick={() =>

@@ -16,9 +16,7 @@ const RecentPostCard = ({ post, onClick }) => {
       className="py-3 border-b border-[#3A3A3C] last:border-0 group cursor-pointer"
     >
       <div className="flex gap-3">
-        {/* Text content */}
         <div className="flex flex-col gap-1.5 flex-1 min-w-0">
-          {/* Community / author row */}
           <div className="flex gap-1.5 items-center">
             <div className="h-4 w-4 rounded-full overflow-hidden shrink-0 bg-linear-to-br from-[#FF6534] to-[#CC3600] flex items-center justify-center">
               {communityPic ? (
@@ -36,13 +34,9 @@ const RecentPostCard = ({ post, onClick }) => {
               · {formatTime(post.createdAt)}
             </p>
           </div>
-
-          {/* Title */}
           <p className="font-bold text-sm text-[#D7DADC] leading-snug group-hover:text-[#CC3600] transition-colors duration-200 line-clamp-2">
             {truncateWords(title, 8)}
           </p>
-
-          {/* Stats */}
           <div className="flex items-center gap-3 text-[11px] text-[#9A9A9A]">
             <span className="flex items-center gap-1">
               <Icon icon="boxicons:like-filled" width="11" height="11" className="text-[#FF4500]" />
@@ -54,8 +48,6 @@ const RecentPostCard = ({ post, onClick }) => {
             </span>
           </div>
         </div>
-
-        {/* Thumbnail */}
         <div className="shrink-0 w-16 h-14 rounded-xl overflow-hidden border border-[#3A3A3C] bg-[#2A2A2A] flex items-center justify-center">
           {thumbnail ? (
             thumbnailType === "video" ? (

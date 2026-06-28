@@ -30,7 +30,6 @@ const RecentPostModule = () => {
   return (
     <aside className="py-5 pr-3">
       <section className="rounded-2xl bg-[#1E1E1E] border border-[#3A3A3C] shadow-[0_2px_16px_rgba(255,69,0,0.07)] overflow-hidden">
-        {/* Header */}
         <div className="flex justify-between items-center px-4 py-3 border-b border-[#3A3A3C] bg-linear-to-r from-[#111111] to-[#1E1E1E]">
           <div className="flex items-center gap-2">
             <div className="p-1 rounded-lg bg-[#2A2A2A]">
@@ -44,8 +43,6 @@ const RecentPostModule = () => {
             </span>
           )}
         </div>
-
-        {/* Content */}
         <div className="px-4">
           {isLoading ? (
             <>
@@ -73,8 +70,6 @@ const RecentPostModule = () => {
             ))
           )}
         </div>
-
-        {/* Footer — only when there are posts */}
         {!isLoading && posts.length > 0 && (
           <div className="px-4 py-2.5 border-t border-[#3A3A3C] bg-[#1E1E1E]">
             <p className="text-xs text-center text-[#9A9A9A]">
