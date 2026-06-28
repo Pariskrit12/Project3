@@ -12,6 +12,7 @@ import {
 } from "../services/chatApi";
 import { useGetFollowersQuery, useGetFollowingQuery } from "../services/userApi";
 import formatTime from "../utils/formatTime";
+import { useCall } from "../context/CallContext";
 const NewMessageModal = ({ onClose, onSelect }) => {
   const [search, setSearch] = useState("");
   const { data: followersData } = useGetFollowersQuery();
@@ -91,6 +92,7 @@ const Chat = () => {
   const navigate = useNavigate();
   const { user: me } = useSelector((state) => state.auth);
 
+  const { callState, initiateCall, callError } = useCall();
   const [selectedConvId, setSelectedConvId] = useState(null);
   const [search, setSearch] = useState("");
   const [message, setMessage] = useState("");
@@ -256,7 +258,7 @@ const Chat = () => {
         </div>
       ) : (
         <div className="flex flex-col overflow-hidden">
-          <div className="flex items-center justify-between px-5 py-3.5 border-b border-[#3A3A3C] bg-[#111111]">
+          <div className="relative flex items-center justify-between px-5 py-3.5 border-b border-[#3A3A3C] bg-[#111111]">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-full overflow-hidden bg-linear-to-br from-[#FF6534] to-[#CC3600] border-2 border-[#FF4500] flex items-center justify-center">
                 {selectedConv?.otherUser?.userProfilePic ? (
@@ -281,12 +283,45 @@ const Chat = () => {
                 </p>
               </div>
             </div>
-            <button
-              onClick={() => setSelectedConvId(null)}
-              className="p-2 rounded-xl hover:bg-[#2A2A2A] transition-colors text-[#9A9A9A]"
-            >
-              <Icon icon="charm:cross" width="20" height="20" />
-            </button>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => initiateCall(
+                  selectedConv?.otherUser?._id,
+                  "video",
+                  { name: selectedConv?.otherUser?.name || selectedConv?.otherUser?.username, username: selectedConv?.otherUser?.username, avatar: selectedConv?.otherUser?.userProfilePic }
+                )}
+                disabled={callState !== "idle" || !selectedConv?.otherUser?._id}
+                className="p-2 rounded-xl hover:bg-[#2A2A2A] transition-colors text-[#9A9A9A] hover:text-[#FF4500] disabled:opacity-40 disabled:cursor-not-allowed"
+                title="Video call"
+              >
+                <Icon icon="mdi:video" width="20" height="20" />
+              </button>
+              <button
+                onClick={() => initiateCall(
+                  selectedConv?.otherUser?._id,
+                  "audio",
+                  { name: selectedConv?.otherUser?.name || selectedConv?.otherUser?.username, username: selectedConv?.otherUser?.username, avatar: selectedConv?.otherUser?.userProfilePic }
+                )}
+                disabled={callState !== "idle" || !selectedConv?.otherUser?._id}
+                className="p-2 rounded-xl hover:bg-[#2A2A2A] transition-colors text-[#9A9A9A] hover:text-[#FF4500] disabled:opacity-40 disabled:cursor-not-allowed"
+                title="Audio call"
+              >
+                <Icon icon="mdi:phone" width="20" height="20" />
+              </button>
+              <button
+                onClick={() => setSelectedConvId(null)}
+                className="p-2 rounded-xl hover:bg-[#2A2A2A] transition-colors text-[#9A9A9A]"
+              >
+                <Icon icon="charm:cross" width="20" height="20" />
+              </button>
+            </div>
+            {callError && (
+              <p className="absolute top-full right-0 mt-1 text-xs text-red-400 bg-[#1E1E1E] border border-[#3A3A3C] rounded-lg px-3 py-1.5 shadow-lg z-10">
+                {callError === "NOT_ALLOWED" && "You must follow this user to call them"}
+                {callError === "USER_OFFLINE" && "User is offline"}
+                {callError === "USER_BUSY" && "User is busy"}
+              </p>
+            )}
           </div>
           <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3">
             {msgsLoading && (

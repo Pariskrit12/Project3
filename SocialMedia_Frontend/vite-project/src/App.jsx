@@ -30,9 +30,11 @@ import { useGetCurrentUserQuery } from "./services/userApi";
 import { setUser } from "./slices/authSlice";
 import { setUnreadCount } from "./slices/notificationSlice";
 import { useGetUnreadCountQuery } from "./services/notificationApi";
-import { useSocket } from "./hooks/useSocket";
 import { Icon } from "@iconify/react";
 import InterestSelectorModal from "./components/InterestSelectorModal";
+import IncomingCallModal from "./components/call/IncomingCallModal";
+import OutgoingCallModal from "./components/call/OutgoingCallModal";
+import InCallView from "./components/call/InCallView";
 
 const PageWrapper = ({ children }) => (
   <div className="px-5 py-6">{children}</div>
@@ -86,8 +88,6 @@ const App = () => {
     }
   }, [unreadData, dispatch]);
 
-  useSocket();
-
   const location = useLocation();
   const isAuthenticationPage = ["/register", "/login"].includes(location.pathname);
 
@@ -126,6 +126,9 @@ const App = () => {
 
   return (
     <>
+      <IncomingCallModal />
+      <OutgoingCallModal />
+      <InCallView />
       {showInterestModal && <InterestSelectorModal currentUser={reduxUser} />}
       <Navbar />
 
