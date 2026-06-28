@@ -5,6 +5,7 @@ import app from "./app.js";
 import connection from "./db/connection.js";
 import { User } from "./models/user.models.js";
 import { initIO } from "./socket/socketManager.js";
+import { registerCallHandlers } from "./socket/callHandler.js";
 
 const port = process.env.PORT;
 
@@ -46,7 +47,7 @@ io.use(async (socket, next) => {
 
 io.on("connection", (socket) => {
   socket.join(socket.userId);
-  socket.on("disconnect", () => {});
+  registerCallHandlers(io, socket);
 });
 
 initIO(io);
