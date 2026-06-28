@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { verifyJwt } from "../middlewares/auth.js";
+import { verifyJwt, isAdmin } from "../middlewares/auth.js";
 import { upload } from "../middlewares/multer.js";
 import {
   createPost,
@@ -19,6 +19,10 @@ import {
   getTopPosts,
   getTrendingPosts,
   getFeedPosts,
+  reportPost,
+  getReportedPosts,
+  dismissPostReport,
+  deleteReportedPost,
 } from "../controllers/post.controllers.js";
 const router = Router();
 
@@ -46,6 +50,9 @@ router.route("/top").get(verifyJwt, getTopPosts);
 router.route("/trending").get(verifyJwt, getTrendingPosts);
 router.route("/feed").get(verifyJwt, getFeedPosts);
 
-
+router.route("/:postId/report").post(verifyJwt, reportPost);
+router.route("/admin/reports").get(verifyJwt, isAdmin, getReportedPosts);
+router.route("/admin/reports/:reportId/dismiss").patch(verifyJwt, isAdmin, dismissPostReport);
+router.route("/admin/reports/:reportId/delete-post").delete(verifyJwt, isAdmin, deleteReportedPost);
 
 export default router;

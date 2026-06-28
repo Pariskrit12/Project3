@@ -62,9 +62,7 @@ const postSchema = new Schema(
     ],
   },
   { timestamps: true },
-);
-//check if post is empty
-postSchema.pre("save", async function () {
+);postSchema.pre("save", async function () {
   const hasText =
     (this.postTitle && this.postTitle.trim().length > 0) ||
     (this.postDescription && this.postDescription.trim().length > 0);
