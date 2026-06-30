@@ -73,9 +73,9 @@ const createPost = asyncHandler(async (req, res) => {
   });
 
   return res
-    .status(200)
+    .status(201)
     .json(
-      new ApiResponse(200, { createdPost: post }, "Successfully Created Post"),
+      new ApiResponse(201, { createdPost: post }, "Successfully Created Post"),
     );
 });
 const getAllPost = asyncHandler(async (req, res) => {
@@ -197,7 +197,7 @@ const deletePost = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, "Post deleted successfully"));
+    .json(new ApiResponse(200, {}, "Post deleted successfully"));
 });
 const likePost = asyncHandler(async (req, res) => {
   const userId = req.user?._id;
