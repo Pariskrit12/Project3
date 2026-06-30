@@ -8,6 +8,8 @@ import { ApiResponse } from "../utils/apiResponse.js";
 import { v2 as cloudinary } from "cloudinary";
 import { sendNotification } from "../utils/sendNotification.js";
 import { PostReport } from "../models/postReport.model.js";
+import { moderateText } from "../moderation/textModeration.js";
+import { moderateImage } from "../moderation/imageModeration.js";
 
 async function activeCreatorIds() {
   const deactivated = await User.find({ accountStatus: "deactivated" }).select("_id").lean();
@@ -38,6 +40,20 @@ const createPost = asyncHandler(async (req, res) => {
   if (!hasText && !hasMedia) {
     throw new ApiError(400, "Post cannot be empty");
   }
+
+  // --- Content moderation (fail-open: errors are logged, not blocking) ---
+  const textToCheck = [postTitle, postDescription].filter(Boolean).join(" ");
+  if (textToCheck) {
+    const { flagged, reason } = await moderateText(textToCheck);
+    if (flagged) throw new ApiError(400, `Post text was flagged for: ${reason}`);
+  }
+  if (req?.files?.length > 0) {
+    for (const file of req.files) {
+      const { flagged } = await moderateImage(file.path, file.mimetype);
+      if (flagged) throw new ApiError(400, "One or more images were flagged as inappropriate");
+    }
+  }
+  // --- End content moderation ---
 
   const mediaArray = [];
 
