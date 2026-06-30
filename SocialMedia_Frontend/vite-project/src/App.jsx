@@ -136,7 +136,7 @@ const App = () => {
         <Routes>
           <Route
             path="/login"
-            element={isAuthenticated ? <Navigate to="/" replace /> : <PageWrapper><Login /></PageWrapper>}
+            element={isAuthenticated ? <Navigate to={reduxUser?.role === "admin" ? "/admin" : "/"} replace /> : <PageWrapper><Login /></PageWrapper>}
           />
           <Route
             path="/register"
