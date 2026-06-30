@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useFollowUserMutation, useUnfollowUserMutation } from "../../services/userApi";
 import { useLikePostMutation, useDislikePostMutation, useDeletePostMutation } from "../../services/postApi";
+import ReportPostModal from "../common/ReportPostModal";
 
 const MediaCarousel = ({ media }) => {
   const [index, setIndex] = useState(0);
@@ -28,7 +29,6 @@ const MediaCarousel = ({ media }) => {
 
   return (
     <div className="mx-5 rounded-xl overflow-hidden relative bg-black select-none">
-      {/* media item */}
       <div className="w-full max-h-[480px] flex items-center justify-center bg-black">
         {current.type === "image" ? (
           <img
@@ -46,8 +46,6 @@ const MediaCarousel = ({ media }) => {
           />
         )}
       </div>
-
-      {/* arrows — only shown when more than 1 item */}
       {count > 1 && (
         <>
           <button
@@ -64,13 +62,9 @@ const MediaCarousel = ({ media }) => {
           >
             <Icon icon="mdi:chevron-right" width="22" height="22" />
           </button>
-
-          {/* counter badge top-right */}
           <div className="absolute top-2 right-2 bg-black/55 text-white text-xs font-bold px-2 py-0.5 rounded-full z-10">
             {index + 1} / {count}
           </div>
-
-          {/* dot indicators */}
           <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
             {media.map((_, i) => (
               <button
@@ -130,6 +124,7 @@ const Cards = ({
   const isDisliked = localDislikes.some((id) => id.toString() === userId);
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [reportModalOpen, setReportModalOpen] = useState(false);
   const menuRef = useRef(null);
 
   useEffect(() => {
@@ -200,6 +195,10 @@ const Cards = ({
   };
 
   return (
+    <>
+    {reportModalOpen && (
+      <ReportPostModal postId={postId} onClose={() => setReportModalOpen(false)} />
+    )}
     <div
       onClick={onClick}
       className="border border-[#3A3A3C] bg-[#1E1E1E] shadow-[0_2px_16px_rgba(255,69,0,0.07)] flex flex-col gap-4 rounded-2xl hover:shadow-[0_8px_28px_rgba(255,69,0,0.13)] hover:border-[#9A9A9A] hover:-translate-y-0.5 transition-all duration-300 cursor-pointer overflow-hidden"
@@ -275,7 +274,7 @@ const Cards = ({
                   </>
                 ) : (
                   <button
-                    onClick={(e) => { e.stopPropagation(); setMenuOpen(false); }}
+                    onClick={(e) => { e.stopPropagation(); setMenuOpen(false); setReportModalOpen(true); }}
                     className="flex items-center gap-2.5 w-full px-4 py-2.5 text-sm font-medium text-[#A83200] hover:bg-red-50 hover:text-red-500 transition-colors"
                   >
                     <Icon icon="material-symbols:flag-outline-rounded" width="16" height="16" className="text-red-400" />
@@ -334,6 +333,7 @@ const Cards = ({
         </button>
       </div>
     </div>
+    </>
   );
 };
 

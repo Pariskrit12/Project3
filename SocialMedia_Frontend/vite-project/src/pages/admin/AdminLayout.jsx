@@ -5,7 +5,8 @@ import { useSelector } from "react-redux";
 
 const sidebarLinks = [
   { label: "Users", icon: "mdi:account-group", path: "/admin/users" },
-  { label: "Reports", icon: "mdi:flag-outline", path: "/admin/reports" },
+  { label: "Post Reports", icon: "mdi:file-document-alert-outline", path: "/admin/post-reports" },
+  { label: "Comment Reports", icon: "mdi:flag-outline", path: "/admin/reports" },
 ];
 
 const AdminLayout = () => {
@@ -15,13 +16,11 @@ const AdminLayout = () => {
 
   return (
     <div className="flex min-h-screen bg-[#111111]">
-      {/* Sidebar */}
       <aside
         className={`flex flex-col bg-[#1C1C1C] text-white transition-all duration-300 ${
           collapsed ? "w-16" : "w-60"
         } min-h-screen shrink-0`}
       >
-        {/* Header */}
         <div className="flex items-center justify-between px-4 py-4 border-b border-white/10">
           {!collapsed && (
             <div>
@@ -45,8 +44,6 @@ const AdminLayout = () => {
             />
           </button>
         </div>
-
-        {/* Nav Links */}
         <nav className="flex flex-col gap-1 px-2 py-4 flex-1">
           {sidebarLinks.map((link) => (
             <NavLink
@@ -65,8 +62,6 @@ const AdminLayout = () => {
             </NavLink>
           ))}
         </nav>
-
-        {/* Bottom: back to site + user */}
         <div className="px-2 py-4 border-t border-white/10 flex flex-col gap-2">
           <button
             onClick={() => navigate("/")}
@@ -90,8 +85,6 @@ const AdminLayout = () => {
           )}
         </div>
       </aside>
-
-      {/* Main Content */}
       <main className="flex-1 overflow-y-auto">
         <Outlet />
       </main>

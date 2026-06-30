@@ -6,7 +6,7 @@ export const postsApi = createApi({
     baseUrl: "/post",
     credentials: "include",
   }),
-  tagTypes: ["Post", "UserPosts", "RecentlyVisited"],
+  tagTypes: ["Post", "UserPosts", "RecentlyVisited", "PostReports"],
   endpoints: (builder) => ({
     createPost: builder.mutation({
       query: (formData) => ({
@@ -91,6 +91,31 @@ export const postsApi = createApi({
       query: ({ page = 1, limit = 10 } = {}) => ({ url: "/feed", params: { page, limit } }),
       providesTags: ["Post"],
     }),
+    reportPost: builder.mutation({
+      query: ({ postId, reason }) => ({
+        url: `/${postId}/report`,
+        method: "POST",
+        body: { reason },
+      }),
+    }),
+    getReportedPosts: builder.query({
+      query: () => "/admin/reports",
+      providesTags: ["PostReports"],
+    }),
+    dismissPostReport: builder.mutation({
+      query: ({ reportId }) => ({
+        url: `/admin/reports/${reportId}/dismiss`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["PostReports"],
+    }),
+    deleteReportedPost: builder.mutation({
+      query: ({ reportId }) => ({
+        url: `/admin/reports/${reportId}/delete-post`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["PostReports", "Post"],
+    }),
   }),
 });
 
@@ -112,4 +137,8 @@ export const {
   useLikePostMutation,
   useDislikePostMutation,
   useSearchPostsQuery,
+  useReportPostMutation,
+  useGetReportedPostsQuery,
+  useDismissPostReportMutation,
+  useDeleteReportedPostMutation,
 } = postsApi;

@@ -7,6 +7,9 @@ import { Community } from "../models/community.model.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import { v2 as cloudinary } from "cloudinary";
 import { sendNotification } from "../utils/sendNotification.js";
+import { PostReport } from "../models/postReport.model.js";
+import { moderateText } from "../moderation/textModeration.js";
+import { moderateImage } from "../moderation/imageModeration.js";
 
 async function activeCreatorIds() {
   const deactivated = await User.find({ accountStatus: "deactivated" }).select("_id").lean();
@@ -37,6 +40,20 @@ const createPost = asyncHandler(async (req, res) => {
   if (!hasText && !hasMedia) {
     throw new ApiError(400, "Post cannot be empty");
   }
+
+  // --- Content moderation (fail-open: errors are logged, not blocking) ---
+  const textToCheck = [postTitle, postDescription].filter(Boolean).join(" ");
+  if (textToCheck) {
+    const { flagged, reason } = await moderateText(textToCheck);
+    if (flagged) throw new ApiError(400, `Post text was flagged for: ${reason}`);
+  }
+  if (req?.files?.length > 0) {
+    for (const file of req.files) {
+      const { flagged } = await moderateImage(file.path, file.mimetype);
+      if (flagged) throw new ApiError(400, "One or more images were flagged as inappropriate");
+    }
+  }
+  // --- End content moderation ---
 
   const mediaArray = [];
 
@@ -72,9 +89,9 @@ const createPost = asyncHandler(async (req, res) => {
   });
 
   return res
-    .status(200)
+    .status(201)
     .json(
-      new ApiResponse(200, { createdPost: post }, "Successfully Created Post"),
+      new ApiResponse(201, { createdPost: post }, "Successfully Created Post"),
     );
 });
 const getAllPost = asyncHandler(async (req, res) => {
@@ -189,11 +206,14 @@ const deletePost = asyncHandler(async (req, res) => {
     );
   }
 
-  await Post.findByIdAndDelete(postId);
+  await Promise.all([
+    Post.findByIdAndDelete(postId),
+    User.updateMany({ recentlyVisited: postId }, { $pull: { recentlyVisited: postId } }),
+  ]);
 
   return res
     .status(200)
-    .json(new ApiResponse(200, "Post deleted successfully"));
+    .json(new ApiResponse(200, {}, "Post deleted successfully"));
 });
 const likePost = asyncHandler(async (req, res) => {
   const userId = req.user?._id;
@@ -308,9 +328,7 @@ const updatePost = asyncHandler(async (req, res) => {
     post.postDescription = postDescription.trim();
   }
   if (hasNewMedia) {
-    if (post.media.length > 0) {
-      //remove old media
-      await Promise.all(
+    if (post.media.length > 0) {      await Promise.all(
         post.media.map((item) =>
           cloudinary.uploader.destroy(item.publicId, {
             resource_type: item.type === "video" ? "video" : "image",
@@ -515,7 +533,6 @@ const getTrendingPosts = asyncHandler(async (req, res) => {
   const limit = parseInt(req.query.limit) || 10;
   const skip = (page - 1) * limit;
 
-
   const cutoff = new Date(Date.now() - 48 * 60 * 60 * 1000);
   const deactivatedIds = await activeCreatorIds();
 
@@ -523,9 +540,7 @@ const getTrendingPosts = asyncHandler(async (req, res) => {
     Post.aggregate([
       { $match: { createdAt: { $gte: cutoff }, creator: { $nin: deactivatedIds } } },
       {
-        $addFields: {
-          // likes + (comments × 2) 
-          engagementScore: {
+        $addFields: {          engagementScore: {
             $add: [{ $size: "$likes" }, { $multiply: [{ $size: "$comments" }, 2] }],
           },
         },
@@ -610,6 +625,82 @@ const getFeedPosts = asyncHandler(async (req, res) => {
   );
 });
 
+const reportPost = asyncHandler(async (req, res) => {
+  const userId = req.user?._id;
+  const { postId } = req.params;
+  const { reason } = req.body;
+
+  if (!reason || !reason.trim()) {
+    throw new ApiError(400, "Reason is required for reporting a post");
+  }
+
+  const post = await Post.findById(postId);
+  if (!post) throw new ApiError(404, "Post not found");
+
+  if (post.creator.toString() === userId.toString()) {
+    throw new ApiError(403, "You cannot report your own post");
+  }
+
+  const existing = await PostReport.findOne({ reporter: userId, post: postId });
+  if (existing) throw new ApiError(409, "You have already reported this post");
+
+  await PostReport.create({
+    reporter: userId,
+    post: postId,
+    reason: reason.trim(),
+  });
+
+  return res.status(201).json(new ApiResponse(201, {}, "Post reported successfully"));
+});
+
+const getReportedPosts = asyncHandler(async (req, res) => {
+  const reports = await PostReport.find()
+    .populate("reporter", "username userProfilePic")
+    .populate({
+      path: "post",
+      populate: { path: "creator", select: "username userProfilePic" },
+    })
+    .sort({ createdAt: -1 })
+    .lean();
+
+  return res.status(200).json(new ApiResponse(200, { reports }, "Reported posts fetched"));
+});
+
+const dismissPostReport = asyncHandler(async (req, res) => {
+  const { reportId } = req.params;
+  const report = await PostReport.findByIdAndUpdate(reportId, { status: "dismissed" }, { new: true });
+  if (!report) throw new ApiError(404, "Report not found");
+  return res.status(200).json(new ApiResponse(200, {}, "Report dismissed"));
+});
+
+const deleteReportedPost = asyncHandler(async (req, res) => {
+  const { reportId } = req.params;
+  const report = await PostReport.findById(reportId);
+  if (!report) throw new ApiError(404, "Report not found");
+
+  const post = await Post.findById(report.post);
+  if (post) {
+    if (post.media.length > 0) {
+      await Promise.all(
+        post.media.map((item) =>
+          cloudinary.uploader.destroy(item.publicId, {
+            resource_type: item.type === "video" ? "video" : "image",
+          }),
+        ),
+      );
+    }
+    await Promise.all([
+      Post.findByIdAndDelete(post._id),
+      PostReport.deleteMany({ post: post._id }),
+      User.updateMany({ recentlyVisited: post._id }, { $pull: { recentlyVisited: post._id } }),
+    ]);
+  } else {
+    await report.deleteOne();
+  }
+
+  return res.status(200).json(new ApiResponse(200, {}, "Post deleted and reports cleared"));
+});
+
 export {
   createPost,
   getAllPost,
@@ -627,4 +718,8 @@ export {
   getTopPosts,
   getTrendingPosts,
   getFeedPosts,
+  reportPost,
+  getReportedPosts,
+  dismissPostReport,
+  deleteReportedPost,
 };

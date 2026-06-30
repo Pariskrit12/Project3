@@ -155,7 +155,7 @@ const logoutUser = asyncHandler(async (req, res) => {
   };
   return res
     .status(200)
-    .clearCookie("accessToken", options) //clearing cookie
+    .clearCookie("accessToken", options)
     .clearCookie("refreshToken", options)
     .json(new ApiResponse(200, {}, "User logged out successfully"));
 });
@@ -592,8 +592,6 @@ const getSuggestedUsers = asyncHandler(async (req, res) => {
 
   const interests = me.interests ?? [];
   const excludeIds = [userId, ...me.following];
-
-  // No interests set — fall back to users they don't follow yet
   if (interests.length === 0) {
     const users = await User.find({
       _id: { $nin: excludeIds },
@@ -697,7 +695,6 @@ const googleLogin = asyncHandler(async (req, res) => {
     idToken: token,
     audience: process.env.GOOGLE_CLIENT_ID,
   });
-
 
   const payload = ticket.getPayload();
   const email = payload.email;

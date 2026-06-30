@@ -10,6 +10,8 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { v2 as cloudinary } from "cloudinary";
 import mongoose from "mongoose";
+import { moderateText } from "../moderation/textModeration.js";
+import { moderateImage } from "../moderation/imageModeration.js";
 
 const createComment = asyncHandler(async (req, res) => {
   const userId = req.user?._id;
@@ -27,6 +29,18 @@ const createComment = asyncHandler(async (req, res) => {
   if (!hasText && !hasMedia) {
     throw new ApiError(400, "Comment Cannot be empty");
   }
+
+  // --- Content moderation (fail-open: errors are logged, not blocking) ---
+  if (description && description.trim()) {
+    const { flagged, reason } = await moderateText(description.trim());
+    if (flagged) throw new ApiError(400, `Comment text was flagged for: ${reason}`);
+  }
+  if (req.file) {
+    const { flagged } = await moderateImage(req.file.path, req.file.mimetype);
+    if (flagged) throw new ApiError(400, "Image was flagged as inappropriate");
+  }
+  // --- End content moderation ---
+
   let imageUrl = "";
   let imagePublicId = "";
   if (req.file) {
@@ -50,10 +64,8 @@ const createComment = asyncHandler(async (req, res) => {
     creator: userId,
     post: postId,
   }).catch(async (err) => {
-    if (imagePublicId) {
-      await cloudinary.uploader.destroy(imagePublicId);
-      throw new ApiError(500, "Failed to save comment", err);
-    }
+    if (imagePublicId) await cloudinary.uploader.destroy(imagePublicId);
+    throw new ApiError(500, "Failed to save comment", err);
   });
 
   await comment.populate("creator", "username userProfilePic");
@@ -275,7 +287,7 @@ const deleteComment = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, "Comment delete successfully"));
+    .json(new ApiResponse(200, {}, "Comment deleted successfully"));
 });
 
 const getCommentOfPost = asyncHandler(async (req, res) => {

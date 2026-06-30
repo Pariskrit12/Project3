@@ -50,9 +50,7 @@ const InterestSelectorModal = ({ currentUser }) => {
       await saveInterests(interests).unwrap();
       dispatch(setUser({ ...currentUser, interests, hasSelectedInterests: true }));
       dispatch(postsApi.util.invalidateTags(["Post"]));
-    } catch {
-      // still close modal on error — user can skip
-      dispatch(setUser({ ...currentUser, hasSelectedInterests: true }));
+    } catch {      dispatch(setUser({ ...currentUser, hasSelectedInterests: true }));
     }
   };
 
@@ -63,7 +61,6 @@ const InterestSelectorModal = ({ currentUser }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
       <div className="bg-[#1E1E1E] rounded-3xl shadow-2xl w-full max-w-lg max-h-[90vh] flex flex-col overflow-hidden border border-[#3A3A3C]">
-        {/* Header */}
         <div className="px-6 pt-6 pb-4 border-b border-[#3A3A3C] bg-linear-to-br from-[#111111] to-[#1E1E1E]">
           <div className="flex items-center gap-3 mb-1">
             <div className="p-2 rounded-xl bg-[#FF4500]">
@@ -75,10 +72,7 @@ const InterestSelectorModal = ({ currentUser }) => {
             Pick topics to personalise your home feed. You can always change these later.
           </p>
         </div>
-
-        {/* Scrollable body */}
         <div className="flex-1 overflow-y-auto px-6 py-4 flex flex-col gap-5">
-          {/* Preset tags */}
           <div>
             <p className="text-[10px] font-extrabold text-[#9A9A9A] uppercase tracking-[0.2em] mb-2">
               Popular topics
@@ -106,8 +100,6 @@ const InterestSelectorModal = ({ currentUser }) => {
               })}
             </div>
           </div>
-
-          {/* Custom tag input */}
           <div>
             <p className="text-[10px] font-extrabold text-[#9A9A9A] uppercase tracking-[0.2em] mb-2">
               Add your own
@@ -155,8 +147,6 @@ const InterestSelectorModal = ({ currentUser }) => {
             )}
           </div>
         </div>
-
-        {/* Footer */}
         <div className="px-6 py-4 border-t border-[#3A3A3C] bg-[#1E1E1E] flex items-center justify-between gap-3">
           <div className="text-sm text-[#9A9A9A]">
             {selected.size > 0 ? (

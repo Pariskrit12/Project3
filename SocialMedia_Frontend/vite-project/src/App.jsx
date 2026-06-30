@@ -24,14 +24,17 @@ import SearchResults from "./pages/SearchResults";
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminReportedComments from "./pages/admin/AdminReportedComments";
+import AdminReportedPosts from "./pages/admin/AdminReportedPosts";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetCurrentUserQuery } from "./services/userApi";
 import { setUser } from "./slices/authSlice";
 import { setUnreadCount } from "./slices/notificationSlice";
 import { useGetUnreadCountQuery } from "./services/notificationApi";
-import { useSocket } from "./hooks/useSocket";
 import { Icon } from "@iconify/react";
 import InterestSelectorModal from "./components/InterestSelectorModal";
+import IncomingCallModal from "./components/call/IncomingCallModal";
+import OutgoingCallModal from "./components/call/OutgoingCallModal";
+import InCallView from "./components/call/InCallView";
 
 const PageWrapper = ({ children }) => (
   <div className="px-5 py-6">{children}</div>
@@ -85,8 +88,6 @@ const App = () => {
     }
   }, [unreadData, dispatch]);
 
-  useSocket();
-
   const location = useLocation();
   const isAuthenticationPage = ["/register", "/login"].includes(location.pathname);
 
@@ -115,6 +116,7 @@ const App = () => {
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<Navigate to="/admin/users" replace />} />
             <Route path="users" element={<AdminUsers />} />
+            <Route path="post-reports" element={<AdminReportedPosts />} />
             <Route path="reports" element={<AdminReportedComments />} />
           </Route>
         </Routes>
@@ -124,6 +126,9 @@ const App = () => {
 
   return (
     <>
+      <IncomingCallModal />
+      <OutgoingCallModal />
+      <InCallView />
       {showInterestModal && <InterestSelectorModal currentUser={reduxUser} />}
       <Navbar />
 

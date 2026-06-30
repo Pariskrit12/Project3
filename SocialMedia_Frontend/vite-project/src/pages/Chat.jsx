@@ -12,8 +12,7 @@ import {
 } from "../services/chatApi";
 import { useGetFollowersQuery, useGetFollowingQuery } from "../services/userApi";
 import formatTime from "../utils/formatTime";
-
-// ── New Message modal ───────────────────────────────────────────────────────
+import { useCall } from "../context/CallContext";
 const NewMessageModal = ({ onClose, onSelect }) => {
   const [search, setSearch] = useState("");
   const { data: followersData } = useGetFollowersQuery();
@@ -21,8 +20,6 @@ const NewMessageModal = ({ onClose, onSelect }) => {
 
   const followers = followersData?.data ?? [];
   const following = followingData?.data ?? [];
-
-  // Union: de-dup by _id
   const all = [...followers, ...following].reduce((acc, u) => {
     if (!acc.find((x) => x._id === u._id)) acc.push(u);
     return acc;
@@ -90,13 +87,12 @@ const NewMessageModal = ({ onClose, onSelect }) => {
     </div>
   );
 };
-
-// ── Main Chat page ───────────────────────────────────────────────────────────
 const Chat = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { user: me } = useSelector((state) => state.auth);
 
+  const { callState, initiateCall, callError } = useCall();
   const [selectedConvId, setSelectedConvId] = useState(null);
   const [search, setSearch] = useState("");
   const [message, setMessage] = useState("");
@@ -118,8 +114,6 @@ const Chat = () => {
   const messages = messagesData?.data ?? [];
 
   const selectedConv = conversations.find((c) => c._id === selectedConvId);
-
-  // Handle ?userId= param (navigating from a profile page)
   useEffect(() => {
     const targetUserId = searchParams.get("userId");
     if (!targetUserId) return;
@@ -131,13 +125,9 @@ const Chat = () => {
       })
       .catch(() => {});
   }, [searchParams]);
-
-  // Auto-scroll to bottom when messages update
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
-
-  // Mark as read when opening a conversation
   useEffect(() => {
     if (selectedConvId) markRead(selectedConvId);
   }, [selectedConvId]);
@@ -173,8 +163,6 @@ const Chat = () => {
 
   return (
     <main className="grid grid-cols-[300px_1fr] gap-0 h-[calc(100vh-80px)] overflow-hidden rounded-2xl border border-[#3A3A3C] shadow-[0_4px_24px_rgba(255,69,0,0.1)] bg-[#1E1E1E]">
-
-      {/* ── Left panel: conversation list ── */}
       <div className="flex flex-col border-r border-[#3A3A3C] overflow-hidden">
         <div className="p-4 border-b border-[#3A3A3C]">
           <div className="flex items-center justify-between mb-3">
@@ -252,8 +240,6 @@ const Chat = () => {
           })}
         </div>
       </div>
-
-      {/* ── Right panel: message thread ── */}
       {!selectedConvId ? (
         <div className="flex flex-col items-center justify-center gap-4 text-[#9A9A9A]">
           <div className="p-5 rounded-full bg-[#2A2A2A]">
@@ -272,8 +258,7 @@ const Chat = () => {
         </div>
       ) : (
         <div className="flex flex-col overflow-hidden">
-          {/* Header */}
-          <div className="flex items-center justify-between px-5 py-3.5 border-b border-[#3A3A3C] bg-[#111111]">
+          <div className="relative flex items-center justify-between px-5 py-3.5 border-b border-[#3A3A3C] bg-[#111111]">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-full overflow-hidden bg-linear-to-br from-[#FF6534] to-[#CC3600] border-2 border-[#FF4500] flex items-center justify-center">
                 {selectedConv?.otherUser?.userProfilePic ? (
@@ -298,15 +283,46 @@ const Chat = () => {
                 </p>
               </div>
             </div>
-            <button
-              onClick={() => setSelectedConvId(null)}
-              className="p-2 rounded-xl hover:bg-[#2A2A2A] transition-colors text-[#9A9A9A]"
-            >
-              <Icon icon="charm:cross" width="20" height="20" />
-            </button>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => initiateCall(
+                  selectedConv?.otherUser?._id,
+                  "video",
+                  { name: selectedConv?.otherUser?.name || selectedConv?.otherUser?.username, username: selectedConv?.otherUser?.username, avatar: selectedConv?.otherUser?.userProfilePic }
+                )}
+                disabled={callState !== "idle" || !selectedConv?.otherUser?._id}
+                className="p-2 rounded-xl hover:bg-[#2A2A2A] transition-colors text-[#9A9A9A] hover:text-[#FF4500] disabled:opacity-40 disabled:cursor-not-allowed"
+                title="Video call"
+              >
+                <Icon icon="mdi:video" width="20" height="20" />
+              </button>
+              <button
+                onClick={() => initiateCall(
+                  selectedConv?.otherUser?._id,
+                  "audio",
+                  { name: selectedConv?.otherUser?.name || selectedConv?.otherUser?.username, username: selectedConv?.otherUser?.username, avatar: selectedConv?.otherUser?.userProfilePic }
+                )}
+                disabled={callState !== "idle" || !selectedConv?.otherUser?._id}
+                className="p-2 rounded-xl hover:bg-[#2A2A2A] transition-colors text-[#9A9A9A] hover:text-[#FF4500] disabled:opacity-40 disabled:cursor-not-allowed"
+                title="Audio call"
+              >
+                <Icon icon="mdi:phone" width="20" height="20" />
+              </button>
+              <button
+                onClick={() => setSelectedConvId(null)}
+                className="p-2 rounded-xl hover:bg-[#2A2A2A] transition-colors text-[#9A9A9A]"
+              >
+                <Icon icon="charm:cross" width="20" height="20" />
+              </button>
+            </div>
+            {callError && (
+              <p className="absolute top-full right-0 mt-1 text-xs text-red-400 bg-[#1E1E1E] border border-[#3A3A3C] rounded-lg px-3 py-1.5 shadow-lg z-10">
+                {callError === "NOT_ALLOWED" && "You must follow this user to call them"}
+                {callError === "USER_OFFLINE" && "User is offline"}
+                {callError === "USER_BUSY" && "User is busy"}
+              </p>
+            )}
           </div>
-
-          {/* Messages */}
           <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3">
             {msgsLoading && (
               <div className="flex justify-center py-10">
@@ -352,8 +368,6 @@ const Chat = () => {
             })}
             <div ref={messagesEndRef} />
           </div>
-
-          {/* Input */}
           <div className="relative flex items-center gap-2 px-3 py-3 bg-[#111111] border-t border-[#3A3A3C]">
             {showPicker && (
               <div className="absolute bottom-16 right-4 z-50">
@@ -390,8 +404,6 @@ const Chat = () => {
           </div>
         </div>
       )}
-
-      {/* Opening indicator */}
       {opening && (
         <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/20">
           <Icon icon="svg-spinners:ring-resize" width="36" height="36" className="text-[#FF4500]" />

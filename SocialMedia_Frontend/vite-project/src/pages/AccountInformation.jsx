@@ -166,9 +166,7 @@ const AccountInformation = () => {
             <h1 className="text-2xl font-black text-[#D7DADC]">Account Info</h1>
             <p className="text-sm text-[#9A9A9A]">Click a field to edit</p>
           </div>
-        </div>
-        {/* Profile pic */}
-        <div className="flex flex-col items-center gap-2 mb-5">
+        </div>        <div className="flex flex-col items-center gap-2 mb-5">
           <div className="relative group cursor-pointer" onClick={() => fileInputRef.current?.click()}>
             <div className="h-20 w-20 rounded-full overflow-hidden border-4 border-[#3A3A3C] shadow-md">
               {picPreview || user?.userProfilePic ? (
