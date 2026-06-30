@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { io } from "socket.io-client";
-import { incrementUnread } from "../slices/notificationSlice";
+import { incrementUnread, incrementUnreadMessages } from "../slices/notificationSlice";
 import { notificationApi } from "../services/notificationApi";
 import { chatApi } from "../services/chatApi";
 import { useCall } from "../context/CallContext";
@@ -28,6 +28,9 @@ export function SocketProvider({ children }) {
         })
       );
       dispatch(chatApi.util.invalidateTags(["Conversation"]));
+      if (!window.location.pathname.startsWith("/chat")) {
+        dispatch(incrementUnreadMessages());
+      }
     });
 
     const unbindCall = bindSocket(socket);

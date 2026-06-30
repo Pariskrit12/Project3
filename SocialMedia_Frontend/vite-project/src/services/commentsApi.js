@@ -106,7 +106,7 @@ export const commentsApi = createApi({
     }),
     reportComment: builder.mutation({
       query: ({ postId, commentId, reason }) => ({
-        url: "/${postId}/${commentId}/report",
+        url: `/${postId}/${commentId}/report`,
         method: "POST",
         body: { reason },
       }),
@@ -117,14 +117,14 @@ export const commentsApi = createApi({
     }),
     dismissReport: builder.mutation({
       query: ({ reportId }) => ({
-        url: "/admin/reports/${reportId}/dismiss",
+        url: `/admin/reports/${reportId}/dismiss`,
         method: "PATCH",
       }),
       invalidatesTags: ["Report"],
     }),
     deleteReportedComment: builder.mutation({
       query: ({ reportId }) => ({
-        url: "/admin/reports/${reportId}/delete-comment",
+        url: `/admin/reports/${reportId}/delete-comment`,
         method: "DELETE",
       }),
       invalidatesTags: ["Report"],

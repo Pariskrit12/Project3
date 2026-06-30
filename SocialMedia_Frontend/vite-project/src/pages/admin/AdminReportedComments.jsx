@@ -148,11 +148,22 @@ const AdminReportedComments = () => {
                     </>
                   )}
                 </div>
-                <p className="text-sm text-[#D7DADC] leading-relaxed">
-                  {report.comment?.description ?? (
-                    <span className="italic text-[#9A9A9A]">Comment deleted</span>
-                  )}
-                </p>
+                {report.comment ? (
+                  <>
+                    {report.comment.description && (
+                      <p className="text-sm text-[#D7DADC] leading-relaxed">{report.comment.description}</p>
+                    )}
+                    {report.comment.image && (
+                      <img
+                        src={report.comment.image}
+                        alt="comment image"
+                        className="max-h-48 max-w-full rounded-lg object-cover border border-[#3A3A3C] mt-1"
+                      />
+                    )}
+                  </>
+                ) : (
+                  <span className="text-sm italic text-[#9A9A9A]">Comment deleted</span>
+                )}
               </div>
               <div className="flex flex-col gap-1">
                 <p className="text-xs font-bold text-[#A83200] uppercase tracking-wide">Reason</p>

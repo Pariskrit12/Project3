@@ -143,13 +143,41 @@ const AdminReportedPosts = () => {
                     @{report.post?.creator?.username ?? "deleted user"}
                   </p>
                 </div>
-                {report.post?.postTitle ? (
-                  <p className="text-sm font-semibold text-[#D7DADC]">{report.post.postTitle}</p>
+                {report.post ? (
+                  <>
+                    {report.post.postTitle && (
+                      <p className="text-sm font-semibold text-[#D7DADC]">{report.post.postTitle}</p>
+                    )}
+                    {report.post.postDescription && (
+                      <p className="text-xs text-[#9A9A9A] leading-relaxed">{report.post.postDescription}</p>
+                    )}
+                    {report.post.media?.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mt-1">
+                        {report.post.media.map((m, i) =>
+                          m.type === "image" ? (
+                            <img
+                              key={i}
+                              src={m.url}
+                              alt="post media"
+                              className="max-h-48 max-w-full rounded-lg object-cover border border-[#3A3A3C]"
+                            />
+                          ) : (
+                            <video
+                              key={i}
+                              src={m.url}
+                              controls
+                              className="max-h-48 max-w-full rounded-lg border border-[#3A3A3C]"
+                            />
+                          )
+                        )}
+                      </div>
+                    )}
+                    {!report.post.postTitle && !report.post.postDescription && !report.post.media?.length && (
+                      <p className="text-sm italic text-[#9A9A9A]">No content</p>
+                    )}
+                  </>
                 ) : (
                   <p className="text-sm italic text-[#9A9A9A]">Post deleted</p>
-                )}
-                {report.post?.postDescription && (
-                  <p className="text-xs text-[#9A9A9A] line-clamp-2">{report.post.postDescription}</p>
                 )}
               </div>
 
@@ -168,7 +196,7 @@ const AdminReportedPosts = () => {
                     <Icon icon="mdi:check" width="14" height="14" />
                     {actionId === report._id && dismissing ? "Dismissing…" : "Dismiss"}
                   </button>
-                  {report.post?.postTitle !== undefined && (
+                  {report.post != null && (
                     <button
                       onClick={() => handleDelete(report._id)}
                       disabled={actionId === report._id}

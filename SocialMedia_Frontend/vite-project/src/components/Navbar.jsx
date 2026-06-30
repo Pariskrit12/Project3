@@ -7,6 +7,7 @@ import Sidebar from "./Sidebar";
 import { useSearchAllQuery } from "../services/postApi";
 import { useGetUnreadCountQuery } from "../services/notificationApi";
 import { setUnreadCount } from "../slices/notificationSlice";
+import { clearUnreadMessages } from "../slices/notificationSlice";
 
 const DUMMY_AVATAR = "https://ui-avatars.com/api/?name=Guest&background=E5E6EA&color=FF4500";
 
@@ -33,6 +34,7 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const { user, isAuthenticated } = useSelector((state) => state.auth);
   const unreadCount = useSelector((state) => state.notifications.unreadCount);
+  const unreadMessages = useSelector((state) => state.notifications.unreadMessages);
 
   const { data: unreadData } = useGetUnreadCountQuery(undefined, { skip: !isAuthenticated });
   useEffect(() => {
@@ -256,12 +258,18 @@ const Navbar = () => {
           {navbarLink.map((elem, index) => (
             <div
               key={index}
+              onClick={index === 1 ? () => dispatch(clearUnreadMessages()) : undefined}
               className="relative p-2 rounded-xl hover:bg-[#2A2A2A] cursor-pointer transition-all duration-200 group"
             >
               <IconLink pageLink={elem.pageLink} icon={elem.icon} />
               {index === 0 && unreadCount > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] flex items-center justify-center bg-[#CC3600] text-white text-[10px] font-bold rounded-full border-2 border-[#111111] px-1">
                   {unreadCount > 99 ? "99+" : unreadCount}
+                </span>
+              )}
+              {index === 1 && unreadMessages > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] flex items-center justify-center bg-[#CC3600] text-white text-[10px] font-bold rounded-full border-2 border-[#111111] px-1">
+                  {unreadMessages > 99 ? "99+" : unreadMessages}
                 </span>
               )}
             </div>
