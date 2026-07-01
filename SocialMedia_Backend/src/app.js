@@ -31,4 +31,11 @@ app.use("/notification", notificationRouter);
 import chatRouter from "./routes/chat.routes.js";
 app.use("/chat", chatRouter);
 
+import { ApiError } from "./utils/apiError.js";
+app.use((err, req, res, next) => {
+  const statusCode = err instanceof ApiError ? err.statusCode : 500;
+  const message = err instanceof ApiError ? err.message : "Internal server error";
+  res.status(statusCode).json({ success: false, message, errors: err.errors ?? [] });
+});
+
 export default app;

@@ -50,7 +50,7 @@ const createPost = asyncHandler(async (req, res) => {
   if (req?.files?.length > 0) {
     for (const file of req.files) {
       const { flagged } = await moderateImage(file.path, file.mimetype);
-      if (flagged) throw new ApiError(400, "One or more images were flagged as inappropriate");
+      if (flagged) throw new ApiError(400, "NSFW_IMAGE");
     }
   }
   // --- End content moderation ---

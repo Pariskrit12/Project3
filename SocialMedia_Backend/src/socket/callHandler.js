@@ -34,15 +34,16 @@ export function registerCallHandlers(io, socket) {
     let caller;
     try {
       caller = await User.findById(userId)
-        .select("following name username userProfilePic")
+        .select("following followers name username userProfilePic")
         .lean();
     } catch {
       return socket.emit("call:error", { code: "NOT_ALLOWED" });
     }
     if (!caller) return socket.emit("call:error", { code: "NOT_ALLOWED" });
 
-    const follows = caller.following.some((id) => id.toString() === toUserId);
-    if (!follows) {
+    const callerFollowsCallee = caller.following.some((id) => id.toString() === toUserId);
+    const calleeFollowsCaller = caller.followers.some((id) => id.toString() === toUserId);
+    if (!callerFollowsCallee && !calleeFollowsCaller) {
       return socket.emit("call:error", { code: "NOT_ALLOWED" });
     }
 

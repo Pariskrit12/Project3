@@ -49,8 +49,14 @@ export async function moderateImage(filePath, mimetype) {
 
     const pornScore = predictions.find((p) => p.className === "Porn")?.probability ?? 0;
     const hentaiScore = predictions.find((p) => p.className === "Hentai")?.probability ?? 0;
+    const sexyScore = predictions.find((p) => p.className === "Sexy")?.probability ?? 0;
 
-    return { flagged: pornScore > 0.7 || hentaiScore > 0.7 };
+    const flagged =
+      pornScore > 0.85 ||
+      hentaiScore > 0.85 ||
+      (pornScore + hentaiScore + sexyScore * 0.5) > 1.4;
+
+    return { flagged };
   } catch (err) {
     console.error("[imageModeration] Classification failed, allowing image through:", err.message);
     return { flagged: false };
