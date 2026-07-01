@@ -2,8 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import { useCall } from "../../context/CallContext";
 
+const ERROR_LABELS = {
+  NOT_ALLOWED: "You must follow each other to call",
+  USER_OFFLINE: "User is offline",
+  USER_BUSY: "User is busy in another call",
+};
+
 const OutgoingCallModal = () => {
-  const { callState, outgoingInfo, endCall } = useCall();
+  const { callState, outgoingInfo, callError, clearCallError, endCall } = useCall();
   const [dots, setDots] = useState(".");
 
   useEffect(() => {
@@ -13,6 +19,30 @@ const OutgoingCallModal = () => {
     }, 500);
     return () => clearInterval(id);
   }, [callState]);
+
+  if (callError && callState === "idle") {
+    return (
+      <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-md">
+        <div className="flex flex-col items-center gap-6 bg-[#1E1E1E] border border-[#3A3A3C] rounded-3xl px-8 py-8 max-w-xs w-full mx-4 shadow-2xl">
+          <div className="h-16 w-16 rounded-full bg-red-500/20 flex items-center justify-center">
+            <Icon icon="mdi:phone-off" width="32" height="32" className="text-red-400" />
+          </div>
+          <div className="text-center">
+            <p className="text-[#D7DADC] font-bold text-base">Call Failed</p>
+            <p className="text-[#9A9A9A] text-sm mt-1">
+              {ERROR_LABELS[callError] || "Something went wrong"}
+            </p>
+          </div>
+          <button
+            onClick={clearCallError}
+            className="w-full py-2.5 rounded-xl bg-[#FF4500] text-white font-bold text-sm hover:bg-[#CC3600] transition-colors"
+          >
+            Dismiss
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (callState !== "ringing-out" || !outgoingInfo) return null;
 

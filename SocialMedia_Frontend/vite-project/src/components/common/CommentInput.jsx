@@ -6,10 +6,12 @@ import { useCreateCommentMutation } from "../../services/commentsApi";
 const CommentInput = ({ postId, currentUser, placeholder }) => {
   const [open, setOpen] = useState(false);
   const [text, setText] = useState("");
+  const [error, setError] = useState("");
   const [createComment, { isLoading }] = useCreateCommentMutation();
 
   const handleSubmit = async () => {
     if (!text.trim()) return;
+    setError("");
     const optimisticComment = {
       _id: `optimistic-${Date.now()}`,
       description: text,
@@ -26,11 +28,18 @@ const CommentInput = ({ postId, currentUser, placeholder }) => {
     };
     const formData = new FormData();
     formData.append("description", text);
-    setText("");
-    setOpen(false);
     try {
-      await createComment({ postId, formData, optimisticComment });
-    } catch {    }
+      await createComment({ postId, formData, optimisticComment }).unwrap();
+      setText("");
+      setOpen(false);
+    } catch (err) {
+      const msg = err?.data?.message || "";
+      if (msg.includes("flagged")) {
+        setError("Your comment contains inappropriate language and cannot be posted.");
+      } else {
+        setError(msg || "Failed to post comment. Please try again.");
+      }
+    }
   };
 
   return (
@@ -65,6 +74,13 @@ const CommentInput = ({ postId, currentUser, placeholder }) => {
         />
       </div>
 
+      {error && (
+        <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-red-500/10 border border-red-500/40 text-red-400 text-xs ml-11">
+          <Icon icon="material-symbols:block" width="14" height="14" className="shrink-0" />
+          {error}
+        </div>
+      )}
+
       {open && (
         <div className="flex justify-between items-center pl-11">
           <div className="flex items-center gap-2">
@@ -83,6 +99,7 @@ const CommentInput = ({ postId, currentUser, placeholder }) => {
               onClick={() => {
                 setOpen(false);
                 setText("");
+                setError("");
               }}
             />
             <Button

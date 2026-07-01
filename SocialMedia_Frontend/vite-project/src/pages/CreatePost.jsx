@@ -17,6 +17,7 @@ const CreatePost = () => {
   const [mediaFiles, setMediaFiles] = useState([]);
   const [previews, setPreviews] = useState([]);
   const [error, setError] = useState("");
+  const [nsfwError, setNsfwError] = useState(false);
   const [selectedTags, setSelectedTags] = useState([]);
   const [tagInput, setTagInput] = useState("");
   const fileInputRef = useRef(null);
@@ -66,6 +67,7 @@ const CreatePost = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setNsfwError(false);
 
     const formData = new FormData();
     if (postTitle.trim()) formData.append("postTitle", postTitle.trim());
@@ -83,7 +85,12 @@ const CreatePost = () => {
       }
       navigate("/");
     } catch (err) {
-      setError(err?.data?.message || "Failed to create post. Please try again.");
+      const msg = err?.data?.message || "";
+      if (msg === "NSFW_IMAGE") {
+        setNsfwError(true);
+      } else {
+        setError(msg || "Failed to create post. Please try again.");
+      }
     }
   };
 
@@ -312,6 +319,25 @@ const CreatePost = () => {
             </div>
           )}
         </div>
+
+        {nsfwError && (
+          <div className="flex flex-col gap-2 px-4 py-4 rounded-xl bg-[#1E1E1E] border border-red-500/60 text-sm">
+            <div className="flex items-center gap-2 text-red-400 font-bold">
+              <Icon icon="material-symbols:block" width="18" height="18" />
+              Image Not Allowed — NSFW Content Detected
+            </div>
+            <p className="text-[#9A9A9A] text-xs leading-relaxed">
+              One or more images you uploaded were flagged as sexually explicit or adult content (NSFW). This type of content is not permitted on SocialSphere. Please remove the flagged image and try again.
+            </p>
+            <button
+              type="button"
+              onClick={() => { setNsfwError(false); setMediaFiles([]); setPreviews([]); }}
+              className="self-start mt-1 text-xs font-semibold text-red-400 hover:text-red-300 underline underline-offset-2 transition-colors"
+            >
+              Clear images and try again
+            </button>
+          </div>
+        )}
 
         {error && (
           <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm">
